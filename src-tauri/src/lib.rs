@@ -12,6 +12,7 @@ mod llm_client;
 mod managers;
 mod overlay;
 pub mod portable;
+pub mod remote_transcription;
 mod settings;
 mod shortcut;
 mod signal_handle;
@@ -351,6 +352,12 @@ pub fn run(cli_args: CliArgs) {
             shortcut::change_post_process_base_url_setting,
             shortcut::change_post_process_api_key_setting,
             shortcut::change_post_process_model_setting,
+            shortcut::change_transcription_provider_setting,
+            shortcut::change_remote_transcription_base_url_setting,
+            shortcut::change_remote_transcription_model_setting,
+            shortcut::change_remote_transcription_api_key_setting,
+            shortcut::fetch_remote_transcription_models,
+            shortcut::test_remote_transcription_connection,
             shortcut::set_post_process_provider,
             shortcut::fetch_post_process_models,
             shortcut::add_post_process_prompt,

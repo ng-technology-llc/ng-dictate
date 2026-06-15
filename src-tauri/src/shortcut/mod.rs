@@ -23,8 +23,8 @@ use tauri_plugin_autostart::ManagerExt;
 use crate::settings::APPLE_INTELLIGENCE_DEFAULT_MODEL_ID;
 use crate::settings::{
     self, get_settings, AutoSubmitKey, ClipboardHandling, KeyboardImplementation, LLMPrompt,
-    OverlayPosition, PasteMethod, ShortcutBinding, SoundTheme, TypingTool,
-    APPLE_INTELLIGENCE_PROVIDER_ID,
+    OverlayPosition, PasteMethod, SecretString, ShortcutBinding, SoundTheme, TranscriptionProvider,
+    TypingTool, APPLE_INTELLIGENCE_PROVIDER_ID,
 };
 use crate::tray;
 
@@ -894,6 +894,93 @@ pub fn change_post_process_model_setting(
     settings.post_process_models.insert(provider_id, model);
     settings::write_settings(&app, settings);
     Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_transcription_provider_setting(
+    app: AppHandle,
+    provider: String,
+) -> Result<(), String> {
+    let provider = match provider.trim() {
+        "local" => TranscriptionProvider::Local,
+        "remote" => TranscriptionProvider::Remote,
+        other => return Err(format!("Invalid transcription provider: {}", other)),
+    };
+
+    let mut settings = settings::get_settings(&app);
+    settings.transcription_provider = provider;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_remote_transcription_base_url_setting(
+    app: AppHandle,
+    base_url: String,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    let base_url = base_url.trim();
+    settings.remote_transcription_base_url = if base_url.is_empty() {
+        String::new()
+    } else {
+        crate::remote_transcription::normalize_remote_base_url(base_url)
+            .unwrap_or_else(|_| base_url.to_string())
+    };
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_remote_transcription_model_setting(
+    app: AppHandle,
+    model: String,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.remote_transcription_model = model.trim().to_string();
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_remote_transcription_api_key_setting(
+    app: AppHandle,
+    api_key: String,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.remote_transcription_api_key = SecretString::from(api_key.trim().to_string());
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn fetch_remote_transcription_models(app: AppHandle) -> Result<Vec<String>, String> {
+    let settings = settings::get_settings(&app);
+    crate::remote_transcription::fetch_remote_models(
+        settings.remote_transcription_base_url,
+        settings.remote_transcription_api_key.expose().to_string(),
+    )
+    .await
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn test_remote_transcription_connection(app: AppHandle) -> Result<(), String> {
+    let settings = settings::get_settings(&app);
+    crate::remote_transcription::validate_remote_config(
+        &settings.remote_transcription_base_url,
+        &settings.remote_transcription_model,
+    )?;
+    crate::remote_transcription::test_remote_connection(
+        settings.remote_transcription_base_url,
+        Some(settings.remote_transcription_model),
+        settings.remote_transcription_api_key.expose().to_string(),
+    )
+    .await
 }
 
 #[tauri::command]

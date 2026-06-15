@@ -107,6 +107,19 @@ pub struct PostProcessProvider {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[serde(rename_all = "snake_case")]
+pub enum TranscriptionProvider {
+    Local,
+    Remote,
+}
+
+impl Default for TranscriptionProvider {
+    fn default() -> Self {
+        TranscriptionProvider::Local
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "lowercase")]
 pub enum OverlayPosition {
     None,
@@ -307,7 +320,45 @@ impl Default for OrtAcceleratorSetting {
 
 #[derive(Clone, Serialize, Deserialize, Type)]
 #[serde(transparent)]
-pub(crate) struct SecretMap(HashMap<String, String>);
+pub struct SecretString(String);
+
+impl Default for SecretString {
+    fn default() -> Self {
+        Self(String::new())
+    }
+}
+
+impl From<&str> for SecretString {
+    fn from(value: &str) -> Self {
+        Self(value.to_string())
+    }
+}
+
+impl From<String> for SecretString {
+    fn from(value: String) -> Self {
+        Self(value)
+    }
+}
+
+impl fmt::Debug for SecretString {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if self.0.is_empty() {
+            write!(f, "\"\"")
+        } else {
+            write!(f, "\"[REDACTED]\"")
+        }
+    }
+}
+
+impl SecretString {
+    pub fn expose(&self) -> &str {
+        &self.0
+    }
+}
+
+#[derive(Clone, Serialize, Deserialize, Type)]
+#[serde(transparent)]
+pub struct SecretMap(HashMap<String, String>);
 
 impl fmt::Debug for SecretMap {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -351,6 +402,14 @@ pub struct AppSettings {
     pub update_checks_enabled: bool,
     #[serde(default = "default_model")]
     pub selected_model: String,
+    #[serde(default)]
+    pub transcription_provider: TranscriptionProvider,
+    #[serde(default)]
+    pub remote_transcription_base_url: String,
+    #[serde(default)]
+    pub remote_transcription_model: String,
+    #[serde(default)]
+    pub remote_transcription_api_key: SecretString,
     #[serde(default = "default_always_on_microphone")]
     pub always_on_microphone: bool,
     #[serde(default)]
@@ -774,6 +833,10 @@ pub fn get_default_settings() -> AppSettings {
         autostart_enabled: default_autostart_enabled(),
         update_checks_enabled: default_update_checks_enabled(),
         selected_model: "".to_string(),
+        transcription_provider: TranscriptionProvider::default(),
+        remote_transcription_base_url: String::new(),
+        remote_transcription_model: String::new(),
+        remote_transcription_api_key: SecretString::default(),
         always_on_microphone: false,
         selected_microphone: None,
         clamshell_microphone: None,
@@ -956,6 +1019,28 @@ mod tests {
         let settings = get_default_settings();
         assert!(!settings.auto_submit);
         assert_eq!(settings.auto_submit_key, AutoSubmitKey::Enter);
+    }
+
+    #[test]
+    fn default_transcription_provider_is_local() {
+        let settings = get_default_settings();
+        assert_eq!(
+            settings.transcription_provider,
+            TranscriptionProvider::Local
+        );
+        assert_eq!(settings.remote_transcription_base_url, "");
+        assert_eq!(settings.remote_transcription_model, "");
+    }
+
+    #[test]
+    fn remote_transcription_api_key_debug_is_redacted() {
+        let mut settings = get_default_settings();
+        settings.remote_transcription_api_key = SecretString::from("secret-token");
+
+        let debug_output = format!("{:?}", settings);
+
+        assert!(!debug_output.contains("secret-token"));
+        assert!(debug_output.contains("[REDACTED]"));
     }
 
     #[test]

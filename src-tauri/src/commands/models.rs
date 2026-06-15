@@ -1,6 +1,6 @@
 use crate::managers::model::{ModelInfo, ModelManager};
 use crate::managers::transcription::{ModelStateEvent, TranscriptionManager};
-use crate::settings::{get_settings, write_settings, ModelUnloadTimeout};
+use crate::settings::{get_settings, write_settings, ModelUnloadTimeout, TranscriptionProvider};
 use std::sync::Arc;
 use tauri::{AppHandle, Emitter, Manager, State};
 
@@ -175,19 +175,33 @@ pub async fn get_current_model(app_handle: AppHandle) -> Result<String, String> 
 #[tauri::command]
 #[specta::specta]
 pub async fn get_transcription_model_status(
+    app_handle: AppHandle,
     transcription_manager: State<'_, Arc<TranscriptionManager>>,
 ) -> Result<Option<String>, String> {
+    let settings = get_settings(&app_handle);
+    if settings.transcription_provider == TranscriptionProvider::Remote {
+        return Ok(if settings.remote_transcription_model.trim().is_empty() {
+            None
+        } else {
+            Some(settings.remote_transcription_model)
+        });
+    }
+
     Ok(transcription_manager.get_current_model())
 }
 
 #[tauri::command]
 #[specta::specta]
 pub async fn is_model_loading(
+    app_handle: AppHandle,
     transcription_manager: State<'_, Arc<TranscriptionManager>>,
 ) -> Result<bool, String> {
-    // Check if transcription manager has a loaded model
-    let current_model = transcription_manager.get_current_model();
-    Ok(current_model.is_none())
+    let settings = get_settings(&app_handle);
+    if settings.transcription_provider == TranscriptionProvider::Remote {
+        return Ok(false);
+    }
+
+    Ok(transcription_manager.is_loading())
 }
 
 #[tauri::command]

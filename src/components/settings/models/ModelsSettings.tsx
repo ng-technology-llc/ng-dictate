@@ -5,8 +5,12 @@ import { ChevronDown, Globe } from "lucide-react";
 import type { ModelCardStatus } from "@/components/onboarding";
 import { ModelCard } from "@/components/onboarding";
 import { useModelStore } from "@/stores/modelStore";
+import { useSettings } from "@/hooks/useSettings";
 import { LANGUAGES } from "@/lib/constants/languages.ts";
 import type { ModelInfo } from "@/bindings";
+import { Dropdown, type DropdownOption } from "../../ui/Dropdown";
+import { SettingContainer } from "../../ui/SettingContainer";
+import { RemoteTranscriptionSettings } from "./RemoteTranscriptionSettings";
 
 // check if model supports a language based on its supported_languages list
 const modelSupportsLanguage = (model: ModelInfo, langCode: string): boolean => {
@@ -21,6 +25,7 @@ export const ModelsSettings: React.FC = () => {
   const [languageSearch, setLanguageSearch] = useState("");
   const languageDropdownRef = useRef<HTMLDivElement>(null);
   const languageSearchInputRef = useRef<HTMLInputElement>(null);
+  const { settings, updateSetting, isUpdating } = useSettings();
   const {
     models,
     currentModel,
@@ -35,6 +40,29 @@ export const ModelsSettings: React.FC = () => {
     selectModel,
     deleteModel,
   } = useModelStore();
+  const transcriptionProvider = settings?.transcription_provider ?? "local";
+  const isRemoteProvider = transcriptionProvider === "remote";
+
+  const providerOptions = useMemo<DropdownOption[]>(
+    () => [
+      {
+        value: "local",
+        label: t("settings.models.transcriptionProvider.local"),
+      },
+      {
+        value: "remote",
+        label: t("settings.models.transcriptionProvider.remote"),
+      },
+    ],
+    [t],
+  );
+
+  const handleProviderSelect = (provider: string) => {
+    void updateSetting(
+      "transcription_provider",
+      provider as "local" | "remote",
+    );
+  };
 
   // click outside handler for language dropdown
   useEffect(() => {
@@ -195,7 +223,7 @@ export const ModelsSettings: React.FC = () => {
     };
   }, [filteredModels, downloadingModels, extractingModels, currentModel]);
 
-  if (loading) {
+  if (loading && !isRemoteProvider) {
     return (
       <div className="max-w-3xl w-full mx-auto">
         <div className="flex items-center justify-center py-16">
@@ -215,7 +243,22 @@ export const ModelsSettings: React.FC = () => {
           {t("settings.models.description")}
         </p>
       </div>
-      {filteredModels.length > 0 ? (
+      <SettingContainer
+        title={t("settings.models.transcriptionProvider.title")}
+        description={t("settings.models.transcriptionProvider.description")}
+      >
+        <Dropdown
+          options={providerOptions}
+          selectedValue={transcriptionProvider}
+          onSelect={handleProviderSelect}
+          disabled={isUpdating("transcription_provider")}
+          className="w-full sm:w-auto"
+        />
+      </SettingContainer>
+
+      {isRemoteProvider ? (
+        <RemoteTranscriptionSettings />
+      ) : filteredModels.length > 0 ? (
         <div className="space-y-6">
           {/* Downloaded Models Section — header always visible so filter stays accessible */}
           <div className="space-y-3">

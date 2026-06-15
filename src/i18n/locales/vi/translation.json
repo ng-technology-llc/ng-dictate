@@ -148,7 +148,9 @@
       "languageOnly": "Chỉ {{language}}"
     },
     "cancel": "Hủy",
-    "cancelDownload": "Hủy tải xuống"
+    "cancelDownload": "Hủy tải xuống",
+    "remoteServerMode": "Remote Server",
+    "remoteModelReady": "Remote Model Ready"
   },
   "settings": {
     "modelSettings": {
@@ -171,7 +173,35 @@
       },
       "noModelsMatch": "Không có mô hình nào khớp với bộ lọc này.",
       "yourModels": "Mô hình đã tải",
-      "availableModels": "Có sẵn để tải xuống"
+      "availableModels": "Có sẵn để tải xuống",
+      "transcriptionProvider": {
+        "title": "Transcription Provider",
+        "description": "Choose where speech-to-text runs.",
+        "local": "Local Model",
+        "remote": "Remote Server"
+      },
+      "remote": {
+        "baseUrl": {
+          "title": "Base URL",
+          "description": "Server root for an OpenAI-compatible speech-to-text endpoint. A trailing /v1 is accepted.",
+          "placeholder": "http://192.168.1.100:8000"
+        },
+        "model": {
+          "title": "Model",
+          "description": "Model sent to the transcription endpoint. Refresh models uses GET /v1/models when available.",
+          "placeholder": "whisper-1",
+          "refreshModels": "Refresh models",
+          "useModel": "Use \"{{model}}\""
+        },
+        "apiKey": {
+          "title": "API Key",
+          "description": "Optional bearer token for protected servers.",
+          "placeholder": "Optional"
+        },
+        "testConnection": "Test transcription",
+        "connectionOk": "Remote transcription endpoint is reachable.",
+        "connectionFailed": "Remote transcription endpoint test failed."
+      }
     },
     "general": {
       "title": "Chung",
