@@ -11,7 +11,7 @@ This plan prepares NG Dictate for production macOS DMG release with Apple Develo
 - Apple Team ID: `5QSSU83XFK`
 - Developer ID Application certificate: consolidated under ignored local release materials
 - GitHub Actions Secrets: partially configured; Apple notarization account secrets are missing
-- App icon: still based on upstream Handy artwork
+- App icon: replaced with NG Dictate generated artwork
 - Tauri updater production key: generated locally and configured in `src-tauri/tauri.conf.json`
 
 ## Decisions
@@ -149,9 +149,11 @@ Expected result: all required secret names are present. Secret values are never 
 
 ## Phase 4: Replace Company Brand Assets
 
+Status: completed.
+
 Replace upstream Handy visual assets with NG Dictate assets before production release.
 
-Known current upstream assets:
+Replaced assets:
 
 - `src-tauri/icons/icon.png`
 - `src-tauri/icons/icon.icns`
@@ -163,7 +165,13 @@ Known current upstream assets:
 - `src-tauri/resources/tray_recording_dark.png`
 - `src-tauri/resources/tray_transcribing.png`
 - `src-tauri/resources/tray_transcribing_dark.png`
-- `src/components/icons/HandyHand.tsx`
+- `src-tauri/resources/handy.png`
+- `src-tauri/resources/recording.png`
+- `src-tauri/resources/transcribing.png`
+- `src/components/icons/NGDictateMark.tsx`
+- `src/components/icons/NGDictateTextLogo.tsx`
+
+The `handy.png` resource path remains for runtime compatibility with existing tray code, but its content is no longer upstream Handy artwork.
 
 Verification:
 

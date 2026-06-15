@@ -1,7 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
 import React from "react";
 
-const HandyTextLogo = ({
+const NGDictateTextLogo = ({
   width,
   height,
   className,
@@ -47,4 +47,4 @@ const HandyTextLogo = ({
   );
 };
 
-export default HandyTextLogo;
+export default NGDictateTextLogo;
