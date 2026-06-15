@@ -100,7 +100,7 @@
     },
     "permissions": {
       "title": "Необходими разрешения",
-      "description": "Handy се нуждае от няколко разрешения, за да работи правилно.",
+      "description": "NG Dictate се нуждае от няколко разрешения, за да работи правилно.",
       "microphone": {
         "title": "Достъп до микрофон",
         "description": "Необходим е, за да чуе гласа ви при транскрипция."
@@ -160,7 +160,7 @@
     "general": {
       "title": "Общи",
       "shortcut": {
-        "title": "Бързи клавиши на Handy",
+        "title": "Бързи клавиши на NG Dictate",
         "description": "Настройте клавишни комбинации за стартиране на запис за реч към текст",
         "loading": "Зареждане на бързите клавиши...",
         "none": "Няма настроени бързи клавиши",
@@ -306,11 +306,11 @@
       },
       "autostart": {
         "label": "Стартиране със системата",
-        "description": "Автоматично стартиране на Handy при влизане в профила ви."
+        "description": "Автоматично стартиране на NG Dictate при влизане в профила ви."
       },
       "showTrayIcon": {
         "label": "Икона в системната област",
-        "description": "Показване на иконата на Handy в системната област."
+        "description": "Показване на иконата на NG Dictate в системната област."
       },
       "overlay": {
         "title": "Позиция на наслагването",
@@ -475,7 +475,7 @@
       },
       "updateChecks": {
         "label": "Проверка за актуализации",
-        "description": "Автоматична проверка за нови версии на Handy"
+        "description": "Автоматична проверка за нови версии на NG Dictate"
       },
       "soundTheme": {
         "label": "Звукова тема",
@@ -543,11 +543,11 @@
       "title": "За приложението",
       "version": {
         "title": "Версия",
-        "description": "Текуща версия на Handy"
+        "description": "Текуща версия на NG Dictate"
       },
       "appDataDirectory": {
         "title": "Папка с данни на приложението",
-        "description": "Мястото, където Handy съхранява данните си"
+        "description": "Мястото, където NG Dictate съхранява данните си"
       },
       "sourceCode": {
         "title": "Изходен код",
@@ -555,17 +555,22 @@
         "button": "Вижте в GitHub"
       },
       "supportDevelopment": {
-        "title": "Подкрепете разработката",
-        "description": "Помогнете ни да продължим да развиваме Handy",
-        "button": "Дарение"
+        "title": "Support",
+        "description": "Get help with NG Dictate",
+        "button": "Get Support"
       },
       "acknowledgments": {
         "title": "Благодарности",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "Високопроизводително изпълнение на автоматичния модел за разпознаване на реч Whisper на OpenAI",
-          "details": "Handy използва Whisper.cpp за бързо локално реч-към-текст. Благодарности на Georgi Gerganov и сътрудниците за отличната работа."
+          "details": "NG Dictate използва Whisper.cpp за бързо локално реч-към-текст. Благодарности на Georgi Gerganov и сътрудниците за отличната работа."
         }
+      },
+      "upstreamAttribution": {
+        "title": "Upstream Attribution",
+        "description": "Based on Handy, licensed under MIT.",
+        "button": "View Handy Project"
       }
     }
   },
@@ -610,7 +615,7 @@
   },
   "accessibility": {
     "permissionsRequired": "Необходими са разрешения за достъпност",
-    "permissionsDescription": "Handy се нуждае от разрешения за достъпност, за да въвежда транскрибирания текст.",
+    "permissionsDescription": "NG Dictate се нуждае от разрешения за достъпност, за да въвежда транскрибирания текст.",
     "openSettings": "Отваряне на системните настройки",
     "dismiss": "Затваряне"
   },
@@ -633,7 +638,7 @@
   },
   "appLanguage": {
     "title": "Език на приложението",
-    "description": "Промяна на езика на интерфейса на Handy"
+    "description": "Промяна на езика на интерфейса на NG Dictate"
   },
   "overlay": {
     "transcribing": "Транскрибиране...",
