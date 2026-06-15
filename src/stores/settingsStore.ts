@@ -18,6 +18,7 @@ interface SettingsStore {
   outputDevices: AudioDevice[];
   customSounds: { start: boolean; stop: boolean };
   postProcessModelOptions: Record<string, string[]>;
+  remoteTranscriptionModelOptions: string[];
 
   // Actions
   initialize: () => Promise<void>;
@@ -53,6 +54,9 @@ interface SettingsStore {
   updatePostProcessModel: (providerId: string, model: string) => Promise<void>;
   fetchPostProcessModels: (providerId: string) => Promise<string[]>;
   setPostProcessModelOptions: (providerId: string, models: string[]) => void;
+  fetchRemoteTranscriptionModels: () => Promise<string[]>;
+  testRemoteTranscriptionConnection: () => Promise<void>;
+  setRemoteTranscriptionModelOptions: (models: string[]) => void;
 
   // Internal state setters
   setSettings: (settings: Settings | null) => void;
@@ -131,6 +135,14 @@ const settingUpdaters: {
   history_limit: (value) => commands.updateHistoryLimit(value as number),
   post_process_enabled: (value) =>
     commands.changePostProcessEnabledSetting(value as boolean),
+  transcription_provider: (value) =>
+    commands.changeTranscriptionProviderSetting(value as string),
+  remote_transcription_base_url: (value) =>
+    commands.changeRemoteTranscriptionBaseUrlSetting(value as string),
+  remote_transcription_model: (value) =>
+    commands.changeRemoteTranscriptionModelSetting(value as string),
+  remote_transcription_api_key: (value) =>
+    commands.changeRemoteTranscriptionApiKeySetting(value as string),
   post_process_selected_prompt_id: (value) =>
     commands.setPostProcessSelectedPrompt(value as string),
   mute_while_recording: (value) =>
@@ -167,6 +179,7 @@ export const useSettingsStore = create<SettingsStore>()(
     outputDevices: [],
     customSounds: { start: false, stop: false },
     postProcessModelOptions: {},
+    remoteTranscriptionModelOptions: [],
 
     // Internal setters
     setSettings: (settings) => set({ settings }),
@@ -288,6 +301,12 @@ export const useSettingsStore = create<SettingsStore>()(
         const updater = settingUpdaters[key];
         if (updater) {
           await updater(value);
+          if (
+            key === "remote_transcription_base_url" ||
+            key === "remote_transcription_api_key"
+          ) {
+            set({ remoteTranscriptionModelOptions: [] });
+          }
         } else if (key !== "bindings" && key !== "selected_model") {
           console.warn(`No handler for setting: ${String(key)}`);
         }
@@ -557,6 +576,49 @@ export const useSettingsStore = create<SettingsStore>()(
           [providerId]: models,
         },
       })),
+
+    fetchRemoteTranscriptionModels: async () => {
+      const updateKey = "remote_transcription_models_fetch";
+      const { setUpdating, setRemoteTranscriptionModelOptions } = get();
+
+      setUpdating(updateKey, true);
+
+      try {
+        const result = await commands.fetchRemoteTranscriptionModels();
+        if (result.status === "ok") {
+          setRemoteTranscriptionModelOptions(result.data);
+          return result.data;
+        }
+        throw new Error(result.error);
+      } catch (error) {
+        console.error("Failed to fetch remote transcription models:", error);
+        throw error;
+      } finally {
+        setUpdating(updateKey, false);
+      }
+    },
+
+    testRemoteTranscriptionConnection: async () => {
+      const updateKey = "remote_transcription_connection_test";
+      const { setUpdating } = get();
+
+      setUpdating(updateKey, true);
+
+      try {
+        const result = await commands.testRemoteTranscriptionConnection();
+        if (result.status === "error") {
+          throw new Error(result.error);
+        }
+      } catch (error) {
+        console.error("Failed to test remote transcription connection:", error);
+        throw error;
+      } finally {
+        setUpdating(updateKey, false);
+      }
+    },
+
+    setRemoteTranscriptionModelOptions: (models) =>
+      set({ remoteTranscriptionModelOptions: models }),
 
     // Load default settings from Rust
     loadDefaultSettings: async () => {

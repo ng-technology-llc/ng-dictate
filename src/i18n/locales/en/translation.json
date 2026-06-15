@@ -136,6 +136,8 @@
     "loadingGeneric": "Loading...",
     "modelError": "Model Error",
     "modelUnloaded": "Model Unloaded",
+    "remoteServerMode": "Remote Server",
+    "remoteModelReady": "Remote Model Ready",
     "noModelDownloadRequired": "No Model - Download Required",
     "deleteModel": "Delete {{modelName}}",
     "downloadSpeed": "{{speed}} MB/s",
@@ -212,6 +214,34 @@
         "multiLanguage": "Multi-language",
         "translation": "Translation",
         "allLanguages": "All Languages"
+      },
+      "transcriptionProvider": {
+        "title": "Transcription Provider",
+        "description": "Choose where speech-to-text runs.",
+        "local": "Local Model",
+        "remote": "Remote Server"
+      },
+      "remote": {
+        "baseUrl": {
+          "title": "Base URL",
+          "description": "OpenAI-compatible audio transcription server.",
+          "placeholder": "http://192.168.1.100:8000"
+        },
+        "model": {
+          "title": "Model",
+          "description": "Remote model identifier.",
+          "placeholder": "deepdml/faster-whisper-large-v3-turbo-ct2",
+          "refreshModels": "Refresh models",
+          "useModel": "Use \"{{model}}\""
+        },
+        "apiKey": {
+          "title": "API Key",
+          "description": "Optional bearer token for protected servers.",
+          "placeholder": "Optional"
+        },
+        "testConnection": "Test connection",
+        "connectionOk": "Remote transcription server is reachable.",
+        "connectionFailed": "Remote transcription server test failed."
       },
       "noModelsMatch": "No models match this filter."
     },
