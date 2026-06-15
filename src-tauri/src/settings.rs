@@ -1024,7 +1024,10 @@ mod tests {
     #[test]
     fn default_transcription_provider_is_local() {
         let settings = get_default_settings();
-        assert_eq!(settings.transcription_provider, TranscriptionProvider::Local);
+        assert_eq!(
+            settings.transcription_provider,
+            TranscriptionProvider::Local
+        );
         assert_eq!(settings.remote_transcription_base_url, "");
         assert_eq!(settings.remote_transcription_model, "");
     }

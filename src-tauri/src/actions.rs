@@ -4,7 +4,7 @@ use crate::audio_feedback::{play_feedback_sound, play_feedback_sound_blocking, S
 use crate::audio_toolkit::{is_microphone_access_denied, is_no_input_device_error};
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::history::HistoryManager;
-use crate::managers::transcription::TranscriptionManager;
+use crate::managers::transcription::{should_preload_local_model, TranscriptionManager};
 use crate::settings::{get_settings, AppSettings, APPLE_INTELLIGENCE_PROVIDER_ID};
 use crate::shortcut;
 use crate::tray::{change_tray_icon, TrayIconState};
@@ -395,8 +395,12 @@ impl ShortcutAction for TranscribeAction {
         let tm = app.state::<Arc<TranscriptionManager>>();
         let rm = app.state::<Arc<AudioRecordingManager>>();
 
+        let settings = get_settings(app);
+
         // Load ASR model and VAD model in parallel
-        tm.initiate_model_load();
+        if should_preload_local_model(settings.transcription_provider) {
+            tm.initiate_model_load();
+        }
         let rm_clone = Arc::clone(&rm);
         std::thread::spawn(move || {
             if let Err(e) = rm_clone.preload_vad() {
@@ -409,7 +413,6 @@ impl ShortcutAction for TranscribeAction {
         show_recording_overlay(app);
 
         // Get the microphone mode to determine audio feedback timing
-        let settings = get_settings(app);
         let is_always_on = settings.always_on_microphone;
         debug!("Microphone mode - always_on: {}", is_always_on);
 
@@ -545,7 +548,7 @@ impl ShortcutAction for TranscribeAction {
 
                     // Transcribe concurrently with WAV save
                     let transcription_time = Instant::now();
-                    let transcription_result = tm.transcribe(samples);
+                    let transcription_result = tm.transcribe(samples).await;
 
                     // Await WAV save and verify
                     let wav_saved = match wav_handle.await {

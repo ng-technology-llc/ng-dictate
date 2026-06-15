@@ -63,7 +63,10 @@ pub fn parse_transcription_text(body: &str) -> Result<String, String> {
     }
 }
 
-pub async fn transcribe_remote(samples: Vec<f32>, settings: &AppSettings) -> Result<String, String> {
+pub async fn transcribe_remote(
+    samples: Vec<f32>,
+    settings: &AppSettings,
+) -> Result<String, String> {
     let model = settings.remote_transcription_model.trim();
     ensure_remote_config(&settings.remote_transcription_base_url, model)?;
 
@@ -204,7 +207,10 @@ async fn successful_body(response: reqwest::Response, operation: &str) -> Result
     if status.is_success() {
         Ok(body)
     } else {
-        Err(format!("{} failed with status {}: {}", operation, status, body))
+        Err(format!(
+            "{} failed with status {}: {}",
+            operation, status, body
+        ))
     }
 }
 

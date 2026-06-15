@@ -2,7 +2,8 @@ use crate::audio_toolkit::{apply_custom_words, filter_transcription_output};
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::model::{EngineType, ModelManager};
 use crate::settings::{
-    get_settings, ModelUnloadTimeout, OrtAcceleratorSetting, WhisperAcceleratorSetting,
+    get_settings, ModelUnloadTimeout, OrtAcceleratorSetting, TranscriptionProvider,
+    WhisperAcceleratorSetting,
 };
 use anyhow::Result;
 use log::{debug, error, info, warn};
@@ -34,6 +35,10 @@ pub struct ModelStateEvent {
     pub model_id: Option<String>,
     pub model_name: Option<String>,
     pub error: Option<String>,
+}
+
+pub fn should_preload_local_model(provider: TranscriptionProvider) -> bool {
+    provider == TranscriptionProvider::Local
 }
 
 enum LoadedEngine {
@@ -174,6 +179,10 @@ impl TranscriptionManager {
     pub fn is_model_loaded(&self) -> bool {
         let engine = self.lock_engine();
         engine.is_some()
+    }
+
+    pub fn is_loading(&self) -> bool {
+        *self.is_loading.lock().unwrap()
     }
 
     /// Atomically check whether a model load is in progress and, if not, mark
@@ -437,7 +446,75 @@ impl TranscriptionManager {
         current_model.clone()
     }
 
-    pub fn transcribe(&self, audio: Vec<f32>) -> Result<String> {
+    pub async fn transcribe(&self, audio: Vec<f32>) -> Result<String> {
+        #[cfg(debug_assertions)]
+        if std::env::var("HANDY_FORCE_TRANSCRIPTION_FAILURE").is_ok() {
+            return Err(anyhow::anyhow!(
+                "Simulated transcription failure (HANDY_FORCE_TRANSCRIPTION_FAILURE)"
+            ));
+        }
+
+        let settings = get_settings(&self.app_handle);
+        match settings.transcription_provider {
+            TranscriptionProvider::Local => {
+                let this = self.clone();
+                tauri::async_runtime::spawn_blocking(move || this.transcribe_local(audio))
+                    .await
+                    .map_err(|e| anyhow::anyhow!("Transcription task panicked: {}", e))?
+            }
+            TranscriptionProvider::Remote => self.transcribe_remote(audio, settings).await,
+        }
+    }
+
+    async fn transcribe_remote(
+        &self,
+        audio: Vec<f32>,
+        settings: crate::settings::AppSettings,
+    ) -> Result<String> {
+        // Update last activity timestamp
+        self.touch_activity();
+
+        let st = std::time::Instant::now();
+
+        debug!("Audio vector length: {}", audio.len());
+
+        if audio.is_empty() {
+            debug!("Empty audio vector");
+            return Ok(String::new());
+        }
+
+        let transcript = crate::remote_transcription::transcribe_remote(audio, &settings)
+            .await
+            .map_err(|e| anyhow::anyhow!("{}", e))?;
+
+        let filtered_result = filter_transcription_output(
+            &transcript,
+            &settings.app_language,
+            &settings.custom_filler_words,
+        );
+
+        let et = std::time::Instant::now();
+        let translation_note = if settings.translate_to_english {
+            " (translated)"
+        } else {
+            ""
+        };
+        info!(
+            "Remote transcription completed in {}ms{}",
+            (et - st).as_millis(),
+            translation_note
+        );
+
+        if filtered_result.is_empty() {
+            info!("Transcription result is empty");
+        } else {
+            info!("Transcription result: {}", filtered_result);
+        }
+
+        Ok(filtered_result)
+    }
+
+    fn transcribe_local(&self, audio: Vec<f32>) -> Result<String> {
         #[cfg(debug_assertions)]
         if std::env::var("HANDY_FORCE_TRANSCRIPTION_FAILURE").is_ok() {
             return Err(anyhow::anyhow!(
@@ -850,5 +927,17 @@ impl Drop for TranscriptionManager {
                 debug!("Idle watcher thread joined successfully");
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod provider_tests {
+    use super::*;
+    use crate::settings::TranscriptionProvider;
+
+    #[test]
+    fn local_provider_requires_model_preload() {
+        assert!(should_preload_local_model(TranscriptionProvider::Local));
+        assert!(!should_preload_local_model(TranscriptionProvider::Remote));
     }
 }
