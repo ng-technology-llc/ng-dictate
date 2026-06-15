@@ -144,6 +144,7 @@ Verification:
 
 ```bash
 gh secret list -R ng-technology-llc/ng-dictate
+bun run check:release
 ```
 
 Expected result: all required secret names are present. Secret values are never printed.
@@ -220,6 +221,7 @@ Expected outputs:
 Verification:
 
 ```bash
+bun run check:release
 gh release list -R ng-technology-llc/ng-dictate --limit 5
 gh run list -R ng-technology-llc/ng-dictate --workflow Release --limit 5
 ```
