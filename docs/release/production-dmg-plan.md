@@ -10,7 +10,7 @@ This plan prepares NG Dictate for production macOS DMG release with Apple Develo
 - Apple team: `ng technology llc`
 - Apple Team ID: `5QSSU83XFK`
 - Developer ID Application certificate: consolidated under ignored local release materials
-- GitHub Actions Secrets: partially configured; Apple notarization password secrets are missing
+- GitHub Actions Secrets: configured for Apple signing, Apple notarization, CI keychain, and Tauri updater signing
 - App icon: replaced with NG Dictate generated artwork
 - Tauri updater production key: generated locally and configured in `src-tauri/tauri.conf.json`
 
@@ -103,7 +103,7 @@ Expected result: the configured public key matches the production updater public
 
 ## Phase 3: Prepare GitHub Actions Secrets
 
-Status: partially completed. Apple certificate, Apple ID, Apple Team ID, CI keychain password, and production Tauri updater signing secrets are configured. Apple notarization password secrets still need operator input.
+Status: completed. Apple certificate, Apple ID, Apple Team ID, Apple notarization app-specific password, CI keychain password, and production Tauri updater signing secrets are configured.
 
 Configure repository secrets on `ng-technology-llc/ng-dictate`.
 
@@ -205,7 +205,7 @@ Do not commit:
 
 ## Phase 6: Run Release Workflow
 
-Status: blocked until `APPLE_PASSWORD` and `APPLE_ID_PASSWORD` are configured.
+Status: ready to run after the macOS DMG CI packaging path is validated.
 
 Run the GitHub `Release` workflow from `product/main`.
 
@@ -218,6 +218,12 @@ Expected outputs:
 - `latest.json`
 - matching updater signatures
 
+macOS DMG packaging note:
+
+- The release workflow builds macOS `app` bundles first so Tauri still generates the updater archive and signature.
+- The reusable build workflow then creates the DMG with `hdiutil` instead of Tauri's default Finder AppleScript DMG beautification path.
+- The generated DMG is codesigned, submitted to Apple notarization, stapled, validated, and uploaded to the draft GitHub Release.
+
 Verification:
 
 ```bash
@@ -225,6 +231,8 @@ bun run check:release
 gh release list -R ng-technology-llc/ng-dictate --limit 5
 gh run list -R ng-technology-llc/ng-dictate --workflow Release --limit 5
 ```
+
+Expected release assets include at least two `.dmg` files, two `.app.tar.gz` updater archives, two `.app.tar.gz.sig` signatures, and `latest.json`.
 
 If the release workflow fails, inspect the failing job logs before changing secrets or workflow configuration.
 

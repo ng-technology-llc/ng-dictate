@@ -94,10 +94,10 @@ jobs:
       matrix:
         include:
           - platform: "macos-26" # for Arm based macs (M1 and above). Uses macOS 26 for Apple Intelligence SDK.
-            args: "--target aarch64-apple-darwin"
+            args: "--target aarch64-apple-darwin --bundles app"
             target: "aarch64-apple-darwin"
           - platform: "macos-latest" # for Intel based macs.
-            args: "--target x86_64-apple-darwin"
+            args: "--target x86_64-apple-darwin --bundles app"
             target: "x86_64-apple-darwin"
           - platform: "ubuntu-22.04" # Build .deb on 22.04
             args: "--bundles deb"
@@ -116,6 +116,7 @@ jobs:
       build-args: ${{ matrix.args }}
       sign-binaries: true
       asset-prefix: "ng-dictate"
+      asset-name-pattern: "[version]_[platform]_[arch][ext]"
       upload-artifacts: false
       release-id: ${{ needs.create-release.outputs.release-id }}
     secrets: inherit
@@ -134,4 +135,13 @@ jobs:
           VERSION: ${{ needs.create-release.outputs.version }}
         shell: bash
         run: |
-          gh release view "v${VERSION}" --json assets --jq '.assets[].name' | rg '^latest\.json$'
+          assets="$(gh release view "v${VERSION}" --json assets --jq '.assets[].name')"
+          printf '%s\n' "$assets" | rg '^latest\.json$'
+
+          dmg_count="$(printf '%s\n' "$assets" | rg '\.dmg$' | wc -l | tr -d ' ')"
+          updater_count="$(printf '%s\n' "$assets" | rg '\.app\.tar\.gz$' | wc -l | tr -d ' ')"
+          signature_count="$(printf '%s\n' "$assets" | rg '\.app\.tar\.gz\.sig$' | wc -l | tr -d ' ')"
+
+          test "$dmg_count" -ge 2
+          test "$updater_count" -ge 2
+          test "$signature_count" -ge 2
