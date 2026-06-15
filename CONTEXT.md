@@ -27,3 +27,7 @@ _Avoid_: fork branch, custom main, downstream mirror
 **Company Brand**:
 The user-visible name, icon, bundle identity, website, update source, and release identity used for the company's downstream product.
 _Avoid_: Handy brand, upstream brand, fork name
+
+**Local Release Materials**:
+Machine-local credentials and derived files used to prepare Company Brand releases. They are kept near the Product Line workspace for operator continuity but are not part of the repository.
+_Avoid_: release assets, repo secrets, project files

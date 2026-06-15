@@ -66,7 +66,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDMwMTkyRjA4NDFBMzZDQ0UKUldUT2JLTkJDQzhaTUpaZFJMYjhkKzRPZnZvM1NqckN6UzZFa1dHYmxOZEVxUjZpZUxwWXk0b2wK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY5MzdDN0EwRDgxQjJGRDUKUldUVkx4dllvTWMzK1E2eS91aVlVbU12OFBRMksrbUhvcGRDUXlEdExuczdETWhaRzdOS05OL3YK",
       "endpoints": [
         "https://github.com/ng-technology-llc/ng-dictate/releases/latest/download/latest.json"
       ]

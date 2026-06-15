@@ -36,6 +36,9 @@ recording_*
 # Local agent workflow artifacts
 docs/superpowers/
 
+# Local release signing materials and secrets
+local-release-materials/
+
 # Playwright
 playwright-report/
 test-results/
