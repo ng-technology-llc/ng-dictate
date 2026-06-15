@@ -12,6 +12,7 @@ mod llm_client;
 mod managers;
 mod overlay;
 pub mod portable;
+pub mod remote_transcription;
 mod settings;
 mod shortcut;
 mod signal_handle;
