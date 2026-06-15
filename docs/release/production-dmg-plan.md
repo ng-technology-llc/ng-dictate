@@ -28,6 +28,8 @@ This plan prepares NG Dictate for production macOS DMG release with Apple Develo
 local-release-materials/
   apple-developer-id/
     developer-id-application-20260614-221337/
+      DeveloperIDG2CA.cer
+      DeveloperIDG2CA.pem
   tauri-updater/
     production/
     legacy-dev-key/
@@ -49,6 +51,11 @@ Move these existing files into `local-release-materials/apple-developer-id/devel
 - `/Users/nic/.certs/ng-dictate/developer-id-application-20260614-221337/developerID_application.p12.base64`
 - `/Users/nic/.certs/ng-dictate/developer-id-application-20260614-221337/developerID_application.p12.password`
 - `/Users/nic/Downloads/developerID_application.cer`, if still needed as the downloaded original
+
+The CI `.p12` must be exported in a macOS `security import` compatible form and include Apple's Developer ID G2 intermediate certificate. Apple documents the Developer ID G2 intermediate on its PKI page; this local release material is stored as:
+
+- `DeveloperIDG2CA.cer`
+- `DeveloperIDG2CA.pem`
 
 Move these existing Tauri updater files into `local-release-materials/tauri-updater/legacy-dev-key/`:
 
