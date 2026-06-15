@@ -33,6 +33,9 @@ recording_*
 .crush/
 .codegraph/
 
+# Local agent workflow artifacts
+docs/superpowers/
+
 # Playwright
 playwright-report/
 test-results/
