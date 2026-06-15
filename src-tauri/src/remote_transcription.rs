@@ -68,7 +68,7 @@ pub async fn transcribe_remote(
     settings: &AppSettings,
 ) -> Result<String, String> {
     let model = settings.remote_transcription_model.trim();
-    ensure_remote_config(&settings.remote_transcription_base_url, model)?;
+    validate_remote_config(&settings.remote_transcription_base_url, model)?;
 
     let url = transcription_endpoint(
         &settings.remote_transcription_base_url,
@@ -156,7 +156,7 @@ pub async fn test_remote_connection(
     Ok(())
 }
 
-fn ensure_remote_config(base_url: &str, model: &str) -> Result<(), String> {
+pub fn validate_remote_config(base_url: &str, model: &str) -> Result<(), String> {
     if base_url.trim().is_empty() {
         return Err("Remote transcription base URL is not configured".to_string());
     }
@@ -297,5 +297,12 @@ mod tests {
             "hello"
         );
         assert_eq!(parse_transcription_text("hello").unwrap(), "hello");
+    }
+
+    #[test]
+    fn validates_required_remote_config() {
+        assert!(validate_remote_config("", "model").is_err());
+        assert!(validate_remote_config("http://server:8000", "").is_err());
+        assert!(validate_remote_config("http://server:8000", "model").is_ok());
     }
 }
