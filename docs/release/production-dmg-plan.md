@@ -10,7 +10,7 @@ This plan prepares NG Dictate for production macOS DMG release with Apple Develo
 - Apple team: `ng technology llc`
 - Apple Team ID: `5QSSU83XFK`
 - Developer ID Application certificate: consolidated under ignored local release materials
-- GitHub Actions Secrets: partially configured; Apple notarization account secrets are missing
+- GitHub Actions Secrets: partially configured; Apple notarization password secrets are missing
 - App icon: replaced with NG Dictate generated artwork
 - Tauri updater production key: generated locally and configured in `src-tauri/tauri.conf.json`
 
@@ -103,7 +103,7 @@ Expected result: the configured public key matches the production updater public
 
 ## Phase 3: Prepare GitHub Actions Secrets
 
-Status: partially completed. Apple certificate, Apple Team ID, CI keychain password, and production Tauri updater signing secrets are configured. Apple notarization account secrets still need operator input.
+Status: partially completed. Apple certificate, Apple ID, Apple Team ID, CI keychain password, and production Tauri updater signing secrets are configured. Apple notarization password secrets still need operator input.
 
 Configure repository secrets on `ng-technology-llc/ng-dictate`.
 
@@ -122,6 +122,7 @@ Required for Apple notarization:
 
 - `APPLE_ID`
   - Source: Apple account email used for notarization
+  - Status: configured
 - `APPLE_PASSWORD`
   - Source: Apple app-specific password
 - `APPLE_ID_PASSWORD`
@@ -202,6 +203,8 @@ Do not commit:
 - local inventory files containing sensitive values
 
 ## Phase 6: Run Release Workflow
+
+Status: blocked until `APPLE_PASSWORD` and `APPLE_ID_PASSWORD` are configured.
 
 Run the GitHub `Release` workflow from `product/main`.
 
