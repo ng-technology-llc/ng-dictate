@@ -75,6 +75,19 @@ export const RemoteTranscriptionSettings: React.FC = () => {
     }
   };
 
+  const persistPendingConnectionSettings = async () => {
+    const trimmedBaseUrl = baseUrlInput.trim();
+    const trimmedApiKey = apiKeyInput.trim();
+
+    if (trimmedBaseUrl !== baseUrl) {
+      await updateSetting("remote_transcription_base_url", trimmedBaseUrl);
+    }
+
+    if (trimmedApiKey !== apiKey) {
+      await updateSetting("remote_transcription_api_key", trimmedApiKey);
+    }
+  };
+
   const handleModelChange = (value: string | null) => {
     void updateSetting("remote_transcription_model", value?.trim() ?? "");
   };
@@ -88,6 +101,7 @@ export const RemoteTranscriptionSettings: React.FC = () => {
 
   const handleRefreshModels = async () => {
     try {
+      await persistPendingConnectionSettings();
       await fetchRemoteTranscriptionModels();
     } catch {
       toast.error(t("settings.models.remote.connectionFailed"));
@@ -96,6 +110,7 @@ export const RemoteTranscriptionSettings: React.FC = () => {
 
   const handleTestConnection = async () => {
     try {
+      await persistPendingConnectionSettings();
       await testRemoteTranscriptionConnection();
       toast.success(t("settings.models.remote.connectionOk"));
     } catch {
@@ -103,14 +118,15 @@ export const RemoteTranscriptionSettings: React.FC = () => {
     }
   };
 
-  const canRefreshModels = baseUrl.trim() !== "";
-  const canTestConnection = baseUrl.trim() !== "" && model.trim() !== "";
+  const canRefreshModels = baseUrlInput.trim() !== "";
+  const canTestConnection = baseUrlInput.trim() !== "" && model.trim() !== "";
 
   return (
     <div className="space-y-3">
       <SettingContainer
         title={t("settings.models.remote.baseUrl.title")}
         description={t("settings.models.remote.baseUrl.description")}
+        layout="stacked"
       >
         <Input
           type="text"
@@ -119,17 +135,18 @@ export const RemoteTranscriptionSettings: React.FC = () => {
           onBlur={handleBaseUrlBlur}
           placeholder={t("settings.models.remote.baseUrl.placeholder")}
           disabled={isBaseUrlUpdating}
-          className="w-full min-w-0 sm:min-w-[360px]"
+          className="w-full min-w-0"
         />
       </SettingContainer>
 
       <SettingContainer
         title={t("settings.models.remote.model.title")}
         description={t("settings.models.remote.model.description")}
+        layout="stacked"
       >
-        <div className="flex w-full min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="flex w-full min-w-0 flex-col gap-2 md:flex-row md:items-center">
           <Select
-            className="w-full min-w-0 sm:min-w-[360px]"
+            className="w-full min-w-0 md:flex-1"
             value={model || null}
             options={modelOptions}
             onChange={(value) => handleModelChange(value)}
@@ -148,7 +165,7 @@ export const RemoteTranscriptionSettings: React.FC = () => {
             size="sm"
             onClick={handleRefreshModels}
             disabled={!canRefreshModels || isFetchingModels}
-            className="inline-flex items-center justify-center gap-2 whitespace-nowrap"
+            className="inline-flex w-full shrink-0 items-center justify-center gap-2 whitespace-nowrap md:w-auto"
           >
             <RefreshCw
               className={`h-4 w-4 ${isFetchingModels ? "animate-spin" : ""}`}
@@ -161,6 +178,7 @@ export const RemoteTranscriptionSettings: React.FC = () => {
       <SettingContainer
         title={t("settings.models.remote.apiKey.title")}
         description={t("settings.models.remote.apiKey.description")}
+        layout="stacked"
       >
         <Input
           type="password"
@@ -169,7 +187,7 @@ export const RemoteTranscriptionSettings: React.FC = () => {
           onBlur={handleApiKeyBlur}
           placeholder={t("settings.models.remote.apiKey.placeholder")}
           disabled={isApiKeyUpdating}
-          className="w-full min-w-0 sm:min-w-[320px]"
+          className="w-full min-w-0"
         />
       </SettingContainer>
 
@@ -180,7 +198,7 @@ export const RemoteTranscriptionSettings: React.FC = () => {
           size="sm"
           onClick={handleTestConnection}
           disabled={!canTestConnection || isTestingConnection}
-          className="inline-flex items-center justify-center gap-2 whitespace-nowrap"
+          className="inline-flex w-full items-center justify-center gap-2 whitespace-nowrap sm:w-auto"
         >
           <PlugZap className="h-4 w-4" />
           {t("settings.models.remote.testConnection")}
