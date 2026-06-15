@@ -921,7 +921,13 @@ pub fn change_remote_transcription_base_url_setting(
     base_url: String,
 ) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
-    settings.remote_transcription_base_url = base_url.trim().to_string();
+    let base_url = base_url.trim();
+    settings.remote_transcription_base_url = if base_url.is_empty() {
+        String::new()
+    } else {
+        crate::remote_transcription::normalize_remote_base_url(base_url)
+            .unwrap_or_else(|_| base_url.to_string())
+    };
     settings::write_settings(&app, settings);
     Ok(())
 }

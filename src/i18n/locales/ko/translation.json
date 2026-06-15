@@ -248,13 +248,13 @@
       "remote": {
         "baseUrl": {
           "title": "Base URL",
-          "description": "OpenAI-compatible audio transcription server.",
+          "description": "Server root for an OpenAI-compatible speech-to-text endpoint. A trailing /v1 is accepted.",
           "placeholder": "http://192.168.1.100:8000"
         },
         "model": {
           "title": "Model",
-          "description": "Remote model identifier.",
-          "placeholder": "deepdml/faster-whisper-large-v3-turbo-ct2",
+          "description": "Model sent to the transcription endpoint. Refresh models uses GET /v1/models when available.",
+          "placeholder": "whisper-1",
           "refreshModels": "Refresh models",
           "useModel": "Use \"{{model}}\""
         },
@@ -263,9 +263,9 @@
           "description": "Optional bearer token for protected servers.",
           "placeholder": "Optional"
         },
-        "testConnection": "Test connection",
-        "connectionOk": "Remote transcription server is reachable.",
-        "connectionFailed": "Remote transcription server test failed."
+        "testConnection": "Test transcription",
+        "connectionOk": "Remote transcription endpoint is reachable.",
+        "connectionFailed": "Remote transcription endpoint test failed."
       }
     },
     "advanced": {
