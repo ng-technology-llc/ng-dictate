@@ -3,6 +3,7 @@
 // Existing tests don't exercise transcription, so this is safe.
 
 use crate::managers::model::ModelManager;
+use crate::settings::TranscriptionProvider;
 use anyhow::Result;
 use serde::Serialize;
 use specta::Type;
@@ -26,6 +27,10 @@ pub struct TranscriptionManager {
     app_handle: AppHandle,
 }
 
+pub fn should_preload_local_model(provider: TranscriptionProvider) -> bool {
+    provider == TranscriptionProvider::Local
+}
+
 impl TranscriptionManager {
     pub fn new(app_handle: &AppHandle, _model_manager: Arc<ModelManager>) -> Result<Self> {
         Ok(Self {
@@ -34,6 +39,10 @@ impl TranscriptionManager {
     }
 
     pub fn is_model_loaded(&self) -> bool {
+        false
+    }
+
+    pub fn is_loading(&self) -> bool {
         false
     }
 
@@ -57,7 +66,7 @@ impl TranscriptionManager {
         None
     }
 
-    pub fn transcribe(&self, _audio: Vec<f32>) -> Result<String> {
+    pub async fn transcribe(&self, _audio: Vec<f32>) -> Result<String> {
         Ok(String::new())
     }
 }
