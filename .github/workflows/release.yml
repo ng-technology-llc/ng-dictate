@@ -133,11 +133,13 @@ jobs:
       - name: Verify latest.json exists
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_ID: ${{ needs.create-release.outputs.release-id }}
           VERSION: ${{ needs.create-release.outputs.version }}
           REPOSITORY: ${{ github.repository }}
         shell: bash
         run: |
-          assets="$(gh release view "v${VERSION}" -R "${REPOSITORY}" --json assets --jq '.assets[].name')"
+          test -n "${RELEASE_ID}"
+          assets="$(gh api "repos/${REPOSITORY}/releases/${RELEASE_ID}" --jq '.assets[].name')"
           printf 'Release assets:\n%s\n' "$assets"
 
           printf '%s\n' "$assets" | awk '$0 == "latest.json" { found = 1 } END { exit found ? 0 : 1 }'
