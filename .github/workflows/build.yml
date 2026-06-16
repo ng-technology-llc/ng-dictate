@@ -52,6 +52,7 @@ jobs:
     permissions:
       contents: write
     runs-on: ${{ inputs.platform }}
+    timeout-minutes: 180
     steps:
       - name: Enable long paths (Windows)
         if: runner.os == 'Windows'
@@ -347,6 +348,7 @@ jobs:
 
       - name: Build with Tauri
         uses: tauri-apps/tauri-action@v0
+        timeout-minutes: 120
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APPLE_ID: ${{ inputs.sign-binaries && secrets.APPLE_ID || '' }}
@@ -404,6 +406,7 @@ jobs:
       # DMG here with hdiutil and notarize/staple it explicitly.
       - name: Create macOS DMG without Finder
         if: contains(inputs.platform, 'macos')
+        timeout-minutes: 90
         env:
           APPLE_ID: ${{ inputs.sign-binaries && secrets.APPLE_ID || '' }}
           APPLE_PASSWORD: ${{ inputs.sign-binaries && secrets.APPLE_PASSWORD || '' }}
@@ -411,6 +414,61 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          run_with_timeout() {
+            local label="$1"
+            local seconds="$2"
+            shift 2
+
+            echo "::group::${label}"
+            "$@" &
+            local cmd_pid=$!
+
+            (
+              sleep "$seconds"
+              if kill -0 "$cmd_pid" 2>/dev/null; then
+                echo "${label} timed out after ${seconds}s" >&2
+                pkill -TERM -P "$cmd_pid" 2>/dev/null || true
+                kill -TERM "$cmd_pid" 2>/dev/null || true
+                sleep 5
+                pkill -KILL -P "$cmd_pid" 2>/dev/null || true
+                kill -KILL "$cmd_pid" 2>/dev/null || true
+              fi
+            ) &
+            local watchdog_pid=$!
+
+            set +e
+            wait "$cmd_pid"
+            local status=$?
+            set -e
+
+            kill "$watchdog_pid" 2>/dev/null || true
+            wait "$watchdog_pid" 2>/dev/null || true
+            echo "::endgroup::"
+            return "$status"
+          }
+
+          retry_with_timeout() {
+            local label="$1"
+            local seconds="$2"
+            local attempts="$3"
+            shift 3
+
+            local attempt status
+            for attempt in $(seq 1 "$attempts"); do
+              echo "${label} attempt ${attempt}/${attempts}"
+              if run_with_timeout "$label" "$seconds" "$@"; then
+                return 0
+              fi
+              status=$?
+              echo "${label} failed with status ${status}" >&2
+              if [[ "$attempt" -lt "$attempts" ]]; then
+                sleep $((attempt * 30))
+              fi
+            done
+
+            return "$status"
+          }
 
           profile="${{ steps.build-profile.outputs.profile }}"
           target="${{ inputs.target }}"
@@ -443,30 +501,32 @@ jobs:
           cp -R "$app_path" "$staging_dir/"
           ln -s /Applications "$staging_dir/Applications"
 
-          hdiutil create \
+          run_with_timeout "Create DMG" 600 hdiutil create \
             -volname "NG Dictate" \
             -srcfolder "$staging_dir" \
             -ov \
             -format UDZO \
             "$dmg_path"
 
-          hdiutil verify "$dmg_path"
+          run_with_timeout "Verify DMG" 300 hdiutil verify "$dmg_path"
 
           if [[ -n "$cert_id" ]]; then
-            codesign --force --sign "$cert_id" "$dmg_path"
-            codesign --verify --verbose=2 "$dmg_path"
+            retry_with_timeout "Sign DMG" 600 3 codesign --force --timestamp --sign "$cert_id" "$dmg_path"
+            run_with_timeout "Verify DMG signature" 120 codesign --verify --verbose=2 "$dmg_path"
           else
             echo "Skipping DMG codesign; CERT_ID is not configured."
           fi
 
           if [[ -n "$APPLE_ID" && -n "$APPLE_PASSWORD" && -n "$APPLE_TEAM_ID" ]]; then
-            xcrun notarytool submit "$dmg_path" \
+            retry_with_timeout "Notarize DMG" 3600 2 xcrun notarytool submit "$dmg_path" \
               --apple-id "$APPLE_ID" \
               --password "$APPLE_PASSWORD" \
               --team-id "$APPLE_TEAM_ID" \
-              --wait
-            xcrun stapler staple "$dmg_path"
-            xcrun stapler validate "$dmg_path"
+              --wait \
+              --timeout 45m \
+              --no-progress
+            retry_with_timeout "Staple DMG" 300 3 xcrun stapler staple "$dmg_path"
+            retry_with_timeout "Validate stapled DMG" 300 3 xcrun stapler validate "$dmg_path"
           else
             echo "Skipping DMG notarization; Apple notarization credentials are not configured."
           fi
