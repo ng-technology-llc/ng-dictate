@@ -194,6 +194,53 @@ jobs:
         if: contains(inputs.platform, 'windows') && inputs.sign-binaries && steps.cache-tsc.outputs.cache-hit != 'true'
         run: cargo install trusted-signing-cli@${{ env.TSC_VERSION }}
 
+      - name: Configure Windows trusted signing
+        if: contains(inputs.platform, 'windows') && inputs.sign-binaries
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_TRUSTED_SIGNING_ENDPOINT: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
+          AZURE_TRUSTED_SIGNING_ACCOUNT_NAME: ${{ secrets.AZURE_TRUSTED_SIGNING_ACCOUNT_NAME }}
+          AZURE_CERTIFICATE_PROFILE_NAME: ${{ secrets.AZURE_CERTIFICATE_PROFILE_NAME }}
+        shell: pwsh
+        run: |
+          $required = @(
+            "AZURE_CLIENT_ID",
+            "AZURE_CLIENT_SECRET",
+            "AZURE_TENANT_ID",
+            "AZURE_TRUSTED_SIGNING_ENDPOINT",
+            "AZURE_TRUSTED_SIGNING_ACCOUNT_NAME",
+            "AZURE_CERTIFICATE_PROFILE_NAME"
+          )
+          $missing = @()
+          foreach ($name in $required) {
+            if (-not [Environment]::GetEnvironmentVariable($name)) {
+              $missing += $name
+            }
+          }
+
+          if ($missing.Count -gt 0) {
+            Write-Error "Missing required Windows signing secrets: $($missing -join ', ')"
+            exit 1
+          }
+
+          $configPath = "src-tauri/tauri.conf.json"
+          $config = Get-Content $configPath -Raw | ConvertFrom-Json
+          $signCommand = [ordered]@{
+            cmd = "trusted-signing-cli"
+            args = @(
+              "-e",
+              $env:AZURE_TRUSTED_SIGNING_ENDPOINT,
+              "-d",
+              "NG Dictate",
+              "--ignore-unsupported",
+              "%1"
+            )
+          }
+          $config.bundle.windows | Add-Member -NotePropertyName signCommand -NotePropertyValue $signCommand -Force
+          $config | ConvertTo-Json -Depth 100 | Set-Content $configPath -Encoding utf8
+
       - name: Prepare Vulkan SDK for Ubuntu 24.04
         if: contains(inputs.platform, 'ubuntu-24.04') && !contains(inputs.platform, 'arm')
         run: |
@@ -361,6 +408,8 @@ jobs:
           AZURE_CLIENT_ID: ${{ inputs.sign-binaries && secrets.AZURE_CLIENT_ID || '' }}
           AZURE_CLIENT_SECRET: ${{ inputs.sign-binaries && secrets.AZURE_CLIENT_SECRET || '' }}
           AZURE_TENANT_ID: ${{ inputs.sign-binaries && secrets.AZURE_TENANT_ID || '' }}
+          AZURE_TRUSTED_SIGNING_ACCOUNT_NAME: ${{ inputs.sign-binaries && secrets.AZURE_TRUSTED_SIGNING_ACCOUNT_NAME || '' }}
+          AZURE_CERTIFICATE_PROFILE_NAME: ${{ inputs.sign-binaries && secrets.AZURE_CERTIFICATE_PROFILE_NAME || '' }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ inputs.sign-binaries && secrets.TAURI_SIGNING_PRIVATE_KEY || '' }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ inputs.sign-binaries && secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD || '' }}
           # Disable -march=native and all SIMD instruction sets above SSE4.2 for
