@@ -134,14 +134,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ needs.create-release.outputs.version }}
+          REPOSITORY: ${{ github.repository }}
         shell: bash
         run: |
-          assets="$(gh release view "v${VERSION}" --json assets --jq '.assets[].name')"
-          printf '%s\n' "$assets" | rg '^latest\.json$'
+          assets="$(gh release view "v${VERSION}" -R "${REPOSITORY}" --json assets --jq '.assets[].name')"
+          printf 'Release assets:\n%s\n' "$assets"
 
-          dmg_count="$(printf '%s\n' "$assets" | rg '\.dmg$' | wc -l | tr -d ' ')"
-          updater_count="$(printf '%s\n' "$assets" | rg '\.app\.tar\.gz$' | wc -l | tr -d ' ')"
-          signature_count="$(printf '%s\n' "$assets" | rg '\.app\.tar\.gz\.sig$' | wc -l | tr -d ' ')"
+          printf '%s\n' "$assets" | awk '$0 == "latest.json" { found = 1 } END { exit found ? 0 : 1 }'
+
+          dmg_count="$(printf '%s\n' "$assets" | awk '/\.dmg$/ { count++ } END { print count + 0 }')"
+          updater_count="$(printf '%s\n' "$assets" | awk '/\.app\.tar\.gz$/ { count++ } END { print count + 0 }')"
+          signature_count="$(printf '%s\n' "$assets" | awk '/\.app\.tar\.gz\.sig$/ { count++ } END { print count + 0 }')"
+
+          printf 'DMG count: %s\nUpdater count: %s\nUpdater signature count: %s\n' \
+            "$dmg_count" \
+            "$updater_count" \
+            "$signature_count"
 
           test "$dmg_count" -ge 2
           test "$updater_count" -ge 2
