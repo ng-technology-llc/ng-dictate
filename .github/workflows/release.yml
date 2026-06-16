@@ -91,6 +91,7 @@ jobs:
     needs: create-release
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         include:
           - platform: "macos-26" # for Arm based macs (M1 and above). Uses macOS 26 for Apple Intelligence SDK.
