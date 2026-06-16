@@ -4,9 +4,11 @@ on:
   push:
     branches: [main]
     paths:
+      - ".github/workflows/test.yml"
       - "src-tauri/**"
   pull_request:
     paths:
+      - ".github/workflows/test.yml"
       - "src-tauri/**"
 
 concurrency:
@@ -15,25 +17,45 @@ concurrency:
 
 jobs:
   rust-tests:
-    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Install system dependencies
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev libasound2-dev libssl-dev libgtk-layer-shell-dev
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
 
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: "./src-tauri -> target"
 
-      - name: Use mock TranscriptionManager (CI only)
+      - name: Use mock TranscriptionManager (CI only, Unix)
+        if: runner.os != 'Windows'
         working-directory: src-tauri
         run: |
           # Swap to mock adapter - avoids compiling whisper/Vulkan
           cp src/managers/transcription_mock.rs src/managers/transcription.rs
           sed -i '/^transcribe-rs/d' Cargo.toml
+
+      - name: Use mock TranscriptionManager (CI only, Windows)
+        if: runner.os == 'Windows'
+        working-directory: src-tauri
+        shell: pwsh
+        run: |
+          # Swap to mock adapter - avoids compiling whisper/Vulkan
+          Copy-Item src/managers/transcription_mock.rs src/managers/transcription.rs -Force
+          (Get-Content Cargo.toml) |
+            Where-Object { $_ -notmatch '^transcribe-rs\s*=' } |
+            Set-Content Cargo.toml
 
       - name: Run Rust tests
         working-directory: src-tauri

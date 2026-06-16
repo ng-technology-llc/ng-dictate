@@ -109,6 +109,12 @@ jobs:
           - platform: "ubuntu-24.04-arm" # Build for ARM64 Linux
             args: "--bundles appimage,deb,rpm"
             target: "aarch64-unknown-linux-gnu"
+          - platform: "windows-latest" # Build for x64 Windows.
+            args: ""
+            target: "x86_64-pc-windows-msvc"
+          - platform: "windows-11-arm" # Build for ARM64 Windows.
+            args: "--target aarch64-pc-windows-msvc"
+            target: "aarch64-pc-windows-msvc"
 
     uses: ./.github/workflows/build.yml
     with:
@@ -147,12 +153,18 @@ jobs:
           dmg_count="$(printf '%s\n' "$assets" | awk '/\.dmg$/ { count++ } END { print count + 0 }')"
           updater_count="$(printf '%s\n' "$assets" | awk '/\.app\.tar\.gz$/ { count++ } END { print count + 0 }')"
           signature_count="$(printf '%s\n' "$assets" | awk '/\.app\.tar\.gz\.sig$/ { count++ } END { print count + 0 }')"
+          windows_installer_count="$(printf '%s\n' "$assets" | awk '/windows.*\.(exe|msi)$/ { count++ } END { print count + 0 }')"
+          windows_signature_count="$(printf '%s\n' "$assets" | awk '/windows.*\.(exe|msi|zip)\.sig$/ { count++ } END { print count + 0 }')"
 
-          printf 'DMG count: %s\nUpdater count: %s\nUpdater signature count: %s\n' \
+          printf 'DMG count: %s\nUpdater count: %s\nUpdater signature count: %s\nWindows installer count: %s\nWindows signature count: %s\n' \
             "$dmg_count" \
             "$updater_count" \
-            "$signature_count"
+            "$signature_count" \
+            "$windows_installer_count" \
+            "$windows_signature_count"
 
           test "$dmg_count" -ge 2
           test "$updater_count" -ge 2
           test "$signature_count" -ge 2
+          test "$windows_installer_count" -ge 2
+          test "$windows_signature_count" -ge 2
