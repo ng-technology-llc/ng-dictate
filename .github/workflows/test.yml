@@ -2,7 +2,7 @@ name: "test"
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, product/main]
     paths:
       - ".github/workflows/test.yml"
       - "src-tauri/**"

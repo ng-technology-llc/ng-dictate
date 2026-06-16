@@ -10,7 +10,7 @@ name: "nix build check"
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, product/main]
     paths:
       - "flake.nix"
       - "flake.lock"
