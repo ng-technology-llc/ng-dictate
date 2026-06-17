@@ -1,5 +1,6 @@
-/* eslint-disable i18next/no-literal-string */
 import React from "react";
+import wordmarkOnDark from "@/assets/brand/ng-dictate-wordmark-on-dark.png";
+import wordmarkOnLight from "@/assets/brand/ng-dictate-wordmark-on-light.png";
 
 const NGDictateTextLogo = ({
   width,
@@ -10,40 +11,29 @@ const NGDictateTextLogo = ({
   height?: number;
   className?: string;
 }) => {
+  const resolvedWidth = width ?? 200;
+  const resolvedHeight = height ?? Math.round(resolvedWidth * 0.33);
+
   return (
-    <svg
-      width={width}
-      height={height}
-      className={className}
-      viewBox="0 0 930 328"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <span
+      className={`inline-block ${className ?? ""}`}
+      style={{ width: resolvedWidth, height: resolvedHeight }}
       role="img"
       aria-label="NG Dictate"
     >
-      <text
-        x="40"
-        y="150"
-        className="logo-primary"
-        fontFamily="Inter, ui-sans-serif, system-ui, sans-serif"
-        fontSize="118"
-        fontWeight="800"
-        letterSpacing="0"
-      >
-        NG
-      </text>
-      <text
-        x="40"
-        y="260"
-        className="logo-stroke"
-        fontFamily="Inter, ui-sans-serif, system-ui, sans-serif"
-        fontSize="96"
-        fontWeight="700"
-        letterSpacing="0"
-      >
-        Dictate
-      </text>
-    </svg>
+      <img
+        src={wordmarkOnLight}
+        alt=""
+        aria-hidden="true"
+        className="ng-dictate-wordmark-on-light w-full h-full object-contain"
+      />
+      <img
+        src={wordmarkOnDark}
+        alt=""
+        aria-hidden="true"
+        className="ng-dictate-wordmark-on-dark w-full h-full object-contain"
+      />
+    </span>
   );
 };
 

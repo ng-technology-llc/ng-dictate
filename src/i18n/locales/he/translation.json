@@ -567,11 +567,6 @@
           "description": "הסקה מהירה לביצועים גבוהים עבור מודל זיהוי הדיבור Whisper של OpenAI",
           "details": "NG Dictate משתמש ב-Whisper.cpp לתמלול מהיר ומקומי. תודה לעבודה המדהימה של Georgi Gerganov וכל התורמים."
         }
-      },
-      "upstreamAttribution": {
-        "title": "Upstream Attribution",
-        "description": "Based on Handy, licensed under MIT.",
-        "button": "View Handy Project"
       }
     }
   },

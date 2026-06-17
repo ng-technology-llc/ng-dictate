@@ -567,11 +567,6 @@
           "description": "Високопродуктивний інференс моделі автоматичного розпізнавання мовлення Whisper від OpenAI",
           "details": "NG Dictate використовує Whisper.cpp для швидкої локальної обробки мовлення в текст. Дякуємо за чудову роботу Георгію Герганову та контриб'юторам."
         }
-      },
-      "upstreamAttribution": {
-        "title": "Upstream Attribution",
-        "description": "Based on Handy, licensed under MIT.",
-        "button": "View Handy Project"
       }
     }
   },

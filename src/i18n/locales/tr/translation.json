@@ -567,11 +567,6 @@
           "description": "OpenAI'nin Whisper otomatik konuşma tanıma modelinin yüksek performanslı çıkarımı",
           "details": "NG Dictate, hızlı ve yerel konuşmadan metne dönüştürme için Whisper.cpp kullanır. Georgi Gerganov ve katkıda bulunanların harika çalışmaları için teşekkür ederiz."
         }
-      },
-      "upstreamAttribution": {
-        "title": "Upstream Attribution",
-        "description": "Based on Handy, licensed under MIT.",
-        "button": "View Handy Project"
       }
     }
   },

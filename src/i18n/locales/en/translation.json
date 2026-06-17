@@ -567,11 +567,6 @@
           "description": "High-performance inference of OpenAI's Whisper automatic speech recognition model",
           "details": "NG Dictate uses Whisper.cpp for fast, local speech-to-text processing. Thanks to the amazing work by Georgi Gerganov and contributors."
         }
-      },
-      "upstreamAttribution": {
-        "title": "Upstream Attribution",
-        "description": "Based on Handy, licensed under MIT.",
-        "button": "View Handy Project"
       }
     }
   },

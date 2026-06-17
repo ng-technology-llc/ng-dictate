@@ -567,11 +567,6 @@
           "description": "Inferência de alto desempenho do modelo de reconhecimento automático de fala Whisper da OpenAI",
           "details": "O NG Dictate usa Whisper.cpp para processamento rápido e local de fala para texto. Agradecemos ao incrível trabalho de Georgi Gerganov e colaboradores."
         }
-      },
-      "upstreamAttribution": {
-        "title": "Upstream Attribution",
-        "description": "Based on Handy, licensed under MIT.",
-        "button": "View Handy Project"
       }
     }
   },

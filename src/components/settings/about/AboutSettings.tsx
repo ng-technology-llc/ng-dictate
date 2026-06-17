@@ -74,20 +74,6 @@ export const AboutSettings: React.FC = () => {
           </Button>
         </SettingContainer>
 
-        <SettingContainer
-          title={t("settings.about.upstreamAttribution.title")}
-          description={t("settings.about.upstreamAttribution.description")}
-          grouped={true}
-        >
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => openUrl("https://github.com/cjpais/Handy")}
-          >
-            {t("settings.about.upstreamAttribution.button")}
-          </Button>
-        </SettingContainer>
-
         <AppDataDirectory descriptionMode="tooltip" grouped={true} />
         <LogDirectory grouped={true} />
       </SettingsGroup>

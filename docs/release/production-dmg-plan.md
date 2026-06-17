@@ -174,13 +174,13 @@ Replaced assets:
 - `src-tauri/resources/tray_recording_dark.png`
 - `src-tauri/resources/tray_transcribing.png`
 - `src-tauri/resources/tray_transcribing_dark.png`
-- `src-tauri/resources/handy.png`
-- `src-tauri/resources/recording.png`
-- `src-tauri/resources/transcribing.png`
+- `src-tauri/resources/ng-dictate-tray-idle.png`
+- `src-tauri/resources/ng-dictate-tray-recording.png`
+- `src-tauri/resources/ng-dictate-tray-transcribing.png`
 - `src/components/icons/NGDictateMark.tsx`
 - `src/components/icons/NGDictateTextLogo.tsx`
 
-The `handy.png` resource path remains for runtime compatibility with existing tray code, but its content is no longer upstream Handy artwork.
+The colored tray resources use NG Dictate-specific names so release assets no longer carry upstream Handy naming.
 
 Verification:
 

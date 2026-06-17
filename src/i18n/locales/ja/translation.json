@@ -567,11 +567,6 @@
           "description": "OpenAIのWhisper自動音声認識モデルの高性能推論",
           "details": "NG Dictateは高速でローカルな音声からテキストへの変換にWhisper.cppを使用しています。Georgi Gerganov氏と貢献者の皆様の素晴らしい仕事に感謝します。"
         }
-      },
-      "upstreamAttribution": {
-        "title": "Upstream Attribution",
-        "description": "Based on Handy, licensed under MIT.",
-        "button": "View Handy Project"
       }
     }
   },

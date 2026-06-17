@@ -1,7 +1,11 @@
-NG Dictate is based on Handy.
+NG Dictate
+Copyright (c) 2026 NG Technology LLC
 
-Handy is licensed under the MIT License.
+NG Dictate includes software derived from Handy.
+
+Handy
 Copyright (c) 2025 CJ Pais
+Licensed under the MIT License.
+Source: https://github.com/cjpais/Handy
 
-The original license text is preserved in LICENSE.
-Source project: https://github.com/cjpais/Handy
+The upstream MIT license text is preserved in LICENSE.

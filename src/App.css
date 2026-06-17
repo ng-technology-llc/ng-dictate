@@ -4,9 +4,9 @@
   /* Design tokens */
   --color-text: #0f0f0f;
   --color-background: #fbfbfb;
-  --color-background-ui: #da5893;
-  --color-logo-primary: #faa2ca;
-  --color-logo-stroke: #382731;
+  --color-background-ui: #9dff00;
+  --color-logo-primary: #9dff00;
+  --color-logo-stroke: #142015;
   --color-text-stroke: #f6f6f6;
   --color-mid-gray: #808080;
 }
@@ -20,8 +20,8 @@
   /* Colors - Light Theme */
   /* --color-text: #0f0f0f;
   --color-background: #fbfbfb;
-  --color-logo-primary: #FAA2CA;
-  --color-logo-stroke: #382731;
+  --color-logo-primary: #9DFF00;
+  --color-logo-stroke: #142015;
   --color-text-stroke: #f6f6f6; */
 
   /* Typography settings */
@@ -56,9 +56,10 @@
   :root {
     /* Colors - Dark Theme */
     --color-text: #fbfbfb;
-    --color-background: #2c2b29;
-    --color-logo-primary: #f28cbb;
-    --color-logo-stroke: #fad1ed;
+    --color-background: #10140f;
+    --color-background-ui: #9dff00;
+    --color-logo-primary: #adff24;
+    --color-logo-stroke: #e8ffd1;
   }
 }
 
@@ -105,4 +106,18 @@
   fill: var(--color-logo-stroke);
   stroke: var(--color-logo-stroke);
   stroke-width: 1;
+}
+
+.ng-dictate-wordmark-on-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ng-dictate-wordmark-on-light {
+    display: none;
+  }
+
+  .ng-dictate-wordmark-on-dark {
+    display: block;
+  }
 }

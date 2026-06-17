@@ -567,11 +567,6 @@
           "description": "Высокопроизводительная модель автоматического распознавания речи OpenAI Whisper",
           "details": "NG Dictate использует Whisper.cpp для быстрого локального преобразования речи в текст. Спасибо великолепной работе Георгия Герганова и участников."
         }
-      },
-      "upstreamAttribution": {
-        "title": "Upstream Attribution",
-        "description": "Based on Handy, licensed under MIT.",
-        "button": "View Handy Project"
       }
     }
   },

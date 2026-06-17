@@ -1,0 +1,30 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="signal" x1="52" y1="512" x2="940" y2="512" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9DFF00" stop-opacity="0"/>
+      <stop offset="0.1" stop-color="#9DFF00"/>
+      <stop offset="0.48" stop-color="#9DFF00"/>
+      <stop offset="0.74" stop-color="#9DFF00"/>
+      <stop offset="1" stop-color="#9DFF00" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="soft-glow" x="0" y="240" width="1024" height="560" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+  </defs>
+  <path
+    d="M52 548C124 548 140 548 168 514C194 482 214 466 238 548C258 614 280 614 302 548C330 456 346 388 372 388C400 388 412 486 436 604C456 704 484 704 508 604C536 454 552 314 584 314C616 314 632 456 658 600C678 708 710 700 736 628C760 572 780 578 820 578H940"
+    stroke="url(#signal)"
+    stroke-width="72"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.28"
+    filter="url(#soft-glow)"
+  />
+  <path
+    d="M52 548C124 548 140 548 168 514C194 482 214 466 238 548C258 614 280 614 302 548C330 456 346 388 372 388C400 388 412 486 436 604C456 704 484 704 508 604C536 454 552 314 584 314C616 314 632 456 658 600C678 708 710 700 736 628C760 572 780 578 820 578H940"
+    stroke="url(#signal)"
+    stroke-width="52"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
