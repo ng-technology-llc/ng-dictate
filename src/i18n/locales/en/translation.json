@@ -550,11 +550,6 @@
         "title": "App Data Directory",
         "description": "Location where NG Dictate stores its data"
       },
-      "sourceCode": {
-        "title": "Source Code",
-        "description": "View source code and contribute",
-        "button": "View on GitHub"
-      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",

@@ -550,11 +550,6 @@
         "title": "應用程式資料目錄",
         "description": "NG Dictate 儲存資料的位置"
       },
-      "sourceCode": {
-        "title": "原始碼",
-        "description": "檢視原始碼並參與貢獻",
-        "button": "在 GitHub 上檢視"
-      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",

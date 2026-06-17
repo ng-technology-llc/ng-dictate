@@ -550,11 +550,6 @@
         "title": "Thư mục dữ liệu ứng dụng",
         "description": "Vị trí NG Dictate lưu trữ dữ liệu"
       },
-      "sourceCode": {
-        "title": "Mã nguồn",
-        "description": "Xem mã nguồn và đóng góp",
-        "button": "Xem trên GitHub"
-      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",

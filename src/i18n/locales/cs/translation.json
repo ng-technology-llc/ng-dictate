@@ -550,11 +550,6 @@
         "title": "Adresář dat aplikace",
         "description": "Umístění, kde NG Dictate ukládá data"
       },
-      "sourceCode": {
-        "title": "Zdrojový kód",
-        "description": "Zobrazit zdrojový kód a přispět",
-        "button": "Zobrazit na GitHubu"
-      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",

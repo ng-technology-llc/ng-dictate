@@ -550,11 +550,6 @@
         "title": "App-Datenverzeichnis",
         "description": "Speicherort der NG Dictate-Daten"
       },
-      "sourceCode": {
-        "title": "Quellcode",
-        "description": "Quellcode ansehen und beitragen",
-        "button": "Auf GitHub ansehen"
-      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",

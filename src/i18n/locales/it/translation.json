@@ -550,11 +550,6 @@
         "title": "Cartella Dati App",
         "description": "Cartella in cui NG Dictate salva i dati"
       },
-      "sourceCode": {
-        "title": "Codice Sorgente",
-        "description": "Vedi e contribuisci al codice sorgente",
-        "button": "Vedi su GitHub"
-      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",

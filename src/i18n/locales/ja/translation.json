@@ -550,11 +550,6 @@
         "title": "アプリデータディレクトリ",
         "description": "NG Dictateがデータを保存する場所"
       },
-      "sourceCode": {
-        "title": "ソースコード",
-        "description": "ソースコードを見て貢献する",
-        "button": "GitHubで見る"
-      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",

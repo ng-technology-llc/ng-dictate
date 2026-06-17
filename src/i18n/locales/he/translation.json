@@ -550,11 +550,6 @@
         "title": "תיקיית נתוני אפליקציה",
         "description": "המיקום שבו NG Dictate שומר את הנתונים שלו"
       },
-      "sourceCode": {
-        "title": "קוד מקור",
-        "description": "צפה בקוד המקור ותרום",
-        "button": "צפה ב-GitHub"
-      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",

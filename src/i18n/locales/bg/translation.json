@@ -550,11 +550,6 @@
         "title": "Папка с данни на приложението",
         "description": "Мястото, където NG Dictate съхранява данните си"
       },
-      "sourceCode": {
-        "title": "Изходен код",
-        "description": "Преглед на изходния код и принос",
-        "button": "Вижте в GitHub"
-      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",

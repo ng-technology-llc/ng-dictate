@@ -550,11 +550,6 @@
         "title": "Uygulama Veri Dizini",
         "description": "NG Dictate'nin verilerini sakladığı konum"
       },
-      "sourceCode": {
-        "title": "Kaynak Kodu",
-        "description": "Kaynak kodunu görüntüle ve katkıda bulun",
-        "button": "GitHub'da Görüntüle"
-      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",

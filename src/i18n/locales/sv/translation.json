@@ -550,11 +550,6 @@
         "title": "Mapp för appdata",
         "description": "Plats där NG Dictate lagrar sina data"
       },
-      "sourceCode": {
-        "title": "Källkod",
-        "description": "Visa källkod och bidra",
-        "button": "Visa på GitHub"
-      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",
