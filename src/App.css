@@ -7,6 +7,7 @@
   --color-background-ui: #9dff00;
   --color-logo-primary: #9dff00;
   --color-logo-stroke: #142015;
+  --color-on-accent: #142015;
   --color-text-stroke: #f6f6f6;
   --color-mid-gray: #808080;
 }
@@ -60,6 +61,7 @@
     --color-background-ui: #9dff00;
     --color-logo-primary: #adff24;
     --color-logo-stroke: #e8ffd1;
+    --color-on-accent: #142015;
   }
 }
 
@@ -110,6 +112,14 @@
 
 .ng-dictate-wordmark-on-dark {
   display: none;
+}
+
+.sidebar-nav-item-active {
+  color: var(--color-on-accent);
+}
+
+.sidebar-nav-item-active .ng-dictate-mark {
+  --ng-dictate-mark-color: var(--color-on-accent);
 }
 
 @media (prefers-color-scheme: dark) {

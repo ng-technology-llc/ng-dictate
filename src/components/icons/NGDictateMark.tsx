@@ -19,7 +19,7 @@ const NGDictateMark = ({
       width={width || 126}
       height={height || 126}
       viewBox="0 0 1024 1024"
-      className={className}
+      className={`ng-dictate-mark ${className ?? ""}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -33,13 +33,25 @@ const NGDictateMark = ({
           y2="512"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="var(--color-logo-primary)" stopOpacity="0" />
-          <stop offset="0.1" stopColor="var(--color-logo-primary)" />
-          <stop offset="0.48" stopColor="var(--color-logo-primary)" />
-          <stop offset="0.74" stopColor="var(--color-logo-primary)" />
+          <stop
+            stopColor="var(--ng-dictate-mark-color, var(--color-logo-primary))"
+            stopOpacity="0"
+          />
+          <stop
+            offset="0.1"
+            stopColor="var(--ng-dictate-mark-color, var(--color-logo-primary))"
+          />
+          <stop
+            offset="0.48"
+            stopColor="var(--ng-dictate-mark-color, var(--color-logo-primary))"
+          />
+          <stop
+            offset="0.74"
+            stopColor="var(--ng-dictate-mark-color, var(--color-logo-primary))"
+          />
           <stop
             offset="1"
-            stopColor="var(--color-logo-primary)"
+            stopColor="var(--ng-dictate-mark-color, var(--color-logo-primary))"
             stopOpacity="0"
           />
         </linearGradient>
