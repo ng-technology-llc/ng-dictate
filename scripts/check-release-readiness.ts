@@ -42,6 +42,12 @@ const requiredSecrets = [
   "APPLE_ID_PASSWORD",
   "APPLE_PASSWORD",
   "APPLE_TEAM_ID",
+  "AZURE_CLIENT_ID",
+  "AZURE_CLIENT_SECRET",
+  "AZURE_TENANT_ID",
+  "AZURE_TRUSTED_SIGNING_ENDPOINT",
+  "AZURE_TRUSTED_SIGNING_ACCOUNT_NAME",
+  "AZURE_CERTIFICATE_PROFILE_NAME",
   "KEYCHAIN_PASSWORD",
   "TAURI_SIGNING_PRIVATE_KEY",
   "TAURI_SIGNING_PRIVATE_KEY_PASSWORD",
@@ -113,6 +119,25 @@ function checkUpdaterPublicKey(): void {
     fail(
       "src-tauri/tauri.conf.json updater pubkey does not match local production updater public key",
     );
+  }
+}
+
+function checkTauriConfigDoesNotUseUpstreamSettings(): void {
+  if (!existsSync(tauriConfigPath)) return;
+
+  const tauriConfig = readFileSync(tauriConfigPath, "utf8");
+  const legacyPatterns = [
+    "github.com/cjpais/Handy/releases",
+    "CJ-Signing",
+    "com.pais.handy",
+  ];
+
+  for (const pattern of legacyPatterns) {
+    if (tauriConfig.includes(pattern)) {
+      fail(
+        `src-tauri/tauri.conf.json still contains upstream setting: ${pattern}`,
+      );
+    }
   }
 }
 
@@ -252,6 +277,7 @@ function main(): void {
     checkOwnerOnly(file);
   }
   checkUpdaterPublicKey();
+  checkTauriConfigDoesNotUseUpstreamSettings();
   checkP12ImportsWithSecurity();
   checkGitHubSecrets();
 

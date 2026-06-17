@@ -28,7 +28,7 @@ jobs:
           legacy_release="github.com/cjpais/Handy""/releases"
           legacy_signing="CJ""-Signing"
           legacy_bundle="com[.]pais[.]handy"
-          if rg -n "${legacy_release}|${legacy_signing}|${legacy_bundle}" src-tauri/tauri.conf.json; then
+          if grep -En "${legacy_release}|${legacy_signing}|${legacy_bundle}" src-tauri/tauri.conf.json; then
             echo "Refusing to release with upstream Handy updater/signing configuration."
             exit 1
           fi
