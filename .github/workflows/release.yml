@@ -41,12 +41,6 @@ jobs:
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_TRUSTED_SIGNING_ENDPOINT: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
-          AZURE_TRUSTED_SIGNING_ACCOUNT_NAME: ${{ secrets.AZURE_TRUSTED_SIGNING_ACCOUNT_NAME }}
-          AZURE_CERTIFICATE_PROFILE_NAME: ${{ secrets.AZURE_CERTIFICATE_PROFILE_NAME }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
@@ -60,12 +54,6 @@ jobs:
             APPLE_ID_PASSWORD \
             APPLE_PASSWORD \
             APPLE_TEAM_ID \
-            AZURE_CLIENT_ID \
-            AZURE_CLIENT_SECRET \
-            AZURE_TENANT_ID \
-            AZURE_TRUSTED_SIGNING_ENDPOINT \
-            AZURE_TRUSTED_SIGNING_ACCOUNT_NAME \
-            AZURE_CERTIFICATE_PROFILE_NAME \
             KEYCHAIN_PASSWORD \
             TAURI_SIGNING_PRIVATE_KEY \
             TAURI_SIGNING_PRIVATE_KEY_PASSWORD
@@ -112,21 +100,6 @@ jobs:
           - platform: "macos-latest" # for Intel based macs.
             args: "--target x86_64-apple-darwin --bundles app"
             target: "x86_64-apple-darwin"
-          - platform: "ubuntu-22.04" # Build .deb on 22.04
-            args: "--bundles deb"
-            target: "x86_64-unknown-linux-gnu"
-          - platform: "ubuntu-24.04" # Build AppImage and RPM on 24.04
-            args: "--bundles appimage,rpm"
-            target: "x86_64-unknown-linux-gnu"
-          - platform: "ubuntu-24.04-arm" # Build for ARM64 Linux
-            args: "--bundles appimage,deb,rpm"
-            target: "aarch64-unknown-linux-gnu"
-          - platform: "windows-latest" # Build for x64 Windows.
-            args: ""
-            target: "x86_64-pc-windows-msvc"
-          - platform: "windows-11-arm" # Build for ARM64 Windows.
-            args: "--target aarch64-pc-windows-msvc"
-            target: "aarch64-pc-windows-msvc"
 
     uses: ./.github/workflows/build.yml
     with:
@@ -148,7 +121,7 @@ jobs:
       - create-release
       - publish-tauri
     steps:
-      - name: Verify latest.json exists
+      - name: Verify macOS release assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_ID: ${{ needs.create-release.outputs.release-id }}
@@ -165,18 +138,28 @@ jobs:
           dmg_count="$(printf '%s\n' "$assets" | awk '/\.dmg$/ { count++ } END { print count + 0 }')"
           updater_count="$(printf '%s\n' "$assets" | awk '/\.app\.tar\.gz$/ { count++ } END { print count + 0 }')"
           signature_count="$(printf '%s\n' "$assets" | awk '/\.app\.tar\.gz\.sig$/ { count++ } END { print count + 0 }')"
-          windows_installer_count="$(printf '%s\n' "$assets" | awk '/windows.*\.(exe|msi)$/ { count++ } END { print count + 0 }')"
-          windows_signature_count="$(printf '%s\n' "$assets" | awk '/windows.*\.(exe|msi|zip)\.sig$/ { count++ } END { print count + 0 }')"
+          unsupported_count="$(printf '%s\n' "$assets" | awk '/\.(exe|msi|deb|rpm|AppImage)$/ { count++ } END { print count + 0 }')"
 
-          printf 'DMG count: %s\nUpdater count: %s\nUpdater signature count: %s\nWindows installer count: %s\nWindows signature count: %s\n' \
+          printf 'DMG count: %s\nUpdater count: %s\nUpdater signature count: %s\nUnsupported package count: %s\n' \
             "$dmg_count" \
             "$updater_count" \
             "$signature_count" \
-            "$windows_installer_count" \
-            "$windows_signature_count"
+            "$unsupported_count"
 
           test "$dmg_count" -ge 2
           test "$updater_count" -ge 2
           test "$signature_count" -ge 2
-          test "$windows_installer_count" -ge 2
-          test "$windows_signature_count" -ge 2
+          test "$unsupported_count" -eq 0
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_ID: ${{ needs.create-release.outputs.release-id }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          test -n "${RELEASE_ID}"
+          gh api \
+            --method PATCH \
+            "repos/${REPOSITORY}/releases/${RELEASE_ID}" \
+            -F draft=false
