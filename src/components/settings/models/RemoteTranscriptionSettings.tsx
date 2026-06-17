@@ -48,10 +48,9 @@ export const RemoteTranscriptionSettings: React.FC = () => {
     for (const option of remoteTranscriptionModelOptions) {
       addOption(option);
     }
-    addOption(model);
 
     return options;
-  }, [model, remoteTranscriptionModelOptions]);
+  }, [remoteTranscriptionModelOptions]);
 
   const isBaseUrlUpdating = isUpdating("remote_transcription_base_url");
   const isModelUpdating = isUpdating("remote_transcription_model");

@@ -5,6 +5,7 @@
     "copyLastTranscript": "Copier la dernière transcription",
     "unloadModel": "Décharger le modèle",
     "model": "Modèle",
+    "remoteServer": "Remote Server",
     "quit": "Quitter",
     "cancel": "Annuler"
   },

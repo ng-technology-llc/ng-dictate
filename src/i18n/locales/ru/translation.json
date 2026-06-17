@@ -5,6 +5,7 @@
     "copyLastTranscript": "Скопировать последнюю транскрипцию",
     "unloadModel": "Выгрузить модель",
     "model": "Модель",
+    "remoteServer": "Remote Server",
     "quit": "Выход",
     "cancel": "Отмена"
   },

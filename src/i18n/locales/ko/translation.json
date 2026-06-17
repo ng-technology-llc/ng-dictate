@@ -5,6 +5,7 @@
     "copyLastTranscript": "마지막 녹음 내용 복사",
     "unloadModel": "모델 언로드",
     "model": "모델",
+    "remoteServer": "Remote Server",
     "quit": "종료",
     "cancel": "취소"
   },

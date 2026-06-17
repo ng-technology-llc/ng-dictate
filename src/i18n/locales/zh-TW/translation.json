@@ -5,6 +5,7 @@
     "copyLastTranscript": "複製最新轉錄",
     "unloadModel": "卸載模型",
     "model": "模型",
+    "remoteServer": "Remote Server",
     "quit": "結束",
     "cancel": "取消"
   },

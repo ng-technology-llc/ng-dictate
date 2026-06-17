@@ -20,6 +20,11 @@ pub fn transcription_endpoint(
     Ok(format!("{}/{}", base_url, path))
 }
 
+fn model_list_endpoint(base_url: &str) -> Result<String, String> {
+    let base_url = normalized_base_url(base_url)?;
+    Ok(format!("{}/v1/models", base_url))
+}
+
 pub fn remote_language(selected_language: &str) -> Option<String> {
     let selected_language = selected_language.trim();
     match selected_language {
@@ -84,9 +89,9 @@ pub async fn transcribe_remote(
 }
 
 pub async fn fetch_remote_models(base_url: String, api_key: String) -> Result<Vec<String>, String> {
-    let base_url = normalized_base_url(&base_url)?;
+    let url = model_list_endpoint(&base_url)?;
     let client = create_client()?;
-    let response = authorize(client.get(format!("{}/v1/models", base_url)), &api_key)
+    let response = authorize(client.get(url), &api_key)
         .send()
         .await
         .map_err(|e| format!("Failed to fetch remote transcription models: {}", e))?;
@@ -145,7 +150,17 @@ fn normalized_base_url(base_url: &str) -> Result<String, String> {
     }
 
     let mut parsed = parsed;
-    let path = parsed.path().trim_end_matches('/').to_string();
+    parsed.set_query(None);
+    parsed.set_fragment(None);
+
+    let mut path = parsed.path().trim_end_matches('/').to_string();
+    for suffix in ["/v1/audio/transcriptions", "/v1/audio/translations"] {
+        if path == suffix || path.ends_with(suffix) {
+            path = path[..path.len() - suffix.len()].to_string();
+            break;
+        }
+    }
+
     if path == "/v1" || path.ends_with("/v1") {
         let stripped = &path[..path.len() - "/v1".len()];
         parsed.set_path(stripped);
@@ -224,6 +239,10 @@ fn parse_model_ids(body: &str) -> Result<Vec<String>, String> {
         for entry in array {
             if let Some(model) = entry.as_str() {
                 models.push(model.to_string());
+            } else if let Some(id) = entry.get("id").and_then(Value::as_str) {
+                models.push(id.to_string());
+            } else if let Some(name) = entry.get("name").and_then(Value::as_str) {
+                models.push(name.to_string());
             }
         }
     }
@@ -353,6 +372,22 @@ mod tests {
     }
 
     #[test]
+    fn endpoints_accept_full_transcription_endpoint_inputs() {
+        assert_eq!(
+            transcription_endpoint("http://server:8000/v1/audio/transcriptions", false).unwrap(),
+            "http://server:8000/v1/audio/transcriptions"
+        );
+        assert_eq!(
+            model_list_endpoint("http://server:8000/v1/audio/transcriptions").unwrap(),
+            "http://server:8000/v1/models"
+        );
+        assert_eq!(
+            model_list_endpoint("https://example.test/proxy/v1/audio/translations/").unwrap(),
+            "https://example.test/proxy/v1/models"
+        );
+    }
+
+    #[test]
     fn remote_base_url_normalization_is_available_for_settings() {
         assert_eq!(
             normalize_remote_base_url("http://server:8000/v1/").unwrap(),
@@ -378,6 +413,15 @@ mod tests {
     }
 
     #[test]
+    fn parses_model_ids_from_models_object_array() {
+        assert_eq!(
+            parse_model_ids(r#"{"models":[{"id":"whisper-large-v3"},{"name":"sensevoice"}]}"#)
+                .unwrap(),
+            vec!["whisper-large-v3".to_string(), "sensevoice".to_string()]
+        );
+    }
+
+    #[test]
     fn validates_required_remote_config() {
         assert!(validate_remote_config("", "model").is_err());
         assert!(validate_remote_config("http://server:8000", "").is_err());
@@ -400,6 +444,22 @@ mod tests {
         assert!(request.body.contains("whisper-1"));
         assert!(request.body.contains(r#"name="response_format""#));
         assert!(request.body.contains("json"));
+    }
+
+    #[tokio::test]
+    async fn fetch_models_uses_models_endpoint_when_configured_with_transcription_endpoint() {
+        let (base_url, request_rx) =
+            spawn_response_server("200 OK", r#"{"data":[{"id":"whisper-large-v3"}]}"#);
+        let endpoint = format!("{}/v1/audio/transcriptions", base_url);
+
+        let models = fetch_remote_models(endpoint, String::new())
+            .await
+            .expect("fetch models");
+
+        let request = request_rx.recv().expect("captured request");
+        assert_eq!(request.method, "GET");
+        assert_eq!(request.path, "/v1/models");
+        assert_eq!(models, vec!["whisper-large-v3".to_string()]);
     }
 
     #[tokio::test]

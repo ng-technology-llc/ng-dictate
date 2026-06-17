@@ -5,6 +5,7 @@
     "copyLastTranscript": "Kopiera senaste transkriptionen",
     "unloadModel": "Avlasta modell",
     "model": "Modell",
+    "remoteServer": "Remote Server",
     "quit": "Avsluta",
     "cancel": "Avbryt"
   },

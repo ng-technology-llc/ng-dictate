@@ -911,6 +911,7 @@ pub fn change_transcription_provider_setting(
     let mut settings = settings::get_settings(&app);
     settings.transcription_provider = provider;
     settings::write_settings(&app, settings);
+    tray::update_tray_menu(&app, &tray::TrayIconState::Idle, None);
     Ok(())
 }
 
@@ -941,6 +942,7 @@ pub fn change_remote_transcription_model_setting(
     let mut settings = settings::get_settings(&app);
     settings.remote_transcription_model = model.trim().to_string();
     settings::write_settings(&app, settings);
+    tray::update_tray_menu(&app, &tray::TrayIconState::Idle, None);
     Ok(())
 }
 

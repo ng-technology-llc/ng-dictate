@@ -17,6 +17,7 @@ import { useSettings } from "./hooks/useSettings";
 import { useSettingsStore } from "./stores/settingsStore";
 import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
+import { hasTranscriptionBackendConfigured } from "@/lib/onboarding";
 
 type OnboardingStep = "accessibility" | "model" | "done";
 
@@ -167,12 +168,26 @@ function App() {
 
   const checkOnboardingStatus = async () => {
     try {
-      // Check if they have any models available
-      const result = await commands.hasAnyModelsAvailable();
-      const hasModels = result.status === "ok" && result.data;
+      const [modelsResult, settingsResult] = await Promise.all([
+        commands.hasAnyModelsAvailable(),
+        commands.getAppSettings(),
+      ]);
+      const hasModels = modelsResult.status === "ok" && modelsResult.data;
+      const transcriptionProvider =
+        settingsResult.status === "ok"
+          ? settingsResult.data.transcription_provider
+          : "local";
+      const hasTranscriptionBackend = hasTranscriptionBackendConfigured(
+        hasModels,
+        transcriptionProvider,
+      );
       const currentPlatform = platform();
 
-      if (hasModels) {
+      if (hasTranscriptionBackend) {
+        if (!hasModels && transcriptionProvider === "remote") {
+          setCurrentSection("models");
+        }
+
         // Returning user - check if they need to grant permissions first
         setIsReturningUser(true);
 
@@ -229,7 +244,11 @@ function App() {
     setOnboardingStep(isReturningUser ? "done" : "model");
   };
 
-  const handleModelSelected = () => {
+  const handleModelSelected = (nextSection?: SidebarSection) => {
+    if (nextSection) {
+      setCurrentSection(nextSection);
+    }
+
     // Transition to main app - user has started a download
     setOnboardingStep("done");
   };

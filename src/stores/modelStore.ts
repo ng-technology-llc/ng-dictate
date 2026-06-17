@@ -4,6 +4,7 @@ import { produce } from "immer";
 import { listen } from "@tauri-apps/api/event";
 import { commands, type ModelInfo } from "@/bindings";
 import { toast } from "sonner";
+import { hasTranscriptionBackendConfigured } from "@/lib/onboarding";
 
 interface DownloadProgress {
   model_id: string;
@@ -130,11 +131,25 @@ export const useModelStore = create<ModelsStore>()(
 
     checkFirstRun: async () => {
       try {
-        const result = await commands.hasAnyModelsAvailable();
-        if (result.status === "ok") {
-          const hasModels = result.data;
-          set({ hasAnyModels: hasModels, isFirstRun: !hasModels });
-          return !hasModels;
+        const [modelsResult, settingsResult] = await Promise.all([
+          commands.hasAnyModelsAvailable(),
+          commands.getAppSettings(),
+        ]);
+        if (modelsResult.status === "ok") {
+          const hasModels = modelsResult.data;
+          const transcriptionProvider =
+            settingsResult.status === "ok"
+              ? settingsResult.data.transcription_provider
+              : "local";
+          const hasTranscriptionBackend = hasTranscriptionBackendConfigured(
+            hasModels,
+            transcriptionProvider,
+          );
+          set({
+            hasAnyModels: hasTranscriptionBackend,
+            isFirstRun: !hasTranscriptionBackend,
+          });
+          return !hasTranscriptionBackend;
         }
         return false;
       } catch (err) {

@@ -1,7 +1,7 @@
 use crate::managers::history::{HistoryEntry, HistoryManager};
-use crate::managers::model::ModelManager;
+use crate::managers::model::{ModelInfo, ModelManager};
 use crate::managers::transcription::TranscriptionManager;
-use crate::settings;
+use crate::settings::{self, AppSettings, TranscriptionProvider};
 use crate::tray_i18n::get_tray_translations;
 use log::{error, info, warn};
 use std::sync::Arc;
@@ -93,6 +93,28 @@ fn version_label() -> String {
     }
 }
 
+fn model_submenu_label(
+    settings: &AppSettings,
+    downloaded: &[ModelInfo],
+    local_fallback: &str,
+    remote_fallback: &str,
+) -> String {
+    if settings.transcription_provider == TranscriptionProvider::Remote {
+        let remote_model = settings.remote_transcription_model.trim();
+        return if remote_model.is_empty() {
+            remote_fallback.to_string()
+        } else {
+            remote_model.to_string()
+        };
+    }
+
+    downloaded
+        .iter()
+        .find(|m| m.id == settings.selected_model)
+        .map(|m| m.name.clone())
+        .unwrap_or_else(|| local_fallback.to_string())
+}
+
 pub fn update_tray_menu(app: &AppHandle, state: &TrayIconState, locale: Option<&str>) {
     let settings = settings::get_settings(app);
 
@@ -146,23 +168,43 @@ pub fn update_tray_menu(app: &AppHandle, state: &TrayIconState, locale: Option<&
     let mut downloaded: Vec<_> = models.into_iter().filter(|m| m.is_downloaded).collect();
     downloaded.sort_by(|a, b| a.name.cmp(&b.name));
 
-    let submenu_label = downloaded
-        .iter()
-        .find(|m| m.id == *current_model_id)
-        .map(|m| m.name.clone())
-        .unwrap_or_else(|| strings.model.clone());
+    let submenu_label = model_submenu_label(
+        &settings,
+        &downloaded,
+        &strings.model,
+        &strings.remote_server,
+    );
 
     let model_submenu = {
         let submenu = Submenu::with_id(app, "model_submenu", &submenu_label, true)
             .expect("failed to create model submenu");
 
-        for model in &downloaded {
-            let is_active = model.id == *current_model_id;
-            let item_id = format!("model_select:{}", model.id);
-            let item =
-                CheckMenuItem::with_id(app, &item_id, &model.name, true, is_active, None::<&str>)
-                    .expect("failed to create model item");
+        if settings.transcription_provider == TranscriptionProvider::Remote {
+            let item = CheckMenuItem::with_id(
+                app,
+                "model_select:remote",
+                &submenu_label,
+                false,
+                true,
+                None::<&str>,
+            )
+            .expect("failed to create remote model item");
             let _ = submenu.append(&item);
+        } else {
+            for model in &downloaded {
+                let is_active = model.id == *current_model_id;
+                let item_id = format!("model_select:{}", model.id);
+                let item = CheckMenuItem::with_id(
+                    app,
+                    &item_id,
+                    &model.name,
+                    true,
+                    is_active,
+                    None::<&str>,
+                )
+                .expect("failed to create model item");
+                let _ = submenu.append(&item);
+            }
         }
 
         submenu
@@ -272,8 +314,10 @@ pub fn copy_last_transcript(app: &AppHandle) {
 
 #[cfg(test)]
 mod tests {
-    use super::last_transcript_text;
+    use super::{last_transcript_text, model_submenu_label};
     use crate::managers::history::HistoryEntry;
+    use crate::managers::model::{EngineType, ModelInfo};
+    use crate::settings::{get_default_settings, TranscriptionProvider};
 
     fn build_entry(transcription: &str, post_processed: Option<&str>) -> HistoryEntry {
         HistoryEntry {
@@ -299,5 +343,56 @@ mod tests {
     fn falls_back_to_raw_transcription() {
         let entry = build_entry("raw", None);
         assert_eq!(last_transcript_text(&entry), "raw");
+    }
+
+    fn test_model(id: &str, name: &str, is_downloaded: bool) -> ModelInfo {
+        ModelInfo {
+            id: id.to_string(),
+            name: name.to_string(),
+            description: String::new(),
+            filename: String::new(),
+            url: None,
+            sha256: None,
+            size_mb: 0,
+            is_downloaded,
+            is_downloading: false,
+            partial_size: 0,
+            is_directory: false,
+            engine_type: EngineType::Whisper,
+            accuracy_score: 0.0,
+            speed_score: 0.0,
+            supports_translation: false,
+            is_recommended: false,
+            supported_languages: Vec::new(),
+            supports_language_selection: false,
+            is_custom: false,
+        }
+    }
+
+    #[test]
+    fn remote_provider_label_uses_remote_model_name() {
+        let mut settings = get_default_settings();
+        settings.selected_model = "sensevoice".to_string();
+        settings.transcription_provider = TranscriptionProvider::Remote;
+        settings.remote_transcription_model = "whisper-large-v3".to_string();
+        let downloaded = vec![test_model("sensevoice", "SenseVoice", true)];
+
+        assert_eq!(
+            model_submenu_label(&settings, &downloaded, "Model", "Remote Server"),
+            "whisper-large-v3"
+        );
+    }
+
+    #[test]
+    fn remote_provider_label_falls_back_to_remote_server() {
+        let mut settings = get_default_settings();
+        settings.selected_model = "sensevoice".to_string();
+        settings.transcription_provider = TranscriptionProvider::Remote;
+        let downloaded = vec![test_model("sensevoice", "SenseVoice", true)];
+
+        assert_eq!(
+            model_submenu_label(&settings, &downloaded, "Model", "Remote Server"),
+            "Remote Server"
+        );
     }
 }
