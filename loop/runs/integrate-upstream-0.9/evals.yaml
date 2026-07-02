@@ -21,6 +21,12 @@ checks:
       - "P0"
       - "P1"
     timeout_seconds: 300
+  check_translations:
+    description: "Check that every locale has the same translation keys as English."
+    command: "bun scripts/check-translations.ts"
+    required_for:
+      - "P1"
+    timeout_seconds: 300
   rust_check:
     description: "Run Rust compile checks for the Tauri backend."
     command: "cd src-tauri && cargo check"

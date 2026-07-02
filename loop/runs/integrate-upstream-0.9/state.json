@@ -24,6 +24,20 @@
     "frozen_by": "codex",
     "requires_confirmation_to_change": true
   },
-  "finalization": null,
-  "updated_at": "2026-07-02T06:00:46Z"
+  "finalization": {
+    "status": "succeeded",
+    "finalized_at": "2026-07-02T06:02:01Z",
+    "final_report": "final-report.md",
+    "checks": [
+      "git_status_guard",
+      "check_translations",
+      "frontend_lint",
+      "frontend_build",
+      "rust_check",
+      "format_check"
+    ],
+    "blockers": [],
+    "summary": "Finalization succeeded."
+  },
+  "updated_at": "2026-07-02T06:02:01Z"
 }
