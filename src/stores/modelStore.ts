@@ -4,7 +4,6 @@ import { produce } from "immer";
 import { listen } from "@tauri-apps/api/event";
 import { commands, type ModelInfo } from "@/bindings";
 import { toast } from "sonner";
-import { hasTranscriptionBackendConfigured } from "@/lib/onboarding";
 
 interface DownloadProgress {
   model_id: string;
@@ -31,8 +30,6 @@ interface ModelsStore {
   downloadStats: Record<string, DownloadStats>;
   loading: boolean;
   error: string | null;
-  hasAnyModels: boolean;
-  isFirstRun: boolean;
   initialized: boolean;
   isRescanning: boolean;
 
@@ -40,7 +37,6 @@ interface ModelsStore {
   initialize: () => Promise<void>;
   loadModels: () => Promise<void>;
   loadCurrentModel: () => Promise<void>;
-  checkFirstRun: () => Promise<boolean>;
   rescanLocalModels: () => Promise<void>;
   selectModel: (modelId: string) => Promise<boolean>;
   downloadModel: (modelId: string) => Promise<boolean>;
@@ -70,8 +66,6 @@ export const useModelStore = create<ModelsStore>()(
     downloadStats: {},
     loading: true,
     error: null,
-    hasAnyModels: false,
-    isFirstRun: false,
     initialized: false,
     isRescanning: false,
 
@@ -148,45 +142,12 @@ export const useModelStore = create<ModelsStore>()(
       }
     },
 
-    checkFirstRun: async () => {
-      try {
-        const [modelsResult, settingsResult] = await Promise.all([
-          commands.hasAnyModelsAvailable(),
-          commands.getAppSettings(),
-        ]);
-        if (modelsResult.status === "ok") {
-          const hasModels = modelsResult.data;
-          const transcriptionProvider =
-            settingsResult.status === "ok"
-              ? settingsResult.data.transcription_provider
-              : "local";
-          const hasTranscriptionBackend = hasTranscriptionBackendConfigured(
-            hasModels,
-            transcriptionProvider,
-          );
-          set({
-            hasAnyModels: hasTranscriptionBackend,
-            isFirstRun: !hasTranscriptionBackend,
-          });
-          return !hasTranscriptionBackend;
-        }
-        return false;
-      } catch (err) {
-        console.error("Failed to check model availability:", err);
-        return false;
-      }
-    },
-
     selectModel: async (modelId: string) => {
       try {
         set({ error: null });
         const result = await commands.setActiveModel(modelId);
         if (result.status === "ok") {
-          set({
-            currentModel: modelId,
-            isFirstRun: false,
-            hasAnyModels: true,
-          });
+          set({ currentModel: modelId });
           return true;
         } else {
           set({ error: `Failed to switch to model: ${result.error}` });

@@ -3,16 +3,18 @@
   "objective_run_id": "integrate-upstream-0.9",
   "lifecycle": "frozen",
   "plan_version": 1,
-  "iteration": 4,
+  "iteration": 5,
   "current_task": null,
-  "last_task": "T-004",
+  "last_task": "T-005",
   "last_verification": {
     "status": "passed",
     "checks": [
       "git_status_guard",
+      "frontend_lint",
+      "frontend_build",
       "rust_check"
     ],
-    "summary": "No unresolved conflicts remain, old whisper-cpp compatibility was removed, and cargo check passes."
+    "summary": "Frontend lint/build and Rust check pass after merging upstream UI surfaces with product branding and remote transcription settings."
   },
   "blockers": [],
   "freeze": {
@@ -21,5 +23,5 @@
     "requires_confirmation_to_change": true
   },
   "finalization": null,
-  "updated_at": "2026-07-02T05:48:30Z"
+  "updated_at": "2026-07-02T05:56:38Z"
 }

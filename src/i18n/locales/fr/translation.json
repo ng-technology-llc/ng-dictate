@@ -5,9 +5,9 @@
     "copyLastTranscript": "Copier la dernière transcription",
     "unloadModel": "Décharger le modèle",
     "model": "Modèle",
-    "remoteServer": "Remote Server",
     "quit": "Quitter",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "remoteServer": "Remote Server"
   },
   "sidebar": {
     "general": "Général",
@@ -20,11 +20,12 @@
   },
   "onboarding": {
     "subtitle": "Pour commencer, choisissez un modèle de transcription",
+    "existingModelsTitle": "Compatible Models",
+    "downloadModelsTitle": "Available to Download",
+    "showAllModels": "Show all {{total}} models",
+    "showFewerModels": "Show fewer models",
     "recommended": "Recommandé",
-    "download": "Télécharger",
-    "downloading": "Téléchargement...",
     "customModelDescription": "Non officiellement pris en charge",
-    "downloadFailed": "Échec du téléchargement. Veuillez réessayer.",
     "modelCard": {
       "accuracy": "précision",
       "speed": "vitesse"
@@ -96,6 +97,7 @@
       }
     },
     "errors": {
+      "selectModel": "Failed to select model",
       "loadModels": "Échec du chargement des modèles disponibles",
       "downloadModel": "Échec du téléchargement du modèle : {{error}}"
     },
@@ -118,10 +120,14 @@
         "checkFailed": "Échec de la vérification des autorisations. Veuillez réessayer.",
         "requestFailed": "Échec de la demande d'autorisation. Veuillez réessayer."
       }
-    }
+    },
+    "download": "Télécharger",
+    "downloading": "Téléchargement...",
+    "downloadFailed": "Échec du téléchargement. Veuillez réessayer."
   },
   "modelSelector": {
     "custom": "Personnalisé",
+    "streaming": "Streaming",
     "active": "Actif",
     "switching": "Changement...",
     "noModelsAvailable": "Aucun modèle disponible",
@@ -142,14 +148,17 @@
     "downloadSpeed": "{{speed}} Mo/s",
     "capabilities": {
       "languageSelection": "Prend en charge plusieurs langues d'entrée",
-      "multiLanguage": "Multilingue",
+      "languageCount": "{{total}} languages",
       "translation": "Peut traduire en anglais",
       "translate": "Traduire en anglais",
       "singleLanguage": "Prend en charge uniquement cette langue",
-      "languageOnly": "{{language}} uniquement"
+      "languageOnly": "{{language}} uniquement",
+      "streaming": "Affiche la transcription en direct pendant que vous parlez",
+      "multiLanguage": "Multilingue"
     },
     "cancel": "Annuler",
     "cancelDownload": "Annuler le téléchargement",
+    "legacy": "Hérité",
     "remoteServerMode": "Remote Server",
     "remoteModelReady": "Remote Model Ready"
   },
@@ -161,20 +170,25 @@
     "models": {
       "title": "Modèles de Transcription",
       "description": "Sélectionnez un modèle de transcription ou téléchargez des modèles supplémentaires. Différents modèles offrent différents niveaux de précision et de vitesse.",
-      "downloaded": "Téléchargés",
-      "available": "Disponibles au Téléchargement",
       "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{modelName}} ? Vous devrez le télécharger à nouveau pour l'utiliser.",
       "deleteActiveConfirm": "{{modelName}} est votre modèle actif. Le supprimer arrêtera les transcriptions jusqu'à ce que vous sélectionniez un nouveau modèle. Êtes-vous sûr ?",
       "deleteTitle": "Supprimer le modèle",
       "filters": {
+        "allLanguages": "Toutes les langues",
         "all": "Tous",
         "multiLanguage": "Multilingue",
-        "translation": "Traduction",
-        "allLanguages": "Toutes les langues"
+        "translation": "Traduction"
       },
       "noModelsMatch": "Aucun modèle ne correspond à ce filtre.",
       "yourModels": "Modèles téléchargés",
       "availableModels": "Disponibles au téléchargement",
+      "searchPlaceholder": "Rechercher des modèles par nom…",
+      "rescan": {
+        "label": "Réanalyser",
+        "tooltip": "Réanalyser pour détecter les modèles ajoutés au dossier des modèles ou au cache Hugging Face en dehors de Handy"
+      },
+      "downloaded": "Téléchargés",
+      "available": "Disponibles au Téléchargement",
       "transcriptionProvider": {
         "title": "Transcription Provider",
         "description": "Choose where speech-to-text runs.",
@@ -236,10 +250,10 @@
       "language": {
         "title": "Langue",
         "description": "Sélectionnez la langue pour la reconnaissance vocale. Auto déterminera automatiquement la langue, tandis que sélectionner une langue spécifique peut améliorer la précision pour cette langue.",
-        "descriptionUnsupported": "Le modèle Parakeet détecte automatiquement la langue. Aucune sélection manuelle n'est nécessaire.",
         "searchPlaceholder": "Rechercher des langues...",
         "noResults": "Aucune langue trouvée",
-        "auto": "Auto"
+        "auto": "Auto",
+        "descriptionUnsupported": "Le modèle Parakeet détecte automatiquement la langue. Aucune sélection manuelle n'est nécessaire."
       },
       "pushToTalk": {
         "label": "Appuyer pour parler",
@@ -270,7 +284,6 @@
       }
     },
     "advanced": {
-      "title": "Avancé",
       "groups": {
         "app": "Application",
         "output": "Sortie",
@@ -287,7 +300,7 @@
         "description": "Maintient le flux du microphone ouvert pendant 30 secondes après l'arrêt de l'enregistrement, réduisant la latence pour les transcriptions consécutives. Peut dégrader la qualité audio Bluetooth."
       },
       "acceleration": {
-        "whisper": {
+        "transcribe": {
           "title": "Accélération Whisper",
           "description": "Accélération matérielle pour les modèles Whisper. Auto utilise le GPU si disponible (Metal sur macOS, Vulkan sur Windows/Linux)."
         },
@@ -296,9 +309,13 @@
           "description": "Accélération matérielle pour les modèles ONNX (Parakeet, Canary, Moonshine, etc.). DirectML sur Windows est expérimental. Les modèles peuvent échouer à transcrire."
         },
         "gpuDevice": {
+          "auto": "Auto",
           "title": "Appareil GPU",
-          "description": "Sélectionnez le GPU à utiliser pour l'inférence Whisper. Auto choisit le GPU dédié.",
-          "auto": "Auto"
+          "description": "Sélectionnez le GPU à utiliser pour l'inférence Whisper. Auto choisit le GPU dédié."
+        },
+        "whisper": {
+          "title": "Accélération Whisper",
+          "description": "Accélération matérielle pour les modèles Whisper. Auto utilise le GPU si disponible (Metal sur macOS, Vulkan sur Windows/Linux)."
         }
       },
       "startHidden": {
@@ -314,6 +331,23 @@
         "description": "Afficher l'icône de NG Dictate dans la barre système."
       },
       "overlay": {
+        "style": {
+          "title": "Overlay",
+          "description": "Choose the recording overlay: None hides it, Minimal shows a compact pill, Live shows transcription in real time as you speak (streaming-capable models only — look for the Streaming badge in the model picker). On Linux 'None' is recommended.",
+          "options": {
+            "none": "Aucune",
+            "minimal": "Minimal",
+            "live": "Live"
+          }
+        },
+        "position": {
+          "title": "Position de la fenêtre d'enregistrement",
+          "description": "Afficher un retour visuel pendant l'enregistrement et la transcription. Sur Linux, 'Aucune' est recommandé.",
+          "options": {
+            "bottom": "Bas",
+            "top": "Haut"
+          }
+        },
         "title": "Position de la fenêtre d'enregistrement",
         "description": "Afficher un retour visuel pendant l'enregistrement et la transcription. Sur Linux, 'Aucune' est recommandé.",
         "options": {
@@ -387,10 +421,14 @@
         "add": "Ajouter",
         "remove": "Supprimer {{word}}",
         "duplicate": "\"{{word}}\" existe déjà"
-      }
+      },
+      "voiceActivityDetection": {
+        "title": "Voice Activity Detection",
+        "description": "Filter silence from recordings. Streaming-capable models use a longer VAD tail; disabling VAD records raw audio."
+      },
+      "title": "Avancé"
     },
     "postProcessing": {
-      "title": "Post-traitement",
       "hotkey": {
         "title": "Raccourci clavier"
       },
@@ -401,10 +439,10 @@
           "description": "Sélectionnez un fournisseur compatible OpenAI."
         },
         "appleIntelligence": {
+          "unavailable": "Apple Intelligence n'est pas disponible sur cet appareil. Nécessite un Mac Apple Silicon exécutant macOS Tahoe (26.0) ou une version ultérieure avec Apple Intelligence activé dans les Préférences Système.",
           "title": "Apple Intelligence",
           "description": "Fonctionne entièrement sur l'appareil. Aucune clé API ni accès réseau n'est requis.",
-          "requirements": "Nécessite un Mac Apple Silicon exécutant macOS Tahoe (26.0) ou une version ultérieure. Apple Intelligence doit être activé dans les Préférences Système.",
-          "unavailable": "Apple Intelligence n'est pas disponible sur cet appareil. Nécessite un Mac Apple Silicon exécutant macOS Tahoe (26.0) ou une version ultérieure avec Apple Intelligence activé dans les Préférences Système."
+          "requirements": "Nécessite un Mac Apple Silicon exécutant macOS Tahoe (26.0) ou une version ultérieure. Apple Intelligence doit être activé dans les Préférences Système."
         },
         "baseUrl": {
           "title": "URL de base",
@@ -418,13 +456,13 @@
         },
         "model": {
           "title": "Modèle",
-          "descriptionApple": "Fournissez une limite de tokens optionnelle ou conservez le préréglage par défaut sur l'appareil.",
           "descriptionCustom": "Fournissez l'identifiant du modèle attendu par votre point de terminaison personnalisé.",
           "descriptionDefault": "Choisissez un modèle exposé par le fournisseur sélectionné.",
-          "placeholderApple": "Apple Intelligence",
           "placeholderWithOptions": "Rechercher ou sélectionner un modèle",
           "placeholderNoOptions": "Tapez un nom de modèle",
-          "refreshModels": "Actualiser les modèles"
+          "refreshModels": "Actualiser les modèles",
+          "descriptionApple": "Fournissez une limite de tokens optionnelle ou conservez le préréglage par défaut sur l'appareil.",
+          "placeholderApple": "Apple Intelligence"
         }
       },
       "prompts": {
@@ -447,7 +485,8 @@
         "cancel": "Annuler",
         "selectToEdit": "Sélectionnez un prompt ci-dessus pour voir et modifier ses détails.",
         "createFirst": "Cliquez sur 'Créer un nouveau prompt' ci-dessus pour créer votre premier prompt de post-traitement."
-      }
+      },
+      "title": "Post-traitement"
     },
     "history": {
       "title": "Historique",
@@ -473,6 +512,17 @@
       "logLevel": {
         "title": "Niveau de journalisation",
         "description": "Définir le niveau de détail de la journalisation"
+      },
+      "liveLogs": {
+        "title": "Journaux en direct",
+        "description": "Affichez les journaux de l'application en temps réel pour diagnostiquer les problèmes sans ouvrir le fichier journal. Seuls les journaux émis pendant que ce panneau est ouvert sont affichés ; respecte le réglage Niveau de journalisation ci-dessus.",
+        "live": "En direct",
+        "paused": "En pause",
+        "pause": "Pause",
+        "resume": "Reprendre",
+        "copied": "Copié",
+        "lineCount": "{{count}} lignes",
+        "empty": "En attente de journaux… Les entrées apparaîtront ici au fur et à mesure que l'application les émet."
       },
       "updateChecks": {
         "label": "Vérifier les mises à jour",
@@ -538,6 +588,13 @@
       "recordingBuffer": {
         "title": "Tampon d'enregistrement supplémentaire",
         "description": "Temps supplémentaire (en millisecondes) pour continuer l'enregistrement après avoir relâché la touche, pour capturer l'audio restant. 0 = pas de tampon supplémentaire."
+      },
+      "whatsNewPreview": {
+        "title": "Aperçu des nouveautés",
+        "description": "Ouvrir la dernière note de version intégrée sans la marquer comme vue",
+        "button": "Aperçu",
+        "noNotes": "Aucune note de version intégrée trouvée",
+        "error": "Impossible d’afficher l’aperçu des notes de version"
       }
     },
     "about": {
@@ -550,6 +607,11 @@
         "title": "Emplacement des données de l'application",
         "description": "Emplacement où NG Dictate stocke ses données"
       },
+      "sourceCode": {
+        "title": "Code source",
+        "description": "Voir le code source et contribuer",
+        "button": "Voir sur GitHub"
+      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",
@@ -557,22 +619,27 @@
       },
       "acknowledgments": {
         "title": "Remerciements",
+        "ggml": {
+          "title": "ggml",
+          "description": "Inférence haute performance du modèle de reconnaissance vocale automatique Whisper d'OpenAI",
+          "details": "Handy utilise ggml pour un traitement rapide et local de la parole en texte. Merci au travail incroyable de Georgi Gerganov et des contributeurs."
+        },
         "whisper": {
           "title": "Whisper.cpp",
           "description": "Inférence haute performance du modèle de reconnaissance vocale automatique Whisper d'OpenAI",
           "details": "NG Dictate utilise Whisper.cpp pour un traitement rapide et local de la parole en texte. Merci au travail incroyable de Georgi Gerganov et des contributeurs."
         }
+      },
+      "whatsNewUpdates": {
+        "label": "Afficher les nouveautés",
+        "description": "Afficher les notes de version après les mises à jour de Handy"
       }
     }
   },
   "footer": {
-    "downloadingModel": "Téléchargement de {{model}}...",
     "checkingUpdates": "Recherche de mises à jour...",
-    "updateAvailable": "Mise à jour disponible : {{version}}",
     "updateAvailableShort": "Mise à jour disponible",
     "upToDate": "À jour",
-    "downloadUpdate": "Télécharger la mise à jour",
-    "restart": "Redémarrer",
     "updateCheckingDisabled": "Vérification des mises à jour désactivée",
     "downloading": "Téléchargement... {{progress}}%",
     "installing": "Installation...",
@@ -580,34 +647,40 @@
     "checkForUpdates": "Rechercher des mises à jour",
     "portableUpdateTitle": "Manual update required",
     "portableUpdateMessage": "Portable installs cannot be updated automatically. To update: download the latest NSIS installer from GitHub Releases, install it to the same folder, then copy your Data/ folder (settings, models, recordings) from the old version to the new one.",
-    "portableUpdateButton": "Open GitHub Releases"
+    "portableUpdateButton": "Open GitHub Releases",
+    "downloadingModel": "Téléchargement de {{model}}...",
+    "updateAvailable": "Mise à jour disponible : {{version}}",
+    "downloadUpdate": "Télécharger la mise à jour",
+    "restart": "Redémarrer"
   },
   "common": {
     "loading": "Chargement...",
+    "delete": "Supprimer",
+    "close": "Fermer",
+    "open": "Ouvrir",
+    "copy": "Copier",
+    "clear": "Effacer",
+    "noOptionsFound": "Aucune option trouvée",
     "save": "Enregistrer",
     "cancel": "Annuler",
     "reset": "Réinitialiser",
     "add": "Ajouter",
     "remove": "Supprimer",
-    "delete": "Supprimer",
     "edit": "Modifier",
     "create": "Créer",
     "update": "Mettre à jour",
-    "close": "Fermer",
-    "open": "Ouvrir",
     "default": "Par défaut",
     "enabled": "Activé",
     "disabled": "Désactivé",
     "on": "Activé",
     "off": "Désactivé",
     "yes": "Oui",
-    "no": "Non",
-    "noOptionsFound": "Aucune option trouvée"
+    "no": "Non"
   },
   "accessibility": {
-    "permissionsRequired": "Autorisations d'accessibilité requises",
     "permissionsDescription": "NG Dictate a besoin des autorisations d'accessibilité pour taper le texte transcrit.",
     "openSettings": "Ouvrir les Préférences Système",
+    "permissionsRequired": "Autorisations d'accessibilité requises",
     "dismiss": "Ignorer"
   },
   "errors": {
@@ -625,7 +698,8 @@
     "modelLoadFailed": "Échec du chargement du modèle : {{model}}",
     "modelLoadFailedUnknown": "modèle inconnu",
     "pasteFailedTitle": "Échec du collage du texte",
-    "pasteFailed": "Le texte n'a pas pu être collé dans l'application active."
+    "pasteFailed": "Le texte n'a pas pu être collé dans l'application active.",
+    "transcriptionFailedTitle": "Échec de la transcription"
   },
   "appLanguage": {
     "title": "Langue de l'application",
@@ -634,5 +708,8 @@
   "overlay": {
     "transcribing": "Transcription...",
     "processing": "Traitement..."
+  },
+  "whatsNew": {
+    "title": "Nouveautés de Handy v{{version}}"
   }
 }

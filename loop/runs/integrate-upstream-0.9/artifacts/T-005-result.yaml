@@ -1,0 +1,66 @@
+status: passing
+summary: Integrated upstream frontend settings, live overlay, language filtering, live logs, and What's New surfaces while preserving NG Dictate branding and remote transcription UI.
+touched_files:
+  - src-tauri/src/commands/audio.rs
+  - src/App.tsx
+  - src/App.css
+  - src/bindings.ts
+  - src/components/Sidebar.tsx
+  - src/components/onboarding/
+  - src/components/model-selector/
+  - src/components/settings/
+  - src/components/update-checker/UpdateChecker.tsx
+  - src/components/whats-new/
+  - src/content/release-notes/
+  - src/hooks/useSettings.ts
+  - src/i18n/locales/*/translation.json
+  - src/lib/constants/languages.ts
+  - src/overlay/
+  - src/stores/
+  - src/styles/theme.css
+commands:
+  - command: git status --short --branch
+    exit_code: 0
+    stdout_summary: Current branch is codex/integrate-upstream-0.9; no unmerged paths or conflict markers remain.
+    stderr_summary: ""
+  - command: bun run lint
+    exit_code: 0
+    stdout_summary: ESLint completed for src with no reported errors.
+    stderr_summary: ""
+  - command: bun run build
+    exit_code: 0
+    stdout_summary: TypeScript and Vite production build completed successfully.
+    stderr_summary: Vite reported only the existing large chunk warning.
+  - command: cd src-tauri && cargo check
+    exit_code: 0
+    stdout_summary: Rust backend still compiles after adding the upstream audio command surface.
+    stderr_summary: Two unused model availability command warnings remain for final cleanup.
+verification:
+  status: passed
+  checks:
+    - git_status_guard
+    - frontend_lint
+    - frontend_build
+    - rust_check
+  summary: Frontend lint/build and Rust check pass after merging upstream UI surfaces with product branding and remote transcription settings.
+review_gate:
+  status: passed
+  summary: P0 REQ-001 has automated lint, frontend build, Rust check, and conflict-marker scans; remaining documentation/i18n polish is isolated to T-006 and does not block the integrated capability surface.
+diff_summary: >
+  Adopted upstream frontend UI for live overlay, language selector/filtering, model catalog search,
+  live log viewer, What's New modal, and theme styling; restored NG Dictate logos, support/update links,
+  remote server onboarding entry, remote transcription settings panel, store actions, bindings, and locale copy.
+requirement_evidence:
+  - requirement_id: REQ-001
+    type: automated_check
+    summary: Upstream user-facing frontend capabilities are reachable and compile with product remote-provider UI.
+  - requirement_id: REQ-002
+    type: automated_check
+    summary: Frontend conflicts were resolved with documented product branding, generated binding, and locale merge decisions.
+decisions:
+  - Frontend base is upstream 0.9.0, with product branding and remote transcription UI reapplied.
+  - Locale files were deep-merged from upstream and product JSON instead of hand-editing conflict text.
+  - About and update links point to ng-technology-llc/ng-dictate, not the upstream Handy repository.
+blockers: []
+artifacts:
+  - loop/runs/integrate-upstream-0.9/artifacts/T-005-result.yaml

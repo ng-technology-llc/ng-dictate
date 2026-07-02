@@ -14,3 +14,6 @@
 - 2026-07-02: Preserve upstream live streaming semantics in `actions.rs`: finalized stream text wins, empty/no stream falls back to the unified async transcription route, and finalize timeout is surfaced instead of starting a competing batch decode.
 - 2026-07-02: Remove the temporary `EngineType::Whisper` variant and `transcribe-rs` `whisper-cpp` feature after migrating local Whisper-family models to `EngineType::TranscribeCpp`.
 - 2026-07-02: Include upstream Rust overlay/audio manager utilities in `T-004` because the streaming recorder API, cancel-generation guard, and overlay enabled cache are required for the reconciled transcription pipeline to compile.
+- 2026-07-02: During `T-005`, take upstream `src/` as the frontend base, then reapply product-line branding and remote transcription UI. Keep upstream catalog search, language filtering, live overlay, live logs, and What's New surfaces.
+- 2026-07-02: Resolve locale files with a structured JSON deep merge: upstream translations are the base, product translations override shared keys and add remote-provider copy. `T-006` still owns final wording polish for docs/release/i18n.
+- 2026-07-02: Keep product NG Dictate logos and repository links in sidebar, onboarding, about, and update checker while retaining upstream `ShowWhatsNewOnUpdate` and debug preview components.
