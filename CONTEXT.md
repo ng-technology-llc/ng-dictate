@@ -31,3 +31,11 @@ _Avoid_: Handy brand, upstream brand, fork name
 **Local Release Materials**:
 Machine-local credentials and derived files used to prepare Company Brand releases. They are kept near the Product Line workspace for operator continuity but are not part of the repository.
 _Avoid_: release assets, repo secrets, project files
+
+**Project Playbook**:
+Repository-local operating knowledge for AI assistants and maintainers to reuse when working on the Product Line. It records repeatable methods, decision checks, and known pitfalls without becoming product or contributor documentation.
+_Avoid_: experience package, docs, loop log, runbook
+
+**Playbook Capture**:
+A manually requested workflow that distills a completed piece of work into Project Playbook entries. It may use task logs or Loop Harness reports as evidence, but it is not automatically triggered by them.
+_Avoid_: automatic documentation, loop finalization, post-task logging
