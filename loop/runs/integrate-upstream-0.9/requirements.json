@@ -145,8 +145,16 @@
           ]
         }
       },
-      "status": "failing",
-      "evidence": []
+      "status": "passing",
+      "evidence": [
+        {
+          "timestamp": "2026-07-02T05:28:13Z",
+          "source_task": "T-001",
+          "type": "automated_check",
+          "summary": "git status and stash inspection confirm pre-existing product WIP was parked without stashing loop state files.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T052813Z-T-001.md"
+        }
+      ]
     }
   ]
 }
