@@ -41,7 +41,15 @@
         }
       },
       "status": "failing",
-      "evidence": []
+      "evidence": [
+        {
+          "timestamp": "2026-07-02T05:35:43Z",
+          "source_task": "T-002",
+          "type": "automated_check",
+          "summary": "transcribe-cpp build scaffolding and runtime package files are present; cargo check passes with temporary legacy feature compatibility.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T053543Z-T-002.md"
+        }
+      ]
     },
     {
       "id": "REQ-002",
@@ -76,7 +84,15 @@
         }
       },
       "status": "failing",
-      "evidence": []
+      "evidence": [
+        {
+          "timestamp": "2026-07-02T05:35:43Z",
+          "source_task": "T-002",
+          "type": "automated_check",
+          "summary": "Build/package conflicts were resolved with recorded decisions preserving product identity and upstream runtime staging.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T053543Z-T-002.md"
+        }
+      ]
     },
     {
       "id": "REQ-003",

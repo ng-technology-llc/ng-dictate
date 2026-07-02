@@ -7,10 +7,11 @@ Read `loop/current.yaml`, then the active run's `context-index.md`.
 frozen
 
 ## Last Change
-Completed `T-001`: pre-existing product-file WIP was parked in stash `04bd10a943b917101f6d29ab9a593a59a83a0b05`.
+Completed `T-002`: upstream transcribe-cpp build/package scaffolding is integrated and `cargo check` passes with a temporary legacy `transcribe-rs` feature.
 
 ## Next Action
-Continue with `T-002`: integrate transcribe.cpp build, packaging, and runtime dependency scaffolding.
+Continue with `T-003`: integrate model catalog, GGUF probing, and model manager capabilities.
 
 ## Do Not Do
 Do not apply or drop the WIP stash unless the active task explicitly needs it and records the decision.
+Do not remove the temporary `transcribe-rs` `whisper-cpp` feature before `T-004` migrates the remaining legacy call sites.
