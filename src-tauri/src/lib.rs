@@ -3,6 +3,7 @@ mod actions;
 mod apple_intelligence;
 mod audio_feedback;
 pub mod audio_toolkit;
+mod catalog;
 pub mod cli;
 mod clipboard;
 mod commands;
@@ -401,6 +402,7 @@ pub fn run(cli_args: CliArgs) {
             commands::models::download_model,
             commands::models::delete_model,
             commands::models::cancel_download,
+            commands::models::rescan_local_models,
             commands::models::set_active_model,
             commands::models::get_current_model,
             commands::models::get_transcription_model_status,

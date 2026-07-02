@@ -403,6 +403,8 @@ pub struct AppSettings {
     #[serde(default = "default_model")]
     pub selected_model: String,
     #[serde(default)]
+    pub onboarding_completed: bool,
+    #[serde(default)]
     pub transcription_provider: TranscriptionProvider,
     #[serde(default)]
     pub remote_transcription_base_url: String,
@@ -833,6 +835,7 @@ pub fn get_default_settings() -> AppSettings {
         autostart_enabled: default_autostart_enabled(),
         update_checks_enabled: default_update_checks_enabled(),
         selected_model: "".to_string(),
+        onboarding_completed: false,
         transcription_provider: TranscriptionProvider::default(),
         remote_transcription_base_url: String::new(),
         remote_transcription_model: String::new(),

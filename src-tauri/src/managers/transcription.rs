@@ -309,7 +309,11 @@ impl TranscriptionManager {
         };
 
         let loaded_engine = match model_info.engine_type {
-            EngineType::Whisper => {
+            // Temporary compatibility while T-004 migrates local transcription to
+            // the native transcribe-cpp runtime. Catalog models now identify as
+            // TranscribeCpp, but the legacy loader is kept compileable during the
+            // staged integration.
+            EngineType::Whisper | EngineType::TranscribeCpp => {
                 let engine = WhisperEngine::load(&model_path).map_err(|e| {
                     let error_msg = format!("Failed to load whisper model {}: {}", model_id, e);
                     emit_loading_failed(&error_msg);

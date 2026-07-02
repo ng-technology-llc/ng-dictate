@@ -7,11 +7,11 @@ Read `loop/current.yaml`, then the active run's `context-index.md`.
 frozen
 
 ## Last Change
-Completed `T-002`: upstream transcribe-cpp build/package scaffolding is integrated and `cargo check` passes with a temporary legacy `transcribe-rs` feature.
+Completed `T-003`: upstream catalog/model capability surfaces are integrated, product remote-provider onboarding is preserved, and `cargo check` plus `bun run build` pass.
 
 ## Next Action
-Continue with `T-003`: integrate model catalog, GGUF probing, and model manager capabilities.
+Continue with `T-004`: reconcile transcription pipeline, remote transcription, CLI, and runtime language handling.
 
 ## Do Not Do
 Do not apply or drop the WIP stash unless the active task explicitly needs it and records the decision.
-Do not remove the temporary `transcribe-rs` `whisper-cpp` feature before `T-004` migrates the remaining legacy call sites.
+Do not remove the temporary `transcribe-rs` `whisper-cpp` feature, `EngineType::Whisper`, or temporary `TranscribeCpp` legacy route before `T-004` migrates the remaining local transcription call sites.

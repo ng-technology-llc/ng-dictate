@@ -48,6 +48,13 @@
           "type": "automated_check",
           "summary": "transcribe-cpp build scaffolding and runtime package files are present; cargo check passes with temporary legacy feature compatibility.",
           "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T053543Z-T-002.md"
+        },
+        {
+          "timestamp": "2026-07-02T05:40:55Z",
+          "source_task": "T-003",
+          "type": "automated_check",
+          "summary": "Catalog-backed model descriptors, GGUF probing, and capability metadata are integrated; cargo check and frontend build pass.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054055Z-T-003.md"
         }
       ]
     },
@@ -91,6 +98,13 @@
           "type": "automated_check",
           "summary": "Build/package conflicts were resolved with recorded decisions preserving product identity and upstream runtime staging.",
           "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T053543Z-T-002.md"
+        },
+        {
+          "timestamp": "2026-07-02T05:40:55Z",
+          "source_task": "T-003",
+          "type": "automated_check",
+          "summary": "Model-store conflicts were resolved with remote-provider onboarding behavior preserved and temporary transcription compatibility documented.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054055Z-T-003.md"
         }
       ]
     },

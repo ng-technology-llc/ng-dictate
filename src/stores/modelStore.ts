@@ -34,12 +34,14 @@ interface ModelsStore {
   hasAnyModels: boolean;
   isFirstRun: boolean;
   initialized: boolean;
+  isRescanning: boolean;
 
   // Actions
   initialize: () => Promise<void>;
   loadModels: () => Promise<void>;
   loadCurrentModel: () => Promise<void>;
   checkFirstRun: () => Promise<boolean>;
+  rescanLocalModels: () => Promise<void>;
   selectModel: (modelId: string) => Promise<boolean>;
   downloadModel: (modelId: string) => Promise<boolean>;
   cancelDownload: (modelId: string) => Promise<boolean>;
@@ -71,6 +73,7 @@ export const useModelStore = create<ModelsStore>()(
     hasAnyModels: false,
     isFirstRun: false,
     initialized: false,
+    isRescanning: false,
 
     // Internal setters
     setModels: (models) => set({ models }),
@@ -126,6 +129,22 @@ export const useModelStore = create<ModelsStore>()(
         }
       } catch (err) {
         console.error("Failed to load current model:", err);
+      }
+    },
+
+    rescanLocalModels: async () => {
+      set({ isRescanning: true });
+      try {
+        const result = await commands.rescanLocalModels();
+        if (result.status !== "ok") {
+          set({ error: `Failed to rescan models: ${result.error}` });
+        }
+        // On success the backend emits `models-updated`, which reloads the list
+        // via the listener registered in initialize().
+      } catch (err) {
+        set({ error: `Failed to rescan models: ${err}` });
+      } finally {
+        set({ isRescanning: false });
       }
     },
 
@@ -288,10 +307,10 @@ export const useModelStore = create<ModelsStore>()(
     initialize: async () => {
       if (get().initialized) return;
 
-      const { loadModels, loadCurrentModel, checkFirstRun } = get();
+      const { loadModels, loadCurrentModel } = get();
 
       // Load initial data
-      await Promise.all([loadModels(), loadCurrentModel(), checkFirstRun()]);
+      await Promise.all([loadModels(), loadCurrentModel()]);
 
       // Set up event listeners
       listen<DownloadProgress>("model-download-progress", (event) => {
@@ -439,6 +458,10 @@ export const useModelStore = create<ModelsStore>()(
       listen("model-state-changed", () => {
         get().loadModels();
         get().loadCurrentModel();
+      });
+
+      listen("models-updated", () => {
+        get().loadModels();
       });
 
       set({ initialized: true });
