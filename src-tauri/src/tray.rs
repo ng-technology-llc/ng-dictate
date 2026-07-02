@@ -318,7 +318,7 @@ pub fn copy_last_transcript(app: &AppHandle) {
 mod tests {
     use super::{last_transcript_text, model_submenu_label};
     use crate::managers::history::HistoryEntry;
-    use crate::managers::model::{EngineType, ModelInfo};
+    use crate::managers::model::{EngineType, ModelInfo, ModelSource};
     use crate::settings::{get_default_settings, TranscriptionProvider};
 
     fn build_entry(transcription: &str, post_processed: Option<&str>) -> HistoryEntry {
@@ -353,8 +353,7 @@ mod tests {
             name: name.to_string(),
             description: String::new(),
             filename: String::new(),
-            url: None,
-            sha256: None,
+            source: ModelSource::Local,
             size_mb: 0,
             is_downloaded,
             is_downloading: false,
@@ -368,6 +367,8 @@ mod tests {
             supported_languages: Vec::new(),
             supports_language_selection: false,
             is_custom: false,
+            supports_streaming: false,
+            supports_language_detection: false,
         }
     }
 

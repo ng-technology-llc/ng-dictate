@@ -76,6 +76,7 @@ Run finalization/reporting if needed; all active P0/P1 requirements are passing.
 - Log: /Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T055638Z-T-005.md
 
 ## Iteration 6
+
 - Task: T-006
 - Status: passing
 - Summary: Reconciled release notes, documentation, English source copy, and final verification for the upstream 0.9 integration.

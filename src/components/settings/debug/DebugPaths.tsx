@@ -63,9 +63,7 @@ export const DebugPaths: React.FC<DebugPathsProps> = ({
           <span className="font-medium">
             {t("settings.debug.paths.settings")}
           </span>{" "}
-          <span className="font-mono text-xs select-text">
-            {settingsPath}
-          </span>
+          <span className="font-mono text-xs select-text">{settingsPath}</span>
         </div>
       </div>
     </SettingContainer>

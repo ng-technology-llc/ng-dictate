@@ -12,7 +12,9 @@ import { randomUUID } from "crypto";
 
 const root = resolve(import.meta.dirname, "..");
 const localMaterials = join(root, "local-release-materials");
+const packageJsonPath = join(root, "package.json");
 const tauriConfigPath = join(root, "src-tauri", "tauri.conf.json");
+const cargoTomlPath = join(root, "src-tauri", "Cargo.toml");
 const appleCertDir = join(
   localMaterials,
   "apple-developer-id",
@@ -132,6 +134,99 @@ function checkTauriConfigDoesNotUseUpstreamSettings(): void {
         `src-tauri/tauri.conf.json still contains upstream setting: ${pattern}`,
       );
     }
+  }
+}
+
+function checkReleaseVersion(): void {
+  if (!existsSync(tauriConfigPath)) {
+    fail(`Missing Tauri config: ${tauriConfigPath}`);
+    return;
+  }
+
+  const tauriConfig = JSON.parse(readFileSync(tauriConfigPath, "utf8")) as {
+    version?: string;
+  };
+  const version = tauriConfig.version?.trim();
+
+  if (!version) {
+    fail("src-tauri/tauri.conf.json does not define a release version");
+    return;
+  }
+
+  if (!/^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/.test(version)) {
+    fail(`Release version is not semver-like: ${version}`);
+  }
+
+  if (existsSync(packageJsonPath)) {
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8")) as {
+      version?: string;
+    };
+    if (packageJson.version !== version) {
+      fail(
+        `package.json version (${packageJson.version ?? "missing"}) does not match Tauri version (${version})`,
+      );
+    }
+  }
+
+  if (existsSync(cargoTomlPath)) {
+    const cargoToml = readFileSync(cargoTomlPath, "utf8");
+    const cargoVersion = cargoToml.match(/^version\s*=\s*"([^"]+)"/m)?.[1];
+    if (cargoVersion !== version) {
+      fail(
+        `src-tauri/Cargo.toml version (${cargoVersion ?? "missing"}) does not match Tauri version (${version})`,
+      );
+    }
+  }
+
+  const tagName = `v${version}`;
+  const localTag = run([
+    "git",
+    "rev-parse",
+    "--verify",
+    "--quiet",
+    `refs/tags/${tagName}`,
+  ]);
+  if (localTag.exitCode === 0) {
+    fail(`Release tag already exists locally: ${tagName}`);
+  } else if (localTag.exitCode !== 1) {
+    fail(
+      `Unable to check local release tag ${tagName}: ${localTag.stderr.trim()}`,
+    );
+  }
+
+  const remoteTag = run([
+    "git",
+    "ls-remote",
+    "--exit-code",
+    "--tags",
+    "origin",
+    `refs/tags/${tagName}`,
+  ]);
+  if (remoteTag.exitCode === 0) {
+    fail(`Release tag already exists on origin: ${tagName}`);
+  } else if (remoteTag.exitCode !== 2) {
+    fail(
+      `Unable to check origin release tag ${tagName}: ${remoteTag.stderr.trim()}`,
+    );
+  }
+
+  const release = run([
+    "gh",
+    "release",
+    "view",
+    tagName,
+    "-R",
+    repo,
+    "--json",
+    "url",
+  ]);
+  if (release.exitCode === 0) {
+    const url = JSON.parse(release.stdout) as { url?: string };
+    fail(`GitHub release already exists for ${tagName}: ${url.url ?? repo}`);
+  } else if (
+    !`${release.stdout}\n${release.stderr}`.toLowerCase().includes("not found")
+  ) {
+    fail(`Unable to check GitHub release ${tagName}: ${release.stderr.trim()}`);
   }
 }
 
@@ -270,6 +365,7 @@ function main(): void {
     checkFileExists(file);
     checkOwnerOnly(file);
   }
+  checkReleaseVersion();
   checkUpdaterPublicKey();
   checkTauriConfigDoesNotUseUpstreamSettings();
   checkP12ImportsWithSecurity();

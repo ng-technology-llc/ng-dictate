@@ -35,9 +35,7 @@
             "screenshot",
             "artifact"
           ],
-          "minimum": [
-            "automated_check"
-          ]
+          "minimum": ["automated_check"]
         }
       },
       "status": "passing",
@@ -99,9 +97,7 @@
             "screenshot",
             "artifact"
           ],
-          "minimum": [
-            "automated_check"
-          ]
+          "minimum": ["automated_check"]
         }
       },
       "status": "passing",
@@ -170,9 +166,7 @@
             "screenshot",
             "artifact"
           ],
-          "minimum": [
-            "automated_check"
-          ]
+          "minimum": ["automated_check"]
         }
       },
       "status": "passing",
@@ -213,9 +207,7 @@
             "screenshot",
             "artifact"
           ],
-          "minimum": [
-            "automated_check"
-          ]
+          "minimum": ["automated_check"]
         }
       },
       "status": "passing",
