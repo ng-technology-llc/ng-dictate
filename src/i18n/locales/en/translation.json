@@ -226,7 +226,7 @@
       },
       "rescan": {
         "label": "Rescan",
-        "tooltip": "Rescan for models added to the models folder or Hugging Face cache outside Handy"
+        "tooltip": "Rescan for models added to the models folder or Hugging Face cache outside NG Dictate"
       },
       "noModelsMatch": "No models match this filter.",
       "downloaded": "Downloaded",
@@ -605,7 +605,7 @@
       },
       "whatsNewUpdates": {
         "label": "Show What's New",
-        "description": "Show release notes after Handy updates"
+        "description": "Show release notes after NG Dictate updates"
       },
       "appDataDirectory": {
         "title": "App Data Directory",
@@ -626,7 +626,7 @@
         "ggml": {
           "title": "ggml",
           "description": "High-performance tensor library for on-device machine learning inference",
-          "details": "Handy's local speech-to-text is built on transcribe.cpp and ggml. Thanks to the amazing work by Georgi Gerganov and contributors."
+          "details": "NG Dictate's local speech-to-text is built on transcribe.cpp and ggml. Thanks to the amazing work by Georgi Gerganov and contributors."
         },
         "whisper": {
           "title": "Whisper.cpp",
@@ -654,7 +654,7 @@
     "restart": "Restart"
   },
   "whatsNew": {
-    "title": "New in Handy v{{version}}"
+    "title": "New in NG Dictate v{{version}}"
   },
   "common": {
     "loading": "Loading...",

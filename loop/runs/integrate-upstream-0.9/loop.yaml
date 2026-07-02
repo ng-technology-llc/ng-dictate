@@ -44,14 +44,12 @@ objective_brief:
     mode: "goal"
     max_iterations: 20
   assumptions:
-    -
-      confidence: "high"
+    - confidence: "high"
       statement: "The integration should start from product/main on an isolated codex/ branch."
       affects:
         - "REQ-001"
       validation: "Current branch is codex/integrate-upstream-0.9 created from product/main."
-    -
-      confidence: "medium"
+    - confidence: "medium"
       statement: "Full production signing, release publishing, and hardware-specific GPU validation are out of local scope."
       affects:
         - "REQ-003"

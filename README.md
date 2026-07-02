@@ -51,8 +51,8 @@ NG Dictate is built as a Tauri application combining:
 - **Frontend**: React + TypeScript with Tailwind CSS for the settings UI
 - **Backend**: Rust for system integration, audio processing, and ML inference
 - **Core Libraries**:
-  - `whisper-rs`: Local speech recognition with Whisper models
-  - `transcribe-rs`: CPU-optimized speech recognition with Parakeet models
+  - `transcribe-cpp`: Local speech recognition with Whisper-family and GGML/GGUF models
+  - `transcribe-rs`: CPU-optimized speech recognition with ONNX models
   - `cpal`: Cross-platform audio I/O
   - `vad-rs`: Voice Activity Detection
   - `rdev`: Global keyboard shortcuts and system events
@@ -469,7 +469,7 @@ MIT License - see [LICENSE](LICENSE) file for details. NG Dictate preserves upst
 ## Acknowledgments
 
 - **Whisper** by OpenAI for the speech recognition model
-- **whisper.cpp and ggml** for amazing cross-platform whisper inference/acceleration
+- **ggml and transcribe.cpp** for cross-platform speech-to-text inference/acceleration
 - **Silero** for great lightweight VAD
 - **Tauri** team for the excellent Rust-based app framework
 - **Handy contributors** for the upstream foundation of this product line

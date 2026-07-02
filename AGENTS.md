@@ -216,7 +216,9 @@ See the [Troubleshooting](README.md#troubleshooting) section in README.md.
 **Commits:** Use conventional commit prefixes (`feat:`, `fix:`, `docs:`, `refactor:`, `chore:`). Focus the message on _why_, not _what_.
 
 <!-- loop:start -->
+
 ## Loop Harness
+
 - For loop-based work, read `loop/current.yaml` first, then the active run's `context-index.md`.
 - Treat the active run's `evals.yaml` as the Check Catalog.
 - Do not execute before the plan is frozen.

@@ -104,7 +104,7 @@
           ]
         }
       },
-      "status": "failing",
+      "status": "passing",
       "evidence": [
         {
           "timestamp": "2026-07-02T05:35:43Z",
@@ -133,6 +133,13 @@
           "type": "automated_check",
           "summary": "Frontend conflicts were resolved with documented product branding, generated binding, and locale merge decisions.",
           "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T055638Z-T-005.md"
+        },
+        {
+          "timestamp": "2026-07-02T06:00:46Z",
+          "source_task": "T-006",
+          "type": "automated_check",
+          "summary": "Documentation, release note, generated/catalog formatting, and i18n conflicts are resolved with final verification passing.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T060046Z-T-006.md"
         }
       ]
     },
@@ -168,8 +175,16 @@
           ]
         }
       },
-      "status": "failing",
-      "evidence": []
+      "status": "passing",
+      "evidence": [
+        {
+          "timestamp": "2026-07-02T06:00:46Z",
+          "source_task": "T-006",
+          "type": "automated_check",
+          "summary": "Final frontend lint/build, Rust check, translation consistency, and format checks pass locally.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T060046Z-T-006.md"
+        }
+      ]
     },
     {
       "id": "REQ-004",

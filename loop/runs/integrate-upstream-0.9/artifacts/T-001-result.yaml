@@ -5,23 +5,19 @@ touched_files:
   - "loop/runs/integrate-upstream-0.9/evidence/T-001-wip-stash.md"
   - "loop/runs/integrate-upstream-0.9/artifacts/T-001-result.yaml"
 commands:
-  -
-    command: "git status --short --branch"
+  - command: "git status --short --branch"
     exit_code: 0
     stdout_summary: "Before stash, nine product files plus loop state files were modified on codex/integrate-upstream-0.9."
     stderr_summary: ""
-  -
-    command: "git diff --name-status -- <nine pre-existing product files>"
+  - command: "git diff --name-status -- <nine pre-existing product files>"
     exit_code: 0
     stdout_summary: "Confirmed the nine pre-existing product files were modified."
     stderr_summary: ""
-  -
-    command: "git stash push -m \"pre-upstream-0.9-integration-wip\" -- <nine pre-existing product files>"
+  - command: 'git stash push -m "pre-upstream-0.9-integration-wip" -- <nine pre-existing product files>'
     exit_code: 0
     stdout_summary: "Saved a path-limited stash for the nine pre-existing product files only."
     stderr_summary: ""
-  -
-    command: "git stash show --name-status stash@{0}"
+  - command: "git stash show --name-status stash@{0}"
     exit_code: 0
     stdout_summary: "Stash contains BUILD.md, README.md, docs/release/production-dmg-plan.md, flake.nix, scripts/check-release-readiness.ts, src-tauri/src/llm_client.rs, src-tauri/tauri.conf.json, AboutSettings.tsx, and UpdateChecker.tsx."
     stderr_summary: ""
@@ -37,7 +33,6 @@ blockers: []
 artifacts:
   - "loop/runs/integrate-upstream-0.9/evidence/T-001-wip-stash.md"
 requirement_evidence:
-  -
-    requirement_id: "REQ-004"
+  - requirement_id: "REQ-004"
     type: "automated_check"
     summary: "git status and stash inspection confirm pre-existing product WIP was parked without stashing loop state files."

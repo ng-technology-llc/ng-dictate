@@ -1,0 +1,65 @@
+status: passing
+summary: Reconciled release notes, documentation, English source copy, and final verification for the upstream 0.9 integration.
+touched_files:
+  - AGENTS.md
+  - BUILD.md
+  - CONTRIBUTING_TRANSLATIONS.md
+  - README.md
+  - loop/runs/integrate-upstream-0.9/
+  - src-tauri/src/catalog/catalog.json
+  - src/components/settings/models/ModelsSettings.tsx
+  - src/content/release-notes/0.9.0.md
+  - src/i18n/locales/en/translation.json
+commands:
+  - command: git status --short --branch
+    exit_code: 0
+    stdout_summary: Current branch is codex/integrate-upstream-0.9; no unmerged paths or conflict markers remain.
+    stderr_summary: ""
+  - command: bun scripts/check-translations.ts
+    exit_code: 0
+    stdout_summary: All 19 non-English locale files contain the same 453 keys as English.
+    stderr_summary: ""
+  - command: bun run lint
+    exit_code: 0
+    stdout_summary: ESLint completed for src with no reported errors.
+    stderr_summary: ""
+  - command: bun run build
+    exit_code: 0
+    stdout_summary: TypeScript and Vite production build completed successfully.
+    stderr_summary: Vite reported only the existing large chunk warning.
+  - command: cd src-tauri && cargo check
+    exit_code: 0
+    stdout_summary: Rust backend compiles.
+    stderr_summary: Two unused model availability command warnings remain; they are non-blocking.
+  - command: bun run format:check
+    exit_code: 0
+    stdout_summary: Prettier and cargo fmt checks pass after formatting the repo.
+    stderr_summary: ""
+verification:
+  status: passed
+  checks:
+    - git_status_guard
+    - check_translations
+    - frontend_lint
+    - frontend_build
+    - rust_check
+    - format_check
+  summary: All final required checks pass; only non-blocking bundle-size and Rust dead-code warnings remain.
+diff_summary: >
+  Updated product-facing release notes, README, BUILD, translation contribution guidance,
+  and English source copy for NG Dictate/transcribe-cpp. Ran repository formatting so
+  final format gates pass, including generated catalog JSON and loop evidence files.
+requirement_evidence:
+  - requirement_id: REQ-002
+    type: automated_check
+    summary: Documentation, release note, generated/catalog formatting, and i18n conflicts are resolved with final verification passing.
+  - requirement_id: REQ-003
+    type: automated_check
+    summary: Final frontend lint/build, Rust check, translation consistency, and format checks pass locally.
+decisions:
+  - Keep explicit upstream Handy attribution in README while replacing product-facing release/update wording with NG Dictate.
+  - Treat Vite large chunk and Rust dead-code warnings as non-blocking residual warnings because builds/checks exit successfully.
+  - Use full repository formatting in T-006 so the declared format_check gate passes instead of documenting a formatting blocker.
+blockers: []
+artifacts:
+  - loop/runs/integrate-upstream-0.9/artifacts/T-006-result.yaml

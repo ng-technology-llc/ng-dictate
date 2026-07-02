@@ -1,5 +1,5 @@
 schema_version: 2
 active_run_id: "integrate-upstream-0.9"
 active_run: "runs/integrate-upstream-0.9"
-lifecycle: "frozen"
-updated_at: "2026-07-02T05:56:38Z"
+lifecycle: "completed"
+updated_at: "2026-07-02T06:00:46Z"

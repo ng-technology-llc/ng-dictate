@@ -38,6 +38,12 @@ ORT_LIB_LOCATION=$(brew --prefix onnxruntime)/lib ORT_PREFER_DYNAMIC_LINK=1 bun 
 - Visual Studio 2019/2022 with C++ development tools
 - Or Visual Studio Build Tools 2019/2022
 
+> [!IMPORTANT]
+> Windows' 260-character path limit can break the native build. If `bun run tauri build`
+> fails with `MSB3491` / "path exceeds the OS max path limit", see
+> [Windows build fails with `MSB3491`](#windows-build-fails-with-msb3491--path-exceeds-260-characters)
+> in Troubleshooting.
+
 #### Linux
 
 - Build essentials
@@ -47,17 +53,19 @@ ORT_LIB_LOCATION=$(brew --prefix onnxruntime)/lib ORT_PREFER_DYNAMIC_LINK=1 bun 
   ```bash
   # Ubuntu/Debian
   sudo apt update
-  sudo apt install build-essential libasound2-dev pkg-config libssl-dev libvulkan-dev vulkan-tools glslc libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libgtk-layer-shell0 libgtk-layer-shell-dev patchelf cmake
+  sudo apt install build-essential libasound2-dev pkg-config libssl-dev libvulkan-dev vulkan-tools glslc spirv-headers glslang-tools libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libgtk-layer-shell0 libgtk-layer-shell-dev patchelf cmake
 
   # Fedora/RHEL
   sudo dnf groupinstall "Development Tools"
   sudo dnf install alsa-lib-devel pkgconf openssl-devel vulkan-devel \
+    spirv-headers-devel spirv-tools-devel glslang glslc \
     gtk3-devel webkit2gtk4.1-devel libappindicator-gtk3-devel librsvg2-devel \
     gtk-layer-shell gtk-layer-shell-devel \
     cmake
 
   # Arch Linux
   sudo pacman -S base-devel alsa-lib pkgconf openssl vulkan-devel \
+    spirv-headers glslang shaderc \
     gtk3 webkit2gtk-4.1 libappindicator-gtk3 librsvg gtk-layer-shell \
     cmake
   ```
@@ -102,18 +110,21 @@ cd /tmp
 ar x /path/to/ng-dictate/src-tauri/target/release/bundle/deb/ng-dictate_*_amd64.deb data.tar.gz
 tar xzf data.tar.gz
 sudo cp usr/bin/ng-dictate /usr/bin/
-sudo cp -r usr/lib/ng-dictate /usr/lib/
+sudo cp -a usr/lib/. /usr/lib/
 sudo cp -r usr/share/icons/hicolor/* /usr/share/icons/hicolor/
 sudo cp usr/share/applications/NG Dictate.desktop /usr/share/applications/
+sudo ldconfig
 ```
 
-After subsequent rebuilds, only the binary needs re-copying:
+After subsequent rebuilds, copy the binary and any refreshed runtime libraries:
 
 ```bash
 sudo cp src-tauri/target/release/ng-dictate /usr/bin/
+sudo cp -a src-tauri/transcribe-libs/. /usr/lib/
+sudo ldconfig
 ```
 
-Resources only need re-copying if they change upstream (new icons, sounds, etc.).
+Resources only need re-copying if they change upstream (new icons, sounds, models, etc.).
 
 ## Troubleshooting
 
@@ -143,3 +154,25 @@ bun run tauri build -- --bundles deb
 ```
 
 Then install using the deb extraction method above.
+
+### Windows build fails with `MSB3491` / path exceeds 260 characters
+
+On Windows the native build can fail partway through with an error like:
+
+```text
+error MSB3491: Could not write lines to file "...VCTargetsPath.tlog\VCTargetsPath.lastbuildstate".
+Path: ... exceeds the OS max path limit. The fully qualified file name must be less than 260 characters.
+```
+
+This is Windows' legacy 260-character path limit. The native shader build nests
+deep CMake output inside Cargo's target directory, so long checkout paths can
+overflow the limit.
+
+The most reliable workaround is to build with a short target directory:
+
+```powershell
+$env:CARGO_TARGET_DIR = "C:\h"
+bun run tauri build
+```
+
+Alternatively, clone the repo to a short root such as `C:\ng-dictate`.

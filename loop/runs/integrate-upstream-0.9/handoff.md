@@ -1,17 +1,22 @@
 # Handoff
 
 ## Read First
+
 Read `loop/current.yaml`, then the active run's `context-index.md`.
 
 ## Current State
-frozen
+
+completed
 
 ## Last Change
-Completed `T-005`: upstream frontend settings, live overlay, language filtering, live logs, and What's New surfaces are integrated with NG Dictate branding and remote transcription UI. `bun run lint`, `bun run build`, and `cargo check` pass.
+
+Completed `T-006`: release notes, docs, English source copy, and final verification are reconciled. `bun scripts/check-translations.ts`, `bun run lint`, `bun run build`, `cargo check`, and `bun run format:check` pass.
 
 ## Next Action
-Continue with `T-006`: reconcile i18n wording, docs, release notes, and final verification.
+
+All active P0/P1 requirements are passing. Finalize/report the loop run if needed.
 
 ## Do Not Do
+
 Do not apply or drop the WIP stash unless the active task explicitly needs it and records the decision.
-Do not treat stale frontend bindings/i18n as final until `T-005` and `T-006` regenerate and verify them.
+The pre-existing WIP stash remains parked at `04bd10a943b917101f6d29ab9a593a59a83a0b05`.

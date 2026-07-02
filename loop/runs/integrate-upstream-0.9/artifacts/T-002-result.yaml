@@ -13,33 +13,27 @@ touched_files:
   - "src-tauri/tauri.conf.json"
   - "src-tauri/tauri.windows.conf.json"
 commands:
-  -
-    command: "git checkout upstream/main -- <T-002 build files>; git apply --3way <product build patch>"
+  - command: "git checkout upstream/main -- <T-002 build files>; git apply --3way <product build patch>"
     exit_code: 1
     stdout_summary: "Applied upstream build scaffolding and surfaced expected conflicts in workflow, package, Cargo, and Tauri config files."
     stderr_summary: "Conflicts were resolved manually inside T-002 scope."
-  -
-    command: "git diff --check -- <T-002 files>"
+  - command: "git diff --check -- <T-002 files>"
     exit_code: 0
     stdout_summary: "No whitespace errors."
     stderr_summary: ""
-  -
-    command: "cd src-tauri && cargo fmt -- --check"
+  - command: "cd src-tauri && cargo fmt -- --check"
     exit_code: 0
     stdout_summary: "Rust formatting check passed."
     stderr_summary: ""
-  -
-    command: "cd src-tauri && cargo check"
+  - command: "cd src-tauri && cargo check"
     exit_code: 0
     stdout_summary: "Rust compile check passed after temporarily keeping transcribe-rs whisper-cpp feature for legacy call sites."
     stderr_summary: ""
-  -
-    command: "bun install --frozen-lockfile"
+  - command: "bun install --frozen-lockfile"
     exit_code: 0
     stdout_summary: "Bun lockfile validation passed; postinstall regenerated .nix/bun.nix and .nix/bun-lock-hash."
     stderr_summary: ""
-  -
-    command: "git status --short --branch"
+  - command: "git status --short --branch"
     exit_code: 0
     stdout_summary: "Branch is codex/integrate-upstream-0.9 with T-002 build files staged and loop state pending completion."
     stderr_summary: ""
@@ -59,12 +53,10 @@ blockers: []
 artifacts:
   - "loop/runs/integrate-upstream-0.9/decisions.md"
 requirement_evidence:
-  -
-    requirement_id: "REQ-001"
+  - requirement_id: "REQ-001"
     type: "automated_check"
     summary: "transcribe-cpp build scaffolding and runtime package files are present; cargo check passes with temporary legacy feature compatibility."
-  -
-    requirement_id: "REQ-002"
+  - requirement_id: "REQ-002"
     type: "automated_check"
     summary: "Build/package conflicts were resolved with recorded decisions preserving product identity and upstream runtime staging."
 review_gate:

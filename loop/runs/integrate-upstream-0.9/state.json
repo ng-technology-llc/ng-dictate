@@ -1,20 +1,22 @@
 {
   "schema_version": 2,
   "objective_run_id": "integrate-upstream-0.9",
-  "lifecycle": "frozen",
+  "lifecycle": "completed",
   "plan_version": 1,
-  "iteration": 5,
+  "iteration": 6,
   "current_task": null,
-  "last_task": "T-005",
+  "last_task": "T-006",
   "last_verification": {
     "status": "passed",
     "checks": [
       "git_status_guard",
+      "check_translations",
       "frontend_lint",
       "frontend_build",
-      "rust_check"
+      "rust_check",
+      "format_check"
     ],
-    "summary": "Frontend lint/build and Rust check pass after merging upstream UI surfaces with product branding and remote transcription settings."
+    "summary": "All final required checks pass; only non-blocking bundle-size and Rust dead-code warnings remain."
   },
   "blockers": [],
   "freeze": {
@@ -23,5 +25,5 @@
     "requires_confirmation_to_change": true
   },
   "finalization": null,
-  "updated_at": "2026-07-02T05:56:38Z"
+  "updated_at": "2026-07-02T06:00:46Z"
 }

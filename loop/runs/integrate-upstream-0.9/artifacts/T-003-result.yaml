@@ -15,28 +15,23 @@ touched_files:
   - "src/bindings.ts"
   - "src/stores/modelStore.ts"
 commands:
-  -
-    command: "git checkout upstream/main -- <T-003 model files>; git apply --3way <product model-store patch>"
+  - command: "git checkout upstream/main -- <T-003 model files>; git apply --3way <product model-store patch>"
     exit_code: 1
     stdout_summary: "Applied upstream catalog/model files; product modelStore patch conflicted and was resolved manually."
     stderr_summary: "Conflict was limited to src/stores/modelStore.ts."
-  -
-    command: "cd src-tauri && cargo check"
+  - command: "cd src-tauri && cargo check"
     exit_code: 0
     stdout_summary: "Rust compile check passed with three temporary unused-code warnings expected before T-004 consumes transcribe-cpp capability APIs."
     stderr_summary: ""
-  -
-    command: "bun run build"
+  - command: "bun run build"
     exit_code: 0
     stdout_summary: "TypeScript and Vite production build passed."
     stderr_summary: ""
-  -
-    command: "cd src-tauri && cargo fmt -- --check"
+  - command: "cd src-tauri && cargo fmt -- --check"
     exit_code: 0
     stdout_summary: "Rust formatting check passed."
     stderr_summary: ""
-  -
-    command: "git diff --check -- <T-003 files>"
+  - command: "git diff --check -- <T-003 files>"
     exit_code: 0
     stdout_summary: "No whitespace errors."
     stderr_summary: ""
@@ -57,12 +52,10 @@ blockers: []
 artifacts:
   - "loop/runs/integrate-upstream-0.9/decisions.md"
 requirement_evidence:
-  -
-    requirement_id: "REQ-001"
+  - requirement_id: "REQ-001"
     type: "automated_check"
     summary: "Catalog-backed model descriptors, GGUF probing, and capability metadata are integrated; cargo check and frontend build pass."
-  -
-    requirement_id: "REQ-002"
+  - requirement_id: "REQ-002"
     type: "automated_check"
     summary: "Model-store conflicts were resolved with remote-provider onboarding behavior preserved and temporary transcription compatibility documented."
 review_gate:
