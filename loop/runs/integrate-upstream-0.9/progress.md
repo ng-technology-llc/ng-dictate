@@ -22,3 +22,6 @@ None
 
 ## Next Entry Point
 Read `context-index.md`, confirm P0/P1 scope with the user, then freeze after review.
+
+## Freeze
+- 2026-07-02T05:26:31Z: Plan version 1 frozen.

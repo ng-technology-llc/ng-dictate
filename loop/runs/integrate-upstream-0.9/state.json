@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "objective_run_id": "integrate-upstream-0.9",
-  "lifecycle": "planned",
+  "lifecycle": "frozen",
   "plan_version": 1,
   "iteration": 0,
   "current_task": null,
@@ -12,7 +12,11 @@
     "summary": null
   },
   "blockers": [],
-  "freeze": null,
+  "freeze": {
+    "frozen_at": "2026-07-02T05:26:31Z",
+    "frozen_by": "codex",
+    "requires_confirmation_to_change": true
+  },
   "finalization": null,
-  "updated_at": "2026-07-02T05:22:54Z"
+  "updated_at": "2026-07-02T05:26:31Z"
 }
