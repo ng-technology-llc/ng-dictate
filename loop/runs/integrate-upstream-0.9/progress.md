@@ -10,12 +10,13 @@ frozen
 None
 
 ## Last Completed
-T-003
+T-004
 
 ## Verification Evidence
 - T-001: `git_status_guard` passed. Pre-existing product-file WIP is parked in stash `04bd10a943b917101f6d29ab9a593a59a83a0b05`; see `evidence/T-001-wip-stash.md`.
 - T-002: `git_status_guard` and `rust_check` passed. Build/package scaffolding from upstream was integrated with product identity preserved; see `task-logs/20260702T053543Z-T-002.md`.
 - T-003: `git_status_guard`, `rust_check`, and `frontend_build` passed. Catalog/model capability surfaces are integrated with remote-provider onboarding preserved; see `task-logs/20260702T054055Z-T-003.md`.
+- T-004: `git_status_guard` and `rust_check` passed. Transcription pipeline routing now supports upstream native local transcription and product remote transcription together; see `task-logs/20260702T054830Z-T-004.md`.
 
 ## Blockers
 
@@ -24,7 +25,7 @@ T-003
 - Refined default draft plan into bounded integration tasks and concrete check commands.
 
 ## Next Entry Point
-Read `context-index.md`, validate, then continue with `T-004`.
+Read `context-index.md`, validate, then continue with `T-005`.
 
 ## Freeze
 - 2026-07-02T05:26:31Z: Plan version 1 frozen.
@@ -46,3 +47,9 @@ Read `context-index.md`, validate, then continue with `T-004`.
 - Status: passing
 - Summary: Integrated upstream model catalog, GGUF probing, and model capability surfaces while preserving remote-provider onboarding behavior.
 - Log: /Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054055Z-T-003.md
+
+## Iteration 4
+- Task: T-004
+- Status: passing
+- Summary: Reconciled transcription pipeline routing so upstream native local transcription and product remote transcription coexist.
+- Log: /Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054830Z-T-004.md

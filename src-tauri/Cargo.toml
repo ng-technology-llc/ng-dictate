@@ -69,10 +69,7 @@ rusqlite = { version = "0.37", features = ["bundled"] }
 tar = "0.4.44"
 flate2 = "1.0"
 sha2 = "0.10"
-# T-004 migrates the remaining legacy whisper_cpp call sites to transcribe-cpp.
-# Keep whisper-cpp enabled during the build-scaffolding slice so cargo check stays
-# meaningful while the integration is still staged.
-transcribe-rs = { version = "0.3.8", features = ["whisper-cpp", "onnx"] }
+transcribe-rs = { version = "0.3.8", features = ["onnx"] }
 transcribe-cpp = { version = "0.1.0", default-features = false }
 handy-keys = "0.2.4"
 ferrous-opencc = "0.2.3"

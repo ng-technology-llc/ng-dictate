@@ -1,0 +1,61 @@
+status: passing
+summary: Reconciled transcription pipeline routing so upstream native local transcription and product remote transcription coexist.
+touched_files:
+  - src-tauri/Cargo.lock
+  - src-tauri/Cargo.toml
+  - src-tauri/src/actions.rs
+  - src-tauri/src/audio_toolkit/audio/mod.rs
+  - src-tauri/src/audio_toolkit/audio/recorder.rs
+  - src-tauri/src/audio_toolkit/bin/cli.rs
+  - src-tauri/src/audio_toolkit/mod.rs
+  - src-tauri/src/audio_toolkit/text.rs
+  - src-tauri/src/audio_toolkit/vad/mod.rs
+  - src-tauri/src/audio_toolkit/vad/silero.rs
+  - src-tauri/src/audio_toolkit/vad/smoothed.rs
+  - src-tauri/src/cli.rs
+  - src-tauri/src/lib.rs
+  - src-tauri/src/llm_client.rs
+  - src-tauri/src/managers/audio.rs
+  - src-tauri/src/managers/model.rs
+  - src-tauri/src/managers/transcription.rs
+  - src-tauri/src/overlay.rs
+  - src-tauri/src/settings.rs
+  - src-tauri/src/shortcut/mod.rs
+  - src-tauri/src/transcription_coordinator.rs
+  - src-tauri/src/tray.rs
+  - src-tauri/src/utils.rs
+commands:
+  - command: git status --short --branch
+    exit_code: 0
+    stdout_summary: Current branch is codex/integrate-upstream-0.9; no unmerged paths remain after conflict resolution.
+    stderr_summary: ""
+  - command: cd src-tauri && cargo check
+    exit_code: 0
+    stdout_summary: Rust backend compiles with upstream native transcription, streaming audio manager, CLI, and product remote-provider routing.
+    stderr_summary: Two unused model availability command warnings remain for the later frontend/settings slice.
+verification:
+  status: passed
+  checks:
+    - git_status_guard
+    - rust_check
+  summary: No unresolved conflicts remain, old whisper-cpp compatibility was removed, and cargo check passes.
+diff_summary: >
+  Added an async transcription routing boundary, preserved upstream streaming finalize/fallback behavior,
+  kept product remote transcription routing, integrated upstream Rust audio/overlay helpers required by streaming,
+  and removed the temporary legacy Whisper engine feature.
+requirement_evidence:
+  - requirement_id: REQ-001
+    type: automated_check
+    summary: Local native transcription, live streaming, CLI, and remote-provider routing now compile together.
+  - requirement_id: REQ-002
+    type: automated_check
+    summary: Transcription/settings/audio conflicts were resolved with documented routing and compatibility decisions.
+decisions:
+  - TranscriptionManager::transcribe is the async boundary for local and remote provider routing.
+  - Local provider runs the upstream native transcribe-cpp and ONNX implementation inside spawn_blocking.
+  - Remote provider keeps the product remote transcription client and shared text filtering.
+  - Live streaming finalized text takes priority; empty or absent streaming output falls back to unified transcription.
+  - The temporary EngineType::Whisper variant and transcribe-rs whisper-cpp feature were removed.
+blockers: []
+artifacts:
+  - loop/runs/integrate-upstream-0.9/artifacts/T-004-result.yaml

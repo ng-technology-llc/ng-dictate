@@ -24,9 +24,6 @@ use tauri::{AppHandle, Emitter, Manager};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
 pub enum EngineType {
-    /// Temporary legacy variant kept until T-004 migrates the transcription
-    /// pipeline away from transcribe_rs::whisper_cpp call sites.
-    Whisper,
     /// Any GGML/GGUF model loaded through transcribe-cpp (Whisper, Parakeet,
     /// Voxtral, Qwen3-ASR, Nemotron, …). The architecture is auto-detected from
     /// the file, so this one variant covers the whole transcribe-cpp family.

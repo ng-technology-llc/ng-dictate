@@ -55,6 +55,13 @@
           "type": "automated_check",
           "summary": "Catalog-backed model descriptors, GGUF probing, and capability metadata are integrated; cargo check and frontend build pass.",
           "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054055Z-T-003.md"
+        },
+        {
+          "timestamp": "2026-07-02T05:48:30Z",
+          "source_task": "T-004",
+          "type": "automated_check",
+          "summary": "Local native transcription, live streaming, CLI, and remote-provider routing now compile together.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054830Z-T-004.md"
         }
       ]
     },
@@ -105,6 +112,13 @@
           "type": "automated_check",
           "summary": "Model-store conflicts were resolved with remote-provider onboarding behavior preserved and temporary transcription compatibility documented.",
           "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054055Z-T-003.md"
+        },
+        {
+          "timestamp": "2026-07-02T05:48:30Z",
+          "source_task": "T-004",
+          "type": "automated_check",
+          "summary": "Transcription/settings/audio conflicts were resolved with documented routing and compatibility decisions.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054830Z-T-004.md"
         }
       ]
     },

@@ -7,11 +7,11 @@ Read `loop/current.yaml`, then the active run's `context-index.md`.
 frozen
 
 ## Last Change
-Completed `T-003`: upstream catalog/model capability surfaces are integrated, product remote-provider onboarding is preserved, and `cargo check` plus `bun run build` pass.
+Completed `T-004`: transcription pipeline routing now keeps upstream native local transcription, live streaming finalize/fallback behavior, CLI compatibility, and product remote transcription together. `cargo check` passes.
 
 ## Next Action
-Continue with `T-004`: reconcile transcription pipeline, remote transcription, CLI, and runtime language handling.
+Continue with `T-005`: integrate settings UI, overlay, language selector, live logs, and release notes surfaces.
 
 ## Do Not Do
 Do not apply or drop the WIP stash unless the active task explicitly needs it and records the decision.
-Do not remove the temporary `transcribe-rs` `whisper-cpp` feature, `EngineType::Whisper`, or temporary `TranscribeCpp` legacy route before `T-004` migrates the remaining local transcription call sites.
+Do not treat stale frontend bindings/i18n as final until `T-005` and `T-006` regenerate and verify them.
