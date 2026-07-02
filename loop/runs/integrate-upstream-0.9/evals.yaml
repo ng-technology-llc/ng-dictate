@@ -1,0 +1,43 @@
+schema_version: 2
+checks:
+  git_status_guard:
+    description: "Inspect current branch and dirty worktree so pre-existing user changes are not lost."
+    command: "git status --short --branch"
+    required_for:
+      - "P0"
+      - "P1"
+    timeout_seconds: 120
+  frontend_lint:
+    description: "Run ESLint for the frontend."
+    command: "bun run lint"
+    required_for:
+      - "P0"
+      - "P1"
+    timeout_seconds: 300
+  frontend_build:
+    description: "Build TypeScript/Vite frontend."
+    command: "bun run build"
+    required_for:
+      - "P0"
+      - "P1"
+    timeout_seconds: 300
+  check_translations:
+    description: "Check that every locale has the same translation keys as English."
+    command: "bun scripts/check-translations.ts"
+    required_for:
+      - "P1"
+    timeout_seconds: 300
+  rust_check:
+    description: "Run Rust compile checks for the Tauri backend."
+    command: "cd src-tauri && cargo check"
+    required_for:
+      - "P0"
+      - "P1"
+    timeout_seconds: 900
+  format_check:
+    description: "Check frontend and Rust formatting."
+    command: "bun run format:check"
+    required_for:
+      - "P0"
+      - "P1"
+    timeout_seconds: 300

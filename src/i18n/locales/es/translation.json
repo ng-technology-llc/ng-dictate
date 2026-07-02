@@ -5,9 +5,9 @@
     "copyLastTranscript": "Copiar la última transcripción",
     "unloadModel": "Descargar modelo",
     "model": "Modelo",
-    "remoteServer": "Remote Server",
     "quit": "Salir",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "remoteServer": "Remote Server"
   },
   "sidebar": {
     "general": "General",
@@ -20,11 +20,12 @@
   },
   "onboarding": {
     "subtitle": "Para comenzar, elige un modelo de transcripción",
+    "existingModelsTitle": "Compatible Models",
+    "downloadModelsTitle": "Available to Download",
+    "showAllModels": "Show all {{total}} models",
+    "showFewerModels": "Show fewer models",
     "recommended": "Recomendado",
-    "download": "Descargar",
-    "downloading": "Descargando...",
     "customModelDescription": "Sin soporte oficial",
-    "downloadFailed": "La descarga falló. Por favor, inténtalo de nuevo.",
     "modelCard": {
       "accuracy": "precisión",
       "speed": "velocidad"
@@ -96,6 +97,7 @@
       }
     },
     "errors": {
+      "selectModel": "Failed to select model",
       "loadModels": "Error al cargar los modelos disponibles",
       "downloadModel": "Error al descargar el modelo: {{error}}"
     },
@@ -118,10 +120,14 @@
         "checkFailed": "Error al verificar permisos. Por favor, inténtalo de nuevo.",
         "requestFailed": "Error al solicitar permiso. Por favor, inténtalo de nuevo."
       }
-    }
+    },
+    "download": "Descargar",
+    "downloading": "Descargando...",
+    "downloadFailed": "La descarga falló. Por favor, inténtalo de nuevo."
   },
   "modelSelector": {
     "custom": "Personalizado",
+    "streaming": "Streaming",
     "active": "Activo",
     "switching": "Cambiando...",
     "noModelsAvailable": "No hay modelos disponibles",
@@ -142,14 +148,17 @@
     "downloadSpeed": "{{speed}} MB/s",
     "capabilities": {
       "languageSelection": "Soporta múltiples idiomas de entrada",
-      "multiLanguage": "Multiidioma",
+      "languageCount": "{{total}} languages",
       "translation": "Puede traducir al inglés",
       "translate": "Traducir al inglés",
       "singleLanguage": "Solo admite este idioma",
-      "languageOnly": "Solo {{language}}"
+      "languageOnly": "Solo {{language}}",
+      "streaming": "Muestra la transcripción en vivo mientras hablas",
+      "multiLanguage": "Multiidioma"
     },
     "cancel": "Cancelar",
     "cancelDownload": "Cancelar descarga",
+    "legacy": "Heredado",
     "remoteServerMode": "Remote Server",
     "remoteModelReady": "Remote Model Ready"
   },
@@ -161,20 +170,25 @@
     "models": {
       "title": "Modelos de Transcripción",
       "description": "Selecciona un modelo de transcripción o descarga modelos adicionales. Diferentes modelos ofrecen distintos niveles de precisión y velocidad.",
-      "downloaded": "Descargados",
-      "available": "Disponibles para Descargar",
       "deleteConfirm": "¿Estás seguro de que deseas eliminar {{modelName}}? Necesitarás descargarlo de nuevo para usarlo.",
       "deleteActiveConfirm": "{{modelName}} es tu modelo activo. Eliminarlo detendrá las transcripciones hasta que selecciones un nuevo modelo. ¿Estás seguro?",
       "deleteTitle": "Eliminar modelo",
       "filters": {
+        "allLanguages": "Todos los idiomas",
         "all": "Todos",
         "multiLanguage": "Multiidioma",
-        "translation": "Traducción",
-        "allLanguages": "Todos los idiomas"
+        "translation": "Traducción"
       },
       "noModelsMatch": "Ningún modelo coincide con este filtro.",
       "yourModels": "Modelos descargados",
       "availableModels": "Disponibles para descargar",
+      "searchPlaceholder": "Buscar modelos por nombre…",
+      "rescan": {
+        "label": "Volver a escanear",
+        "tooltip": "Vuelve a escanear en busca de modelos añadidos a la carpeta de modelos o a la caché de Hugging Face fuera de Handy"
+      },
+      "downloaded": "Descargados",
+      "available": "Disponibles para Descargar",
       "transcriptionProvider": {
         "title": "Transcription Provider",
         "description": "Choose where speech-to-text runs.",
@@ -236,10 +250,10 @@
       "language": {
         "title": "Idioma",
         "description": "Selecciona el idioma para el reconocimiento de voz. Auto detectará automáticamente el idioma, mientras que seleccionar un idioma específico puede mejorar la precisión para ese idioma.",
-        "descriptionUnsupported": "El modelo Parakeet detecta automáticamente el idioma. No se necesita selección manual.",
         "searchPlaceholder": "Buscar idiomas...",
         "noResults": "No se encontraron idiomas",
-        "auto": "Auto"
+        "auto": "Auto",
+        "descriptionUnsupported": "El modelo Parakeet detecta automáticamente el idioma. No se necesita selección manual."
       },
       "pushToTalk": {
         "label": "Presionar para Hablar",
@@ -270,7 +284,6 @@
       }
     },
     "advanced": {
-      "title": "Avanzado",
       "groups": {
         "app": "Aplicación",
         "output": "Salida",
@@ -287,7 +300,7 @@
         "description": "Mantiene el flujo del micrófono abierto durante 30 segundos después de detener la grabación, reduciendo la latencia en transcripciones consecutivas. Puede degradar la calidad del audio Bluetooth mientras está activo."
       },
       "acceleration": {
-        "whisper": {
+        "transcribe": {
           "title": "Aceleración de Whisper",
           "description": "Aceleración por hardware para modelos Whisper. Auto usa GPU si está disponible (Metal en macOS, Vulkan en Windows/Linux)."
         },
@@ -296,9 +309,13 @@
           "description": "Aceleración por hardware para modelos ONNX (Parakeet, Canary, Moonshine, etc.). DirectML en Windows es experimental. Los modelos pueden fallar al transcribir."
         },
         "gpuDevice": {
+          "auto": "Auto",
           "title": "Dispositivo GPU",
-          "description": "Seleccione qué GPU usar para la inferencia de Whisper. Auto elige la GPU dedicada.",
-          "auto": "Auto"
+          "description": "Seleccione qué GPU usar para la inferencia de Whisper. Auto elige la GPU dedicada."
+        },
+        "whisper": {
+          "title": "Aceleración de Whisper",
+          "description": "Aceleración por hardware para modelos Whisper. Auto usa GPU si está disponible (Metal en macOS, Vulkan en Windows/Linux)."
         }
       },
       "startHidden": {
@@ -314,6 +331,23 @@
         "description": "Mostrar el icono de NG Dictate en la bandeja del sistema."
       },
       "overlay": {
+        "style": {
+          "title": "Overlay",
+          "description": "Choose the recording overlay: None hides it, Minimal shows a compact pill, Live shows transcription in real time as you speak (streaming-capable models only — look for the Streaming badge in the model picker). On Linux 'None' is recommended.",
+          "options": {
+            "none": "Ninguna",
+            "minimal": "Minimal",
+            "live": "Live"
+          }
+        },
+        "position": {
+          "title": "Posición de Superposición",
+          "description": "Mostrar superposición de retroalimentación visual durante la grabación y transcripción. En Linux se recomienda 'Ninguna'.",
+          "options": {
+            "bottom": "Abajo",
+            "top": "Arriba"
+          }
+        },
         "title": "Posición de Superposición",
         "description": "Mostrar superposición de retroalimentación visual durante la grabación y transcripción. En Linux se recomienda 'Ninguna'.",
         "options": {
@@ -387,10 +421,14 @@
         "add": "Agregar",
         "remove": "Eliminar {{word}}",
         "duplicate": "\"{{word}}\" ya existe"
-      }
+      },
+      "voiceActivityDetection": {
+        "title": "Voice Activity Detection",
+        "description": "Filter silence from recordings. Streaming-capable models use a longer VAD tail; disabling VAD records raw audio."
+      },
+      "title": "Avanzado"
     },
     "postProcessing": {
-      "title": "Post Proceso",
       "hotkey": {
         "title": "Tecla de acceso rápido"
       },
@@ -401,10 +439,10 @@
           "description": "Selecciona un proveedor compatible con OpenAI."
         },
         "appleIntelligence": {
+          "unavailable": "Apple Intelligence no está disponible en este dispositivo. Requiere un Mac con Apple Silicon ejecutando macOS Tahoe (26.0) o posterior con Apple Intelligence habilitado en Ajustes del Sistema.",
           "title": "Apple Intelligence",
           "description": "Se ejecuta completamente en el dispositivo. No se requiere clave API ni acceso a la red.",
-          "requirements": "Requiere un Mac con Apple Silicon ejecutando macOS Tahoe (26.0) o posterior. Apple Intelligence debe estar habilitado en Ajustes del Sistema.",
-          "unavailable": "Apple Intelligence no está disponible en este dispositivo. Requiere un Mac con Apple Silicon ejecutando macOS Tahoe (26.0) o posterior con Apple Intelligence habilitado en Ajustes del Sistema."
+          "requirements": "Requiere un Mac con Apple Silicon ejecutando macOS Tahoe (26.0) o posterior. Apple Intelligence debe estar habilitado en Ajustes del Sistema."
         },
         "baseUrl": {
           "title": "URL Base",
@@ -418,13 +456,13 @@
         },
         "model": {
           "title": "Modelo",
-          "descriptionApple": "Proporciona un límite de tokens numérico opcional o mantén el preajuste predeterminado en el dispositivo.",
           "descriptionCustom": "Proporciona el identificador del modelo esperado por tu endpoint personalizado.",
           "descriptionDefault": "Elige un modelo expuesto por el proveedor seleccionado.",
-          "placeholderApple": "Apple Intelligence",
           "placeholderWithOptions": "Buscar o seleccionar un modelo",
           "placeholderNoOptions": "Escribe un nombre de modelo",
-          "refreshModels": "Actualizar modelos"
+          "refreshModels": "Actualizar modelos",
+          "descriptionApple": "Proporciona un límite de tokens numérico opcional o mantén el preajuste predeterminado en el dispositivo.",
+          "placeholderApple": "Apple Intelligence"
         }
       },
       "prompts": {
@@ -447,7 +485,8 @@
         "cancel": "Cancelar",
         "selectToEdit": "Selecciona un prompt arriba para ver y editar sus detalles.",
         "createFirst": "Haz clic en 'Crear Nuevo Prompt' arriba para crear tu primer prompt de post procesamiento."
-      }
+      },
+      "title": "Post Proceso"
     },
     "history": {
       "title": "Historial",
@@ -473,6 +512,17 @@
       "logLevel": {
         "title": "Nivel de Registro",
         "description": "Establece el nivel de detalle del registro"
+      },
+      "liveLogs": {
+        "title": "Registros en Vivo",
+        "description": "Transmite los registros de la aplicación en tiempo real para diagnosticar problemas sin abrir el archivo de registro. Solo se muestran los registros emitidos mientras este panel está abierto; respeta el ajuste de Nivel de Registro de arriba.",
+        "live": "En Vivo",
+        "paused": "En Pausa",
+        "pause": "Pausar",
+        "resume": "Reanudar",
+        "copied": "Copiado",
+        "lineCount": "{{count}} líneas",
+        "empty": "Esperando registros… Las entradas aparecerán aquí a medida que la aplicación las emita."
       },
       "updateChecks": {
         "label": "Buscar Actualizaciones",
@@ -538,6 +588,13 @@
       "recordingBuffer": {
         "title": "Búfer de grabación adicional",
         "description": "Tiempo adicional (en milisegundos) para seguir grabando después de soltar la tecla, para capturar el audio restante. 0 = sin búfer adicional."
+      },
+      "whatsNewPreview": {
+        "title": "Vista previa de novedades",
+        "description": "Abrir la nota de la versión incluida más reciente sin marcarla como vista",
+        "button": "Vista previa",
+        "noNotes": "No se encontraron notas de la versión incluidas",
+        "error": "No se pudo mostrar la vista previa de las notas de la versión"
       }
     },
     "about": {
@@ -550,6 +607,11 @@
         "title": "Directorio de Datos de la Aplicación",
         "description": "Ubicación donde NG Dictate almacena sus datos"
       },
+      "sourceCode": {
+        "title": "Código Fuente",
+        "description": "Ver código fuente y contribuir",
+        "button": "Ver en GitHub"
+      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",
@@ -557,22 +619,27 @@
       },
       "acknowledgments": {
         "title": "Reconocimientos",
+        "ggml": {
+          "title": "ggml",
+          "description": "Inferencia de alto rendimiento del modelo de reconocimiento automático de voz Whisper de OpenAI",
+          "details": "Handy usa ggml para procesamiento de voz a texto rápido y local. Gracias al increíble trabajo de Georgi Gerganov y colaboradores."
+        },
         "whisper": {
           "title": "Whisper.cpp",
           "description": "Inferencia de alto rendimiento del modelo de reconocimiento automático de voz Whisper de OpenAI",
           "details": "NG Dictate usa Whisper.cpp para procesamiento de voz a texto rápido y local. Gracias al increíble trabajo de Georgi Gerganov y colaboradores."
         }
+      },
+      "whatsNewUpdates": {
+        "label": "Mostrar novedades",
+        "description": "Mostrar notas de la versión después de las actualizaciones de Handy"
       }
     }
   },
   "footer": {
-    "downloadingModel": "Descargando {{model}}...",
     "checkingUpdates": "Buscando actualizaciones...",
-    "updateAvailable": "Actualización disponible: {{version}}",
     "updateAvailableShort": "Actualización disponible",
     "upToDate": "Actualizado",
-    "downloadUpdate": "Descargar Actualización",
-    "restart": "Reiniciar",
     "updateCheckingDisabled": "Búsqueda de Actualizaciones Deshabilitada",
     "downloading": "Descargando... {{progress}}%",
     "installing": "Instalando...",
@@ -580,34 +647,40 @@
     "checkForUpdates": "Buscar actualizaciones",
     "portableUpdateTitle": "Manual update required",
     "portableUpdateMessage": "Portable installs cannot be updated automatically. To update: download the latest NSIS installer from GitHub Releases, install it to the same folder, then copy your Data/ folder (settings, models, recordings) from the old version to the new one.",
-    "portableUpdateButton": "Open GitHub Releases"
+    "portableUpdateButton": "Open GitHub Releases",
+    "downloadingModel": "Descargando {{model}}...",
+    "updateAvailable": "Actualización disponible: {{version}}",
+    "downloadUpdate": "Descargar Actualización",
+    "restart": "Reiniciar"
   },
   "common": {
     "loading": "Cargando...",
+    "delete": "Eliminar",
+    "close": "Cerrar",
+    "open": "Abrir",
+    "copy": "Copiar",
+    "clear": "Limpiar",
+    "noOptionsFound": "No se encontraron opciones",
     "save": "Guardar",
     "cancel": "Cancelar",
     "reset": "Restablecer",
     "add": "Agregar",
     "remove": "Eliminar",
-    "delete": "Eliminar",
     "edit": "Editar",
     "create": "Crear",
     "update": "Actualizar",
-    "close": "Cerrar",
-    "open": "Abrir",
     "default": "Predeterminado",
     "enabled": "Habilitado",
     "disabled": "Deshabilitado",
     "on": "Activado",
     "off": "Desactivado",
     "yes": "Sí",
-    "no": "No",
-    "noOptionsFound": "No se encontraron opciones"
+    "no": "No"
   },
   "accessibility": {
-    "permissionsRequired": "Se Requieren Permisos de Accesibilidad",
     "permissionsDescription": "NG Dictate necesita permisos de accesibilidad para escribir texto transcrito.",
     "openSettings": "Abrir Ajustes del Sistema",
+    "permissionsRequired": "Se Requieren Permisos de Accesibilidad",
     "dismiss": "Descartar"
   },
   "errors": {
@@ -625,7 +698,8 @@
     "modelLoadFailed": "Error al cargar el modelo: {{model}}",
     "modelLoadFailedUnknown": "modelo desconocido",
     "pasteFailedTitle": "Error al pegar el texto",
-    "pasteFailed": "No se pudo pegar el texto en la aplicación activa."
+    "pasteFailed": "No se pudo pegar el texto en la aplicación activa.",
+    "transcriptionFailedTitle": "Error de transcripción"
   },
   "appLanguage": {
     "title": "Idioma de la aplicación",
@@ -634,5 +708,8 @@
   "overlay": {
     "transcribing": "Transcribiendo...",
     "processing": "Procesando..."
+  },
+  "whatsNew": {
+    "title": "Nuevo en Handy v{{version}}"
   }
 }

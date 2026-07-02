@@ -1,0 +1,233 @@
+{
+  "schema_version": 2,
+  "objective": "Safely integrate upstream/main 0.9.0 capabilities into product/main without losing product-line behavior.",
+  "non_goals": [
+    "Do not push, open a PR, or publish a release.",
+    "Do not remove remote transcription/product-line behavior unless a conflict makes it technically impossible and the decision is recorded.",
+    "Do not perform broad UI redesign unrelated to upstream 0.9.0 integration.",
+    "Do not rewrite branding/legal content beyond what is necessary to reconcile upstream changes with product/main."
+  ],
+  "items": [
+    {
+      "id": "REQ-001",
+      "priority": "P0",
+      "category": "functional",
+      "description": "Integration branch contains upstream transcribe.cpp, streaming model, catalog, overlay, language selector, debug CLI, and bug-fix capabilities while preserving product/main branding, release flow, and remote transcription behavior.",
+      "source": {
+        "objective_brief_field": "done",
+        "source_text": "Integration branch contains upstream transcribe.cpp, streaming model, catalog, overlay, language selector, debug CLI, and bug-fix capabilities while preserving product/main branding, release flow, and remote transcription behavior."
+      },
+      "verification": {
+        "checks": [
+          "git_status_guard",
+          "frontend_lint",
+          "frontend_build",
+          "rust_check",
+          "format_check"
+        ],
+        "expected": "required checks pass and acceptance evidence is present",
+        "acceptance_evidence": {
+          "required": true,
+          "allowed_sources": [
+            "automated_check",
+            "code_review",
+            "manual_confirmation",
+            "screenshot",
+            "artifact"
+          ],
+          "minimum": [
+            "automated_check"
+          ]
+        }
+      },
+      "status": "passing",
+      "evidence": [
+        {
+          "timestamp": "2026-07-02T05:35:43Z",
+          "source_task": "T-002",
+          "type": "automated_check",
+          "summary": "transcribe-cpp build scaffolding and runtime package files are present; cargo check passes with temporary legacy feature compatibility.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T053543Z-T-002.md"
+        },
+        {
+          "timestamp": "2026-07-02T05:40:55Z",
+          "source_task": "T-003",
+          "type": "automated_check",
+          "summary": "Catalog-backed model descriptors, GGUF probing, and capability metadata are integrated; cargo check and frontend build pass.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054055Z-T-003.md"
+        },
+        {
+          "timestamp": "2026-07-02T05:48:30Z",
+          "source_task": "T-004",
+          "type": "automated_check",
+          "summary": "Local native transcription, live streaming, CLI, and remote-provider routing now compile together.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054830Z-T-004.md"
+        },
+        {
+          "timestamp": "2026-07-02T05:56:38Z",
+          "source_task": "T-005",
+          "type": "automated_check",
+          "summary": "Upstream user-facing frontend capabilities are reachable and compile with product remote-provider UI.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T055638Z-T-005.md"
+        }
+      ]
+    },
+    {
+      "id": "REQ-002",
+      "priority": "P1",
+      "category": "functional",
+      "description": "Conflicts are resolved with documented decisions for transcription/model architecture, release packaging, branding/legal copy, and generated bindings/i18n.",
+      "source": {
+        "objective_brief_field": "done",
+        "source_text": "Conflicts are resolved with documented decisions for transcription/model architecture, release packaging, branding/legal copy, and generated bindings/i18n."
+      },
+      "verification": {
+        "checks": [
+          "git_status_guard",
+          "frontend_lint",
+          "frontend_build",
+          "rust_check",
+          "format_check"
+        ],
+        "expected": "required checks pass and acceptance evidence is present",
+        "acceptance_evidence": {
+          "required": true,
+          "allowed_sources": [
+            "automated_check",
+            "code_review",
+            "manual_confirmation",
+            "screenshot",
+            "artifact"
+          ],
+          "minimum": [
+            "automated_check"
+          ]
+        }
+      },
+      "status": "passing",
+      "evidence": [
+        {
+          "timestamp": "2026-07-02T05:35:43Z",
+          "source_task": "T-002",
+          "type": "automated_check",
+          "summary": "Build/package conflicts were resolved with recorded decisions preserving product identity and upstream runtime staging.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T053543Z-T-002.md"
+        },
+        {
+          "timestamp": "2026-07-02T05:40:55Z",
+          "source_task": "T-003",
+          "type": "automated_check",
+          "summary": "Model-store conflicts were resolved with remote-provider onboarding behavior preserved and temporary transcription compatibility documented.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054055Z-T-003.md"
+        },
+        {
+          "timestamp": "2026-07-02T05:48:30Z",
+          "source_task": "T-004",
+          "type": "automated_check",
+          "summary": "Transcription/settings/audio conflicts were resolved with documented routing and compatibility decisions.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T054830Z-T-004.md"
+        },
+        {
+          "timestamp": "2026-07-02T05:56:38Z",
+          "source_task": "T-005",
+          "type": "automated_check",
+          "summary": "Frontend conflicts were resolved with documented product branding, generated binding, and locale merge decisions.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T055638Z-T-005.md"
+        },
+        {
+          "timestamp": "2026-07-02T06:00:46Z",
+          "source_task": "T-006",
+          "type": "automated_check",
+          "summary": "Documentation, release note, generated/catalog formatting, and i18n conflicts are resolved with final verification passing.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T060046Z-T-006.md"
+        }
+      ]
+    },
+    {
+      "id": "REQ-003",
+      "priority": "P1",
+      "category": "functional",
+      "description": "Repository verification passes at the strongest practical local level, including frontend build/lint and relevant Rust checks, or every skipped check has an explicit blocker and risk note.",
+      "source": {
+        "objective_brief_field": "done",
+        "source_text": "Repository verification passes at the strongest practical local level, including frontend build/lint and relevant Rust checks, or every skipped check has an explicit blocker and risk note."
+      },
+      "verification": {
+        "checks": [
+          "git_status_guard",
+          "frontend_lint",
+          "frontend_build",
+          "rust_check",
+          "format_check"
+        ],
+        "expected": "required checks pass and acceptance evidence is present",
+        "acceptance_evidence": {
+          "required": true,
+          "allowed_sources": [
+            "automated_check",
+            "code_review",
+            "manual_confirmation",
+            "screenshot",
+            "artifact"
+          ],
+          "minimum": [
+            "automated_check"
+          ]
+        }
+      },
+      "status": "passing",
+      "evidence": [
+        {
+          "timestamp": "2026-07-02T06:00:46Z",
+          "source_task": "T-006",
+          "type": "automated_check",
+          "summary": "Final frontend lint/build, Rust check, translation consistency, and format checks pass locally.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T060046Z-T-006.md"
+        }
+      ]
+    },
+    {
+      "id": "REQ-004",
+      "priority": "P1",
+      "category": "functional",
+      "description": "No current product/main WIP or user changes are lost; pre-existing dirty files are either preserved, parked, or explicitly integrated with evidence.",
+      "source": {
+        "objective_brief_field": "done",
+        "source_text": "No current product/main WIP or user changes are lost; pre-existing dirty files are either preserved, parked, or explicitly integrated with evidence."
+      },
+      "verification": {
+        "checks": [
+          "git_status_guard",
+          "frontend_lint",
+          "frontend_build",
+          "rust_check",
+          "format_check"
+        ],
+        "expected": "required checks pass and acceptance evidence is present",
+        "acceptance_evidence": {
+          "required": true,
+          "allowed_sources": [
+            "automated_check",
+            "code_review",
+            "manual_confirmation",
+            "screenshot",
+            "artifact"
+          ],
+          "minimum": [
+            "automated_check"
+          ]
+        }
+      },
+      "status": "passing",
+      "evidence": [
+        {
+          "timestamp": "2026-07-02T05:28:13Z",
+          "source_task": "T-001",
+          "type": "automated_check",
+          "summary": "git status and stash inspection confirm pre-existing product WIP was parked without stashing loop state files.",
+          "artifact": "/Volumes/Workspace/10_Projects/personal/Handy/loop/runs/integrate-upstream-0.9/task-logs/20260702T052813Z-T-001.md"
+        }
+      ]
+    }
+  ]
+}

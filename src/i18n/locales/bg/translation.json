@@ -5,9 +5,9 @@
     "copyLastTranscript": "Копиране на последния транскрипт",
     "unloadModel": "Разтоварване на модела",
     "model": "Модел",
-    "remoteServer": "Remote Server",
     "quit": "Изход",
-    "cancel": "Отказ"
+    "cancel": "Отказ",
+    "remoteServer": "Remote Server"
   },
   "sidebar": {
     "general": "Общи",
@@ -20,11 +20,12 @@
   },
   "onboarding": {
     "subtitle": "За да започнете, изберете модел за транскрипция",
+    "existingModelsTitle": "Compatible Models",
+    "downloadModelsTitle": "Available to Download",
+    "showAllModels": "Show all {{total}} models",
+    "showFewerModels": "Show fewer models",
     "recommended": "Препоръчан",
-    "download": "Изтегляне",
-    "downloading": "Изтегля се...",
     "customModelDescription": "Не се поддържа официално",
-    "downloadFailed": "Изтеглянето не бе успешно. Опитайте отново.",
     "modelCard": {
       "accuracy": "точност",
       "speed": "скорост"
@@ -96,6 +97,7 @@
       }
     },
     "errors": {
+      "selectModel": "Failed to select model",
       "loadModels": "Неуспешно зареждане на наличните модели",
       "downloadModel": "Неуспешно изтегляне на модела: {{error}}"
     },
@@ -118,10 +120,14 @@
         "checkFailed": "Проверката на разрешенията не бе успешна. Опитайте отново.",
         "requestFailed": "Заявката за разрешение не бе успешна. Опитайте отново."
       }
-    }
+    },
+    "download": "Изтегляне",
+    "downloading": "Изтегля се...",
+    "downloadFailed": "Изтеглянето не бе успешно. Опитайте отново."
   },
   "modelSelector": {
     "custom": "Персонализиран",
+    "streaming": "Стрийминг",
     "active": "Активен",
     "switching": "Превключване...",
     "noModelsAvailable": "Няма налични модели",
@@ -145,11 +151,14 @@
     "capabilities": {
       "languageSelection": "Поддържа няколко входни езика",
       "singleLanguage": "Поддържа само този език",
-      "multiLanguage": "Многоезичен",
+      "languageCount": "{{total}} languages",
       "languageOnly": "Само {{language}}",
       "translation": "Може да превежда на английски",
-      "translate": "Превод на английски"
+      "translate": "Превод на английски",
+      "streaming": "Показва транскрипция на живо, докато говорите",
+      "multiLanguage": "Многоезичен"
     },
+    "legacy": "Наследен",
     "remoteServerMode": "Remote Server",
     "remoteModelReady": "Remote Model Ready"
   },
@@ -190,10 +199,10 @@
       "language": {
         "title": "Език",
         "description": "Изберете езика за разпознаване на реч. „Автоматично“ определя езика сам, а изборът на конкретен език може да подобри точността за него.",
-        "descriptionUnsupported": "Моделът Parakeet автоматично открива езика. Ръчен избор не е необходим.",
         "searchPlaceholder": "Търсене на езици...",
         "noResults": "Няма намерени езици",
-        "auto": "Автоматично"
+        "auto": "Автоматично",
+        "descriptionUnsupported": "Моделът Parakeet автоматично открива езика. Ръчен избор не е необходим."
       },
       "pushToTalk": {
         "label": "Натискане за говорене",
@@ -205,18 +214,23 @@
       "description": "Изберете модел за транскрипция или изтеглете допълнителни. Различните модели предлагат различна точност и скорост.",
       "yourModels": "Изтеглени модели",
       "availableModels": "Налични за изтегляне",
-      "downloaded": "Изтеглен",
-      "available": "Наличен за изтегляне",
       "deleteConfirm": "Сигурни ли сте, че искате да изтриете {{modelName}}? Ще трябва да го изтеглите отново, за да го използвате.",
       "deleteActiveConfirm": "{{modelName}} е вашият активен модел. Изтриването му ще спре транскрипциите, докато не изберете нов модел. Сигурни ли сте?",
       "deleteTitle": "Изтриване на модел",
       "filters": {
+        "allLanguages": "Всички езици",
         "all": "Всички",
         "multiLanguage": "Многоезични",
-        "translation": "Превод",
-        "allLanguages": "Всички езици"
+        "translation": "Превод"
       },
       "noModelsMatch": "Няма модели, отговарящи на този филтър.",
+      "searchPlaceholder": "Търсене на модели по име…",
+      "rescan": {
+        "label": "Сканиране отново",
+        "tooltip": "Сканиране отново за модели, добавени в папката с модели или кеша на Hugging Face извън Handy"
+      },
+      "downloaded": "Изтеглен",
+      "available": "Наличен за изтегляне",
       "transcriptionProvider": {
         "title": "Transcription Provider",
         "description": "Choose where speech-to-text runs.",
@@ -270,7 +284,6 @@
       }
     },
     "advanced": {
-      "title": "Разширени",
       "groups": {
         "app": "Приложение",
         "output": "Изход",
@@ -287,7 +300,7 @@
         "description": "Държи потокът от микрофона отворен 30 секунди след спиране на записа, което намалява забавянето при поредни транскрипции. Може да влоши качеството на Bluetooth аудио, докато е активно."
       },
       "acceleration": {
-        "whisper": {
+        "transcribe": {
           "title": "Ускорение за Whisper",
           "description": "Хардуерно ускорение за моделите Whisper. „Автоматично“ използва GPU при наличност (Metal на macOS, Vulkan на Windows/Linux)."
         },
@@ -296,9 +309,13 @@
           "description": "Хардуерно ускорение за ONNX модели (Parakeet, Canary, Moonshine и др.). DirectML на Windows е експериментален. Моделите може да не транскрибират."
         },
         "gpuDevice": {
+          "auto": "Автоматично",
           "title": "GPU устройство",
-          "description": "Изберете кой GPU да се използва за Whisper. Автоматично избира специализирания GPU.",
-          "auto": "Автоматично"
+          "description": "Изберете кой GPU да се използва за Whisper. Автоматично избира специализирания GPU."
+        },
+        "whisper": {
+          "title": "Ускорение за Whisper",
+          "description": "Хардуерно ускорение за моделите Whisper. „Автоматично“ използва GPU при наличност (Metal на macOS, Vulkan на Windows/Linux)."
         }
       },
       "startHidden": {
@@ -314,6 +331,23 @@
         "description": "Показване на иконата на NG Dictate в системната област."
       },
       "overlay": {
+        "style": {
+          "title": "Overlay",
+          "description": "Choose the recording overlay: None hides it, Minimal shows a compact pill, Live shows transcription in real time as you speak (streaming-capable models only — look for the Streaming badge in the model picker). On Linux 'None' is recommended.",
+          "options": {
+            "none": "Няма",
+            "minimal": "Minimal",
+            "live": "Live"
+          }
+        },
+        "position": {
+          "title": "Позиция на наслагването",
+          "description": "Показване на визуална обратна връзка при запис и транскрипция. На Linux се препоръчва „Няма“.",
+          "options": {
+            "bottom": "Долу",
+            "top": "Горе"
+          }
+        },
         "title": "Позиция на наслагването",
         "description": "Показване на визуална обратна връзка при запис и транскрипция. На Linux се препоръчва „Няма“.",
         "options": {
@@ -387,10 +421,14 @@
         "add": "Добавяне",
         "remove": "Премахване на {{word}}",
         "duplicate": "„{{word}}“ вече съществува"
-      }
+      },
+      "voiceActivityDetection": {
+        "title": "Voice Activity Detection",
+        "description": "Filter silence from recordings. Streaming-capable models use a longer VAD tail; disabling VAD records raw audio."
+      },
+      "title": "Разширени"
     },
     "postProcessing": {
-      "title": "Постобработка",
       "hotkey": {
         "title": "Бърз клавиш"
       },
@@ -401,10 +439,10 @@
           "description": "Изберете доставчик, съвместим с OpenAI."
         },
         "appleIntelligence": {
+          "unavailable": "Apple Intelligence не е налична на това устройство. Необходим е Mac с Apple Silicon и macOS Tahoe (26.0) или по-нова с включена Apple Intelligence в Системните настройки.",
           "title": "Apple Intelligence",
           "description": "Работи изцяло на устройството. Не са нужни API ключ или мрежов достъп.",
-          "requirements": "Изисква Mac с Apple Silicon и macOS Tahoe (26.0) или по-нова. Apple Intelligence трябва да е включена в Системните настройки.",
-          "unavailable": "Apple Intelligence не е налична на това устройство. Необходим е Mac с Apple Silicon и macOS Tahoe (26.0) или по-нова с включена Apple Intelligence в Системните настройки."
+          "requirements": "Изисква Mac с Apple Silicon и macOS Tahoe (26.0) или по-нова. Apple Intelligence трябва да е включена в Системните настройки."
         },
         "baseUrl": {
           "title": "Базов URL",
@@ -418,13 +456,13 @@
         },
         "model": {
           "title": "Модел",
-          "descriptionApple": "Задайте по избор числен лимит на токени или запазете стандартната настройка на устройството.",
           "descriptionCustom": "Въведете идентификатора на модела, очакван от вашия персонализиран краен адрес.",
           "descriptionDefault": "Изберете модел, предлаган от избрания доставчик.",
-          "placeholderApple": "Apple Intelligence",
           "placeholderWithOptions": "Търсене или избор на модел",
           "placeholderNoOptions": "Въведете име на модел",
-          "refreshModels": "Опресняване на моделите"
+          "refreshModels": "Опресняване на моделите",
+          "descriptionApple": "Задайте по избор числен лимит на токени или запазете стандартната настройка на устройството.",
+          "placeholderApple": "Apple Intelligence"
         }
       },
       "prompts": {
@@ -447,7 +485,8 @@
         "cancel": "Отказ",
         "selectToEdit": "Изберете подкана по-горе, за да видите и редактирате подробностите ѝ.",
         "createFirst": "Натиснете „Нова подкана“ по-горе, за да създадете първата си подкана за постобработка."
-      }
+      },
+      "title": "Постобработка"
     },
     "history": {
       "title": "История",
@@ -473,6 +512,17 @@
       "logLevel": {
         "title": "Ниво на логване",
         "description": "Задаване на подробността на логовете"
+      },
+      "liveLogs": {
+        "title": "Логове на живо",
+        "description": "Преглеждайте логовете на приложението в реално време, за да диагностицирате проблеми, без да отваряте лог файла. Показват се само логове, създадени докато този панел е отворен; спазва настройката «Ниво на логване» по-горе.",
+        "live": "На живо",
+        "paused": "На пауза",
+        "pause": "Пауза",
+        "resume": "Възобновяване",
+        "copied": "Копирано",
+        "lineCount": "Редове: {{count}}",
+        "empty": "Изчакване на логове… Записите ще се появят тук, щом приложението ги генерира."
       },
       "updateChecks": {
         "label": "Проверка за актуализации",
@@ -538,6 +588,13 @@
       "recordingBuffer": {
         "title": "Допълнителен буфер на записа",
         "description": "Допълнително време (в милисекунди) за запис след пускане на клавиша, за да се улови краят на аудиото. 0 = без допълнителен буфер."
+      },
+      "whatsNewPreview": {
+        "title": "Преглед на новостите",
+        "description": "Отваря последните включени бележки към изданието, без да ги маркира като видени",
+        "button": "Преглед",
+        "noNotes": "Не са намерени включени бележки към изданието",
+        "error": "Неуспешен преглед на бележките към изданието"
       }
     },
     "about": {
@@ -550,6 +607,11 @@
         "title": "Папка с данни на приложението",
         "description": "Мястото, където NG Dictate съхранява данните си"
       },
+      "sourceCode": {
+        "title": "Изходен код",
+        "description": "Преглед на изходния код и принос",
+        "button": "Вижте в GitHub"
+      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",
@@ -557,22 +619,27 @@
       },
       "acknowledgments": {
         "title": "Благодарности",
+        "ggml": {
+          "title": "ggml",
+          "description": "Високопроизводително изпълнение на автоматичния модел за разпознаване на реч Whisper на OpenAI",
+          "details": "Handy използва ggml за бързо локално реч-към-текст. Благодарности на Georgi Gerganov и сътрудниците за отличната работа."
+        },
         "whisper": {
           "title": "Whisper.cpp",
           "description": "Високопроизводително изпълнение на автоматичния модел за разпознаване на реч Whisper на OpenAI",
           "details": "NG Dictate използва Whisper.cpp за бързо локално реч-към-текст. Благодарности на Georgi Gerganov и сътрудниците за отличната работа."
         }
+      },
+      "whatsNewUpdates": {
+        "label": "Показвай новостите",
+        "description": "Показвай бележки към изданието след актуализации на Handy"
       }
     }
   },
   "footer": {
-    "downloadingModel": "Изтегляне на {{model}}...",
     "checkingUpdates": "Проверка за актуализации...",
-    "updateAvailable": "Налична актуализация: {{version}}",
     "updateAvailableShort": "Налична актуализация",
     "upToDate": "Актуална версия",
-    "downloadUpdate": "Изтегляне на актуализацията",
-    "restart": "Рестартиране",
     "updateCheckingDisabled": "Проверката за актуализации е изключена",
     "downloading": "Изтегля се... {{progress}}%",
     "installing": "Инсталиране...",
@@ -580,34 +647,40 @@
     "checkForUpdates": "Проверка за актуализации",
     "portableUpdateTitle": "Необходима е ръчна актуализация",
     "portableUpdateMessage": "Преносимите инсталации не могат да бъдат актуализирани автоматично. За актуализация: изтеглете най-новия NSIS инсталатор от GitHub Releases, инсталирайте го в същата папка, след което копирайте папката Data/ (настройки, модели, записи) от старата версия в новата.",
-    "portableUpdateButton": "Отвори GitHub Releases"
+    "portableUpdateButton": "Отвори GitHub Releases",
+    "downloadingModel": "Изтегляне на {{model}}...",
+    "updateAvailable": "Налична актуализация: {{version}}",
+    "downloadUpdate": "Изтегляне на актуализацията",
+    "restart": "Рестартиране"
   },
   "common": {
     "loading": "Зареждане...",
+    "delete": "Изтриване",
+    "close": "Затваряне",
+    "open": "Отваряне",
+    "copy": "Копиране",
+    "clear": "Изчистване",
+    "noOptionsFound": "Няма намерени опции",
     "save": "Запазване",
     "cancel": "Отказ",
     "reset": "Нулиране",
     "add": "Добавяне",
     "remove": "Премахване",
-    "delete": "Изтриване",
     "edit": "Редактиране",
     "create": "Създаване",
     "update": "Обновяване",
-    "close": "Затваряне",
-    "open": "Отваряне",
     "default": "По подразбиране",
     "enabled": "Включено",
     "disabled": "Изключено",
     "on": "Вкл.",
     "off": "Изкл.",
     "yes": "Да",
-    "no": "Не",
-    "noOptionsFound": "Няма намерени опции"
+    "no": "Не"
   },
   "accessibility": {
-    "permissionsRequired": "Необходими са разрешения за достъпност",
     "permissionsDescription": "NG Dictate се нуждае от разрешения за достъпност, за да въвежда транскрибирания текст.",
     "openSettings": "Отваряне на системните настройки",
+    "permissionsRequired": "Необходими са разрешения за достъпност",
     "dismiss": "Затваряне"
   },
   "errors": {
@@ -625,7 +698,8 @@
     "modelLoadFailed": "Зареждането на модела не бе успешно: {{model}}",
     "modelLoadFailedUnknown": "неизвестен модел",
     "pasteFailedTitle": "Неуспешно поставяне на текст",
-    "pasteFailed": "Текстът не можа да бъде поставен в активното приложение."
+    "pasteFailed": "Текстът не можа да бъде поставен в активното приложение.",
+    "transcriptionFailedTitle": "Неуспешна транскрипция"
   },
   "appLanguage": {
     "title": "Език на приложението",
@@ -634,5 +708,8 @@
   "overlay": {
     "transcribing": "Транскрибиране...",
     "processing": "Обработка..."
+  },
+  "whatsNew": {
+    "title": "Ново в Handy v{{version}}"
   }
 }

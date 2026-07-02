@@ -1,0 +1,43 @@
+{
+  "schema_version": 2,
+  "objective_run_id": "integrate-upstream-0.9",
+  "lifecycle": "completed",
+  "plan_version": 1,
+  "iteration": 6,
+  "current_task": null,
+  "last_task": "T-006",
+  "last_verification": {
+    "status": "passed",
+    "checks": [
+      "git_status_guard",
+      "check_translations",
+      "frontend_lint",
+      "frontend_build",
+      "rust_check",
+      "format_check"
+    ],
+    "summary": "All final required checks pass; only non-blocking bundle-size and Rust dead-code warnings remain."
+  },
+  "blockers": [],
+  "freeze": {
+    "frozen_at": "2026-07-02T05:26:31Z",
+    "frozen_by": "codex",
+    "requires_confirmation_to_change": true
+  },
+  "finalization": {
+    "status": "succeeded",
+    "finalized_at": "2026-07-02T06:02:01Z",
+    "final_report": "final-report.md",
+    "checks": [
+      "git_status_guard",
+      "check_translations",
+      "frontend_lint",
+      "frontend_build",
+      "rust_check",
+      "format_check"
+    ],
+    "blockers": [],
+    "summary": "Finalization succeeded."
+  },
+  "updated_at": "2026-07-02T06:02:01Z"
+}

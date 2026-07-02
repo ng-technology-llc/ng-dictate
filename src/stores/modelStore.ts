@@ -4,7 +4,6 @@ import { produce } from "immer";
 import { listen } from "@tauri-apps/api/event";
 import { commands, type ModelInfo } from "@/bindings";
 import { toast } from "sonner";
-import { hasTranscriptionBackendConfigured } from "@/lib/onboarding";
 
 interface DownloadProgress {
   model_id: string;
@@ -31,15 +30,14 @@ interface ModelsStore {
   downloadStats: Record<string, DownloadStats>;
   loading: boolean;
   error: string | null;
-  hasAnyModels: boolean;
-  isFirstRun: boolean;
   initialized: boolean;
+  isRescanning: boolean;
 
   // Actions
   initialize: () => Promise<void>;
   loadModels: () => Promise<void>;
   loadCurrentModel: () => Promise<void>;
-  checkFirstRun: () => Promise<boolean>;
+  rescanLocalModels: () => Promise<void>;
   selectModel: (modelId: string) => Promise<boolean>;
   downloadModel: (modelId: string) => Promise<boolean>;
   cancelDownload: (modelId: string) => Promise<boolean>;
@@ -68,9 +66,8 @@ export const useModelStore = create<ModelsStore>()(
     downloadStats: {},
     loading: true,
     error: null,
-    hasAnyModels: false,
-    isFirstRun: false,
     initialized: false,
+    isRescanning: false,
 
     // Internal setters
     setModels: (models) => set({ models }),
@@ -129,32 +126,19 @@ export const useModelStore = create<ModelsStore>()(
       }
     },
 
-    checkFirstRun: async () => {
+    rescanLocalModels: async () => {
+      set({ isRescanning: true });
       try {
-        const [modelsResult, settingsResult] = await Promise.all([
-          commands.hasAnyModelsAvailable(),
-          commands.getAppSettings(),
-        ]);
-        if (modelsResult.status === "ok") {
-          const hasModels = modelsResult.data;
-          const transcriptionProvider =
-            settingsResult.status === "ok"
-              ? settingsResult.data.transcription_provider
-              : "local";
-          const hasTranscriptionBackend = hasTranscriptionBackendConfigured(
-            hasModels,
-            transcriptionProvider,
-          );
-          set({
-            hasAnyModels: hasTranscriptionBackend,
-            isFirstRun: !hasTranscriptionBackend,
-          });
-          return !hasTranscriptionBackend;
+        const result = await commands.rescanLocalModels();
+        if (result.status !== "ok") {
+          set({ error: `Failed to rescan models: ${result.error}` });
         }
-        return false;
+        // On success the backend emits `models-updated`, which reloads the list
+        // via the listener registered in initialize().
       } catch (err) {
-        console.error("Failed to check model availability:", err);
-        return false;
+        set({ error: `Failed to rescan models: ${err}` });
+      } finally {
+        set({ isRescanning: false });
       }
     },
 
@@ -163,11 +147,7 @@ export const useModelStore = create<ModelsStore>()(
         set({ error: null });
         const result = await commands.setActiveModel(modelId);
         if (result.status === "ok") {
-          set({
-            currentModel: modelId,
-            isFirstRun: false,
-            hasAnyModels: true,
-          });
+          set({ currentModel: modelId });
           return true;
         } else {
           set({ error: `Failed to switch to model: ${result.error}` });
@@ -288,10 +268,10 @@ export const useModelStore = create<ModelsStore>()(
     initialize: async () => {
       if (get().initialized) return;
 
-      const { loadModels, loadCurrentModel, checkFirstRun } = get();
+      const { loadModels, loadCurrentModel } = get();
 
       // Load initial data
-      await Promise.all([loadModels(), loadCurrentModel(), checkFirstRun()]);
+      await Promise.all([loadModels(), loadCurrentModel()]);
 
       // Set up event listeners
       listen<DownloadProgress>("model-download-progress", (event) => {
@@ -439,6 +419,10 @@ export const useModelStore = create<ModelsStore>()(
       listen("model-state-changed", () => {
         get().loadModels();
         get().loadCurrentModel();
+      });
+
+      listen("models-updated", () => {
+        get().loadModels();
       });
 
       set({ initialized: true });

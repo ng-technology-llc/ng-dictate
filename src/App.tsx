@@ -13,11 +13,11 @@ import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Footer from "./components/footer";
 import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
+import { WhatsNewGate } from "./components/whats-new";
 import { useSettings } from "./hooks/useSettings";
 import { useSettingsStore } from "./stores/settingsStore";
 import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
-import { hasTranscriptionBackendConfigured } from "@/lib/onboarding";
 
 type OnboardingStep = "accessibility" | "model" | "done";
 
@@ -124,13 +124,26 @@ function App() {
   }, [t]);
 
   // Listen for paste failures and show a toast.
-  // The technical error detail is logged to ng-dictate.log on the Rust side
+  // The technical error detail is logged to handy.log on the Rust side
   // (see actions.rs `error!("Failed to paste transcription: ...")`),
   // so we show a localized, user-friendly message here instead of the raw error.
   useEffect(() => {
     const unlisten = listen("paste-error", () => {
       toast.error(t("errors.pasteFailedTitle"), {
         description: t("errors.pasteFailed"),
+      });
+    });
+    return () => {
+      unlisten.then((fn) => fn());
+    };
+  }, [t]);
+
+  // Listen for transcription failures and show a toast.
+  // The payload is the backend error message (also logged to handy.log).
+  useEffect(() => {
+    const unlisten = listen<string>("transcription-error", (event) => {
+      toast.error(t("errors.transcriptionFailedTitle"), {
+        description: event.payload,
       });
     });
     return () => {
@@ -168,26 +181,13 @@ function App() {
 
   const checkOnboardingStatus = async () => {
     try {
-      const [modelsResult, settingsResult] = await Promise.all([
-        commands.hasAnyModelsAvailable(),
-        commands.getAppSettings(),
-      ]);
-      const hasModels = modelsResult.status === "ok" && modelsResult.data;
-      const transcriptionProvider =
-        settingsResult.status === "ok"
-          ? settingsResult.data.transcription_provider
-          : "local";
-      const hasTranscriptionBackend = hasTranscriptionBackendConfigured(
-        hasModels,
-        transcriptionProvider,
-      );
+      const settingsResult = await commands.getAppSettings();
+      const hasCompletedOnboarding =
+        settingsResult.status === "ok" &&
+        settingsResult.data.onboarding_completed === true;
       const currentPlatform = platform();
 
-      if (hasTranscriptionBackend) {
-        if (!hasModels && transcriptionProvider === "remote") {
-          setCurrentSection("models");
-        }
-
+      if (hasCompletedOnboarding) {
         // Returning user - check if they need to grant permissions first
         setIsReturningUser(true);
 
@@ -245,11 +245,10 @@ function App() {
   };
 
   const handleModelSelected = (nextSection?: SidebarSection) => {
+    // Transition to main app - user has started a download
     if (nextSection) {
       setCurrentSection(nextSection);
     }
-
-    // Transition to main app - user has started a download
     setOnboardingStep("done");
   };
 
@@ -283,6 +282,7 @@ function App() {
           },
         }}
       />
+      <WhatsNewGate />
       {/* Main content area that takes remaining space */}
       <div className="flex-1 flex overflow-hidden">
         <Sidebar

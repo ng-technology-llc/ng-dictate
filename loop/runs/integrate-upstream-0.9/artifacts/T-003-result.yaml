@@ -1,0 +1,64 @@
+status: passing
+summary: "Integrated upstream model catalog, GGUF probing, and model capability surfaces while preserving remote-provider onboarding behavior."
+touched_files:
+  - "scripts/gen_catalog.py"
+  - "src-tauri/src/catalog/catalog.json"
+  - "src-tauri/src/catalog/mod.rs"
+  - "src-tauri/src/commands/models.rs"
+  - "src-tauri/src/lib.rs"
+  - "src-tauri/src/managers/gguf_meta.rs"
+  - "src-tauri/src/managers/mod.rs"
+  - "src-tauri/src/managers/model.rs"
+  - "src-tauri/src/managers/model_capabilities.rs"
+  - "src-tauri/src/managers/transcription.rs"
+  - "src-tauri/src/settings.rs"
+  - "src/bindings.ts"
+  - "src/stores/modelStore.ts"
+commands:
+  - command: "git checkout upstream/main -- <T-003 model files>; git apply --3way <product model-store patch>"
+    exit_code: 1
+    stdout_summary: "Applied upstream catalog/model files; product modelStore patch conflicted and was resolved manually."
+    stderr_summary: "Conflict was limited to src/stores/modelStore.ts."
+  - command: "cd src-tauri && cargo check"
+    exit_code: 0
+    stdout_summary: "Rust compile check passed with three temporary unused-code warnings expected before T-004 consumes transcribe-cpp capability APIs."
+    stderr_summary: ""
+  - command: "bun run build"
+    exit_code: 0
+    stdout_summary: "TypeScript and Vite production build passed."
+    stderr_summary: ""
+  - command: "cd src-tauri && cargo fmt -- --check"
+    exit_code: 0
+    stdout_summary: "Rust formatting check passed."
+    stderr_summary: ""
+  - command: "git diff --check -- <T-003 files>"
+    exit_code: 0
+    stdout_summary: "No whitespace errors."
+    stderr_summary: ""
+verification:
+  status: passed
+  checks:
+    - "git_status_guard"
+    - "rust_check"
+    - "frontend_build"
+  summary: "cargo check and frontend build both pass after catalog/model capability integration."
+diff_summary: "Added upstream catalog, GGUF metadata parser, model capability probing, HF/catalog model manager changes, rescan command, and frontend store support while preserving remote-provider first-run behavior."
+decisions:
+  - "Preserve product first-run logic that treats a configured remote transcription provider as a valid transcription backend."
+  - "Retain product has_any_models_* commands because current App/model store code still calls them."
+  - "Add settings.onboarding_completed for upstream model manager compatibility."
+  - "Temporarily keep EngineType::Whisper and route TranscribeCpp through the legacy loader until T-004 replaces the local transcription path."
+blockers: []
+artifacts:
+  - "loop/runs/integrate-upstream-0.9/decisions.md"
+requirement_evidence:
+  - requirement_id: "REQ-001"
+    type: "automated_check"
+    summary: "Catalog-backed model descriptors, GGUF probing, and capability metadata are integrated; cargo check and frontend build pass."
+  - requirement_id: "REQ-002"
+    type: "automated_check"
+    summary: "Model-store conflicts were resolved with remote-provider onboarding behavior preserved and temporary transcription compatibility documented."
+review_gate:
+  status: passed
+  reviewer: "coordinator"
+  summary: "Reviewed T-003 against frozen scope: model capability surfaces are in place, product remote-provider checks remain, and temporary compile adapters are assigned to T-004."

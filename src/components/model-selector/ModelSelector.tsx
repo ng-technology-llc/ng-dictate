@@ -4,7 +4,6 @@ import { listen } from "@tauri-apps/api/event";
 import { commands } from "@/bindings";
 import { getTranslatedModelName } from "../../lib/utils/modelTranslation";
 import { useModelStore } from "../../stores/modelStore";
-import { useSettings } from "@/hooks/useSettings";
 import ModelStatusButton from "./ModelStatusButton";
 import ModelDropdown from "./ModelDropdown";
 import DownloadProgressDisplay from "./DownloadProgressDisplay";
@@ -27,7 +26,6 @@ interface ModelSelectorProps {
 
 const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
   const { t } = useTranslation();
-  const { settings } = useSettings();
   const {
     models,
     currentModel,
@@ -47,18 +45,10 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const displayModelId = pendingModelId || currentModel;
-  const isRemoteProvider = settings?.transcription_provider === "remote";
-  const remoteModel = settings?.remote_transcription_model?.trim() ?? "";
 
   // Check model status when currentModel changes
   useEffect(() => {
     const checkStatus = async () => {
-      if (isRemoteProvider) {
-        setModelStatus("ready");
-        setModelError(null);
-        return;
-      }
-
       if (currentModel) {
         try {
           const statusResult = await commands.getTranscriptionModelStatus();
@@ -76,7 +66,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
       }
     };
     checkStatus();
-  }, [currentModel, isRemoteProvider]);
+  }, [currentModel]);
 
   useEffect(() => {
     // Listen for model loading lifecycle events
@@ -164,10 +154,6 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
   };
 
   const getModelDisplayText = (): string => {
-    if (isRemoteProvider) {
-      return remoteModel || t("modelSelector.remoteServerMode");
-    }
-
     const verifyingKeys = Object.keys(verifyingModels);
     if (verifyingKeys.length > 0) {
       if (verifyingKeys.length === 1) {
@@ -250,7 +236,6 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
 
   // Derive display status from model status + store state
   const getDisplayStatus = (): ModelStatus => {
-    if (isRemoteProvider) return "ready";
     if (Object.keys(verifyingModels).length > 0) return "verifying";
     if (Object.keys(extractingModels).length > 0) return "extracting";
     if (Object.keys(downloadProgress).length > 0) return "downloading";
@@ -265,15 +250,11 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
           status={getDisplayStatus()}
           displayText={getModelDisplayText()}
           isDropdownOpen={showModelDropdown}
-          onClick={() => {
-            if (!isRemoteProvider) {
-              setShowModelDropdown(!showModelDropdown);
-            }
-          }}
+          onClick={() => setShowModelDropdown(!showModelDropdown)}
         />
 
         {/* Model Dropdown */}
-        {showModelDropdown && !isRemoteProvider && (
+        {showModelDropdown && (
           <ModelDropdown
             models={models}
             currentModelId={displayModelId}

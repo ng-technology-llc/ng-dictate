@@ -5,9 +5,9 @@
     "copyLastTranscript": "Kopiera senaste transkriptionen",
     "unloadModel": "Avlasta modell",
     "model": "Modell",
-    "remoteServer": "Remote Server",
     "quit": "Avsluta",
-    "cancel": "Avbryt"
+    "cancel": "Avbryt",
+    "remoteServer": "Remote Server"
   },
   "sidebar": {
     "general": "Allmänt",
@@ -20,11 +20,12 @@
   },
   "onboarding": {
     "subtitle": "För att komma igång, välj en transkriptionsmodell",
+    "existingModelsTitle": "Compatible Models",
+    "downloadModelsTitle": "Available to Download",
+    "showAllModels": "Show all {{total}} models",
+    "showFewerModels": "Show fewer models",
     "recommended": "Rekommenderat",
-    "download": "Ladda ner",
-    "downloading": "Laddar ner...",
     "customModelDescription": "Stöds inte officiellt",
-    "downloadFailed": "Nedladdningen misslyckades. Försök igen.",
     "modelCard": {
       "accuracy": "noggrannhet",
       "speed": "hastighet"
@@ -96,6 +97,7 @@
       }
     },
     "errors": {
+      "selectModel": "Failed to select model",
       "loadModels": "Misslyckades med att ladda tillgängliga modeller",
       "downloadModel": "Misslyckades med att ladda ner modell: {{error}}"
     },
@@ -118,10 +120,14 @@
         "checkFailed": "Misslyckades med att kontrollera behörigheter. Försök igen.",
         "requestFailed": "Misslyckades med att begära behörighet. Försök igen."
       }
-    }
+    },
+    "download": "Ladda ner",
+    "downloading": "Laddar ner...",
+    "downloadFailed": "Nedladdningen misslyckades. Försök igen."
   },
   "modelSelector": {
     "custom": "Anpassad",
+    "streaming": "Streaming",
     "active": "Aktiv",
     "switching": "Byter...",
     "noModelsAvailable": "Inga modeller tillgängliga",
@@ -145,11 +151,14 @@
     "capabilities": {
       "languageSelection": "Stöder flera indataspråk",
       "singleLanguage": "Stöder endast detta språk",
-      "multiLanguage": "Flerspråkig",
+      "languageCount": "{{total}} languages",
       "languageOnly": "Endast {{language}}",
       "translation": "Kan översätta till engelska",
-      "translate": "Översätt till engelska"
+      "translate": "Översätt till engelska",
+      "streaming": "Visar transkription i realtid medan du talar",
+      "multiLanguage": "Flerspråkig"
     },
+    "legacy": "Äldre",
     "remoteServerMode": "Remote Server",
     "remoteModelReady": "Remote Model Ready"
   },
@@ -190,10 +199,10 @@
       "language": {
         "title": "Språk",
         "description": "Välj språk för taligenkänning. Auto kommer automatiskt att bestämma språket, medan val av ett specifikt språk kan förbättra noggrannheten för det språket.",
-        "descriptionUnsupported": "Parakeet-modellen upptäcker automatiskt språket. Inget manuellt val behövs.",
         "searchPlaceholder": "Sök språk...",
         "noResults": "Inga språk hittades",
-        "auto": "Auto"
+        "auto": "Auto",
+        "descriptionUnsupported": "Parakeet-modellen upptäcker automatiskt språket. Inget manuellt val behövs."
       },
       "pushToTalk": {
         "label": "Tryck för att tala",
@@ -205,18 +214,23 @@
       "description": "Välj en transkriptionsmodell eller ladda ner ytterligare modeller. Olika modeller erbjuder varierande nivåer av noggrannhet och hastighet.",
       "yourModels": "Nedladdade modeller",
       "availableModels": "Tillgängliga att ladda ner",
-      "downloaded": "Nedladdad",
-      "available": "Tillgänglig att ladda ner",
       "deleteConfirm": "Är du säker på att du vill ta bort {{modelName}}? Du måste ladda ner den igen för att använda den.",
       "deleteActiveConfirm": "{{modelName}} är din aktiva modell. Om du tar bort den avbryts transkriptioner tills du väljer en ny modell. Är du säker?",
       "deleteTitle": "Ta bort modell",
       "filters": {
+        "allLanguages": "Alla språk",
         "all": "Alla",
         "multiLanguage": "Flerspråkig",
-        "translation": "Översättning",
-        "allLanguages": "Alla språk"
+        "translation": "Översättning"
       },
       "noModelsMatch": "Inga modeller matchar detta filter.",
+      "searchPlaceholder": "Sök modeller efter namn…",
+      "rescan": {
+        "label": "Skanna om",
+        "tooltip": "Skanna om efter modeller som lagts till i modellmappen eller Hugging Face-cachen utanför Handy"
+      },
+      "downloaded": "Nedladdad",
+      "available": "Tillgänglig att ladda ner",
       "transcriptionProvider": {
         "title": "Transcription Provider",
         "description": "Choose where speech-to-text runs.",
@@ -270,7 +284,6 @@
       }
     },
     "advanced": {
-      "title": "Avancerat",
       "groups": {
         "app": "App",
         "output": "Utmatning",
@@ -287,7 +300,7 @@
         "description": "Håller mikrofonströmmen öppen i 30 sekunder efter att inspelningen avslutats, vilket minskar latensen för transkriptioner efter varandra. Kan försämra Bluetooth-ljudkvaliteten medan den är aktiv."
       },
       "acceleration": {
-        "whisper": {
+        "transcribe": {
           "title": "Whisper-acceleration",
           "description": "Hårdvaruacceleration för Whisper-modeller. Auto använder GPU om tillgängligt (Metal på macOS, Vulkan på Windows/Linux)."
         },
@@ -296,9 +309,13 @@
           "description": "Hårdvaruacceleration för ONNX-modeller (Parakeet, Canary, Moonshine, etc.). DirectML på Windows är experimentellt. Modeller kan misslyckas med att transkribera."
         },
         "gpuDevice": {
+          "auto": "Auto",
           "title": "GPU-enhet",
-          "description": "Välj vilken GPU som ska användas för Whisper-inferens. Auto väljer den dedikerade GPU:n.",
-          "auto": "Auto"
+          "description": "Välj vilken GPU som ska användas för Whisper-inferens. Auto väljer den dedikerade GPU:n."
+        },
+        "whisper": {
+          "title": "Whisper-acceleration",
+          "description": "Hårdvaruacceleration för Whisper-modeller. Auto använder GPU om tillgängligt (Metal på macOS, Vulkan på Windows/Linux)."
         }
       },
       "startHidden": {
@@ -314,6 +331,23 @@
         "description": "Visa NG Dictate-ikonen i systemfältet."
       },
       "overlay": {
+        "style": {
+          "title": "Overlay",
+          "description": "Choose the recording overlay: None hides it, Minimal shows a compact pill, Live shows transcription in real time as you speak (streaming-capable models only — look for the Streaming badge in the model picker). On Linux 'None' is recommended.",
+          "options": {
+            "none": "Ingen",
+            "minimal": "Minimal",
+            "live": "Live"
+          }
+        },
+        "position": {
+          "title": "Överlagringsposition",
+          "description": "Visa visuell återkoppling under inspelning och transkription. På Linux rekommenderas 'Ingen'.",
+          "options": {
+            "bottom": "Nederst",
+            "top": "Överst"
+          }
+        },
         "title": "Överlagringsposition",
         "description": "Visa visuell återkoppling under inspelning och transkription. På Linux rekommenderas 'Ingen'.",
         "options": {
@@ -387,10 +421,14 @@
         "add": "Lägg till",
         "remove": "Ta bort {{word}}",
         "duplicate": "\"{{word}}\" finns redan"
-      }
+      },
+      "voiceActivityDetection": {
+        "title": "Voice Activity Detection",
+        "description": "Filter silence from recordings. Streaming-capable models use a longer VAD tail; disabling VAD records raw audio."
+      },
+      "title": "Avancerat"
     },
     "postProcessing": {
-      "title": "Efterbearbetning",
       "hotkey": {
         "title": "Snabbkommando"
       },
@@ -401,10 +439,10 @@
           "description": "Välj en OpenAI-kompatibel leverantör."
         },
         "appleIntelligence": {
+          "unavailable": "Apple Intelligence är inte tillgängligt på den här enheten. Kräver en Apple Silicon Mac som kör macOS Tahoe (26.0) eller senare med Apple Intelligence aktiverat i systeminställningarna.",
           "title": "Apple Intelligence",
           "description": "Körs helt lokalt på enheten. Ingen API-nyckel eller nätverksåtkomst krävs.",
-          "requirements": "Kräver en Apple Silicon Mac som kör macOS Tahoe (26.0) eller senare. Apple Intelligence måste vara aktiverat i systeminställningarna.",
-          "unavailable": "Apple Intelligence är inte tillgängligt på den här enheten. Kräver en Apple Silicon Mac som kör macOS Tahoe (26.0) eller senare med Apple Intelligence aktiverat i systeminställningarna."
+          "requirements": "Kräver en Apple Silicon Mac som kör macOS Tahoe (26.0) eller senare. Apple Intelligence måste vara aktiverat i systeminställningarna."
         },
         "baseUrl": {
           "title": "Bas-URL",
@@ -418,13 +456,13 @@
         },
         "model": {
           "title": "Modell",
-          "descriptionApple": "Ange en valfri numerisk tokengräns eller behåll standardinställningen på enheten.",
           "descriptionCustom": "Ange den modellidentifierare som förväntas av din anpassade slutpunkt.",
           "descriptionDefault": "Välj en modell som exponeras av den valda leverantören.",
-          "placeholderApple": "Apple Intelligence",
           "placeholderWithOptions": "Sök eller välj en modell",
           "placeholderNoOptions": "Ange ett modellnamn",
-          "refreshModels": "Uppdatera modeller"
+          "refreshModels": "Uppdatera modeller",
+          "descriptionApple": "Ange en valfri numerisk tokengräns eller behåll standardinställningen på enheten.",
+          "placeholderApple": "Apple Intelligence"
         }
       },
       "prompts": {
@@ -447,7 +485,8 @@
         "cancel": "Avbryt",
         "selectToEdit": "Välj en prompt ovan för att visa och redigera dess detaljer.",
         "createFirst": "Klicka på 'Skapa ny prompt' ovan för att skapa din första prompt för efterbearbetning."
-      }
+      },
+      "title": "Efterbearbetning"
     },
     "history": {
       "title": "Historik",
@@ -473,6 +512,17 @@
       "logLevel": {
         "title": "Loggnivå",
         "description": "Ställ in loggningens detaljrikedom"
+      },
+      "liveLogs": {
+        "title": "Liveloggar",
+        "description": "Strömma programmets loggar i realtid för att diagnostisera problem utan att öppna loggfilen. Endast loggar som skapas medan den här panelen är öppen visas; följer inställningen Loggnivå ovan.",
+        "live": "Live",
+        "paused": "Pausad",
+        "pause": "Pausa",
+        "resume": "Återuppta",
+        "copied": "Kopierad",
+        "lineCount": "{{count}} rader",
+        "empty": "Väntar på loggar… Poster visas här när appen skickar dem."
       },
       "updateChecks": {
         "label": "Sök efter uppdateringar",
@@ -538,6 +588,13 @@
       "recordingBuffer": {
         "title": "Extra inspelningsbuffert",
         "description": "Extra tid (i millisekunder) för att fortsätta spela in efter att du släppt tangenten, för att fånga upp avslutande ljud. 0 = ingen extra buffert."
+      },
+      "whatsNewPreview": {
+        "title": "Förhandsvisa nyheter",
+        "description": "Öppna den senaste medföljande versionsinformationen utan att markera den som visad",
+        "button": "Förhandsvisa",
+        "noNotes": "Ingen medföljande versionsinformation hittades",
+        "error": "Det gick inte att förhandsvisa versionsinformationen"
       }
     },
     "about": {
@@ -550,6 +607,11 @@
         "title": "Mapp för appdata",
         "description": "Plats där NG Dictate lagrar sina data"
       },
+      "sourceCode": {
+        "title": "Källkod",
+        "description": "Visa källkod och bidra",
+        "button": "Visa på GitHub"
+      },
       "supportDevelopment": {
         "title": "Support",
         "description": "Get help with NG Dictate",
@@ -557,22 +619,27 @@
       },
       "acknowledgments": {
         "title": "Tack till",
+        "ggml": {
+          "title": "ggml",
+          "description": "Högpresterande inferens av OpenAI:s Whisper-modell för automatisk taligenkänning",
+          "details": "Handy använder ggml för snabb, lokal tal-till-text-behandling. Tack till det fantastiska arbete som utförts av Georgi Gerganov med medarbetare."
+        },
         "whisper": {
           "title": "Whisper.cpp",
           "description": "Högpresterande inferens av OpenAI:s Whisper-modell för automatisk taligenkänning",
           "details": "NG Dictate använder Whisper.cpp för snabb, lokal tal-till-text-behandling. Tack till det fantastiska arbete som utförts av Georgi Gerganov med medarbetare."
         }
+      },
+      "whatsNewUpdates": {
+        "label": "Visa nyheter",
+        "description": "Visa versionsinformation efter Handy-uppdateringar"
       }
     }
   },
   "footer": {
-    "downloadingModel": "Laddar ner {{model}}...",
     "checkingUpdates": "Söker efter uppdateringar...",
-    "updateAvailable": "Uppdatering tillgänglig: {{version}}",
     "updateAvailableShort": "Uppdatering tillgänglig",
     "upToDate": "Uppdaterad",
-    "downloadUpdate": "Ladda ner uppdatering",
-    "restart": "Starta om",
     "updateCheckingDisabled": "Uppdateringskontroll inaktiverad",
     "downloading": "Laddar ner... {{progress}}%",
     "installing": "Installerar...",
@@ -580,34 +647,40 @@
     "checkForUpdates": "Sök efter uppdateringar",
     "portableUpdateTitle": "Manual update required",
     "portableUpdateMessage": "Portable installs cannot be updated automatically. To update: download the latest NSIS installer from GitHub Releases, install it to the same folder, then copy your Data/ folder (settings, models, recordings) from the old version to the new one.",
-    "portableUpdateButton": "Open GitHub Releases"
+    "portableUpdateButton": "Open GitHub Releases",
+    "downloadingModel": "Laddar ner {{model}}...",
+    "updateAvailable": "Uppdatering tillgänglig: {{version}}",
+    "downloadUpdate": "Ladda ner uppdatering",
+    "restart": "Starta om"
   },
   "common": {
     "loading": "Laddar...",
+    "delete": "Ta bort",
+    "close": "Stäng",
+    "open": "Öppna",
+    "copy": "Kopiera",
+    "clear": "Rensa",
+    "noOptionsFound": "Inga alternativ hittades",
     "save": "Spara",
     "cancel": "Avbryt",
     "reset": "Återställ",
     "add": "Lägg till",
     "remove": "Ta bort",
-    "delete": "Ta bort",
     "edit": "Redigera",
     "create": "Skapa",
     "update": "Uppdatera",
-    "close": "Stäng",
-    "open": "Öppna",
     "default": "Standard",
     "enabled": "Aktiverad",
     "disabled": "Inaktiverad",
     "on": "På",
     "off": "Av",
     "yes": "Ja",
-    "no": "Nej",
-    "noOptionsFound": "Inga alternativ hittades"
+    "no": "Nej"
   },
   "accessibility": {
-    "permissionsRequired": "Behörigheter för hjälpmedel krävs",
     "permissionsDescription": "NG Dictate behöver behörighet för hjälpmedel för att kunna skriva transkriberad text.",
     "openSettings": "Öppna systeminställningar",
+    "permissionsRequired": "Behörigheter för hjälpmedel krävs",
     "dismiss": "Avvisa"
   },
   "errors": {
@@ -625,7 +698,8 @@
     "noInputDeviceTitle": "Ingen mikrofon hittades",
     "noInputDevice": "Ingen ljudenhet hittades. Anslut en mikrofon eller ett headset och försök igen.",
     "pasteFailedTitle": "Det gick inte att klistra in texten",
-    "pasteFailed": "Texten kunde inte klistras in i det aktiva programmet."
+    "pasteFailed": "Texten kunde inte klistras in i det aktiva programmet.",
+    "transcriptionFailedTitle": "Transkriptionen misslyckades"
   },
   "appLanguage": {
     "title": "Applikationsspråk",
@@ -634,5 +708,8 @@
   "overlay": {
     "transcribing": "Transkriberar...",
     "processing": "Bearbetar..."
+  },
+  "whatsNew": {
+    "title": "Nytt i Handy v{{version}}"
   }
 }
