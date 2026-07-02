@@ -21,18 +21,15 @@ const NGDictateTextLogo = ({
       role="img"
       aria-label="NG Dictate"
     >
-      <img
-        src={wordmarkOnLight}
-        alt=""
-        aria-hidden="true"
-        className="ng-dictate-wordmark-on-light w-full h-full object-contain"
-      />
-      <img
-        src={wordmarkOnDark}
-        alt=""
-        aria-hidden="true"
-        className="ng-dictate-wordmark-on-dark w-full h-full object-contain"
-      />
+      <picture className="block h-full w-full">
+        <source media="(prefers-color-scheme: dark)" srcSet={wordmarkOnDark} />
+        <img
+          src={wordmarkOnLight}
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-contain"
+        />
+      </picture>
     </span>
   );
 };
