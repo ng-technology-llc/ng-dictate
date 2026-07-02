@@ -185,7 +185,7 @@
       "searchPlaceholder": "名前でモデルを検索…",
       "rescan": {
         "label": "再スキャン",
-        "tooltip": "Handy の外部でモデルフォルダーまたは Hugging Face キャッシュに追加されたモデルを再スキャンします"
+        "tooltip": "NG Dictate の外部でモデルフォルダーまたは Hugging Face キャッシュに追加されたモデルを再スキャンします"
       },
       "downloaded": "ダウンロード済み",
       "available": "ダウンロード可能",
@@ -622,7 +622,7 @@
         "ggml": {
           "title": "ggml",
           "description": "OpenAIのWhisper自動音声認識モデルの高性能推論",
-          "details": "Handyは高速でローカルな音声からテキストへの変換にggmlを使用しています。Georgi Gerganov氏と貢献者の皆様の素晴らしい仕事に感謝します。"
+          "details": "NG Dictateは高速でローカルな音声からテキストへの変換にggmlを使用しています。Georgi Gerganov氏と貢献者の皆様の素晴らしい仕事に感謝します。"
         },
         "whisper": {
           "title": "Whisper.cpp",
@@ -632,7 +632,7 @@
       },
       "whatsNewUpdates": {
         "label": "新機能を表示",
-        "description": "Handyのアップデート後にリリースノートを表示"
+        "description": "NG Dictateのアップデート後にリリースノートを表示"
       }
     }
   },
@@ -710,6 +710,6 @@
     "processing": "処理中..."
   },
   "whatsNew": {
-    "title": "Handy v{{version}} の新機能"
+    "title": "NG Dictate v{{version}} の新機能"
   }
 }

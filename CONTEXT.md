@@ -1,11 +1,11 @@
-# Handy
+# NG Dictate
 
-Handy turns recorded speech into text and delivers that text to the user's current workflow. This glossary defines the product language used for speech capture, transcription, and related providers.
+NG Dictate turns recorded speech into text and delivers that text to the user's current workflow. This glossary defines the product language used for speech capture, transcription, and related providers.
 
 ## Language
 
 **Remote Transcription Provider**:
-A transcription provider that accepts recorded audio from Handy and returns transcript text from a separate service.
+A transcription provider that accepts recorded audio from NG Dictate and returns transcript text from a separate service.
 _Avoid_: Custom provider, post-processing provider, home server provider
 
 **OpenAI-compatible Audio Transcription API**:
@@ -13,7 +13,7 @@ An audio transcription API that follows the OpenAI-style speech-to-text contract
 _Avoid_: arbitrary HTTP provider, custom JSON protocol
 
 **Remote Transcription Model**:
-The model identifier that Handy asks a Remote Transcription Provider to use for a transcription request.
+The model identifier that NG Dictate asks a Remote Transcription Provider to use for a transcription request.
 _Avoid_: local model, downloaded model
 
 **Upstream Mirror**:

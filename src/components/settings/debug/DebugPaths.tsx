@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { commands } from "@/bindings";
 import { SettingContainer } from "../../ui/SettingContainer";
 
 interface DebugPathsProps {
@@ -12,6 +13,31 @@ export const DebugPaths: React.FC<DebugPathsProps> = ({
   grouped = false,
 }) => {
   const { t } = useTranslation();
+  const [appDataDir, setAppDataDir] = useState("");
+
+  useEffect(() => {
+    const loadAppDataDir = async () => {
+      try {
+        const result = await commands.getAppDirPath();
+        if (result.status === "ok") {
+          setAppDataDir(result.data);
+        }
+      } catch (error) {
+        console.error("Failed to load app data directory:", error);
+      }
+    };
+
+    void loadAppDataDir();
+  }, []);
+
+  const pathSeparator = appDataDir.includes("\\") ? "\\" : "/";
+  const appDataPath = appDataDir || t("common.loading");
+  const modelsPath = appDataDir
+    ? `${appDataDir}${pathSeparator}models`
+    : t("common.loading");
+  const settingsPath = appDataDir
+    ? `${appDataDir}${pathSeparator}settings_store.json`
+    : t("common.loading");
 
   return (
     <SettingContainer
@@ -25,25 +51,20 @@ export const DebugPaths: React.FC<DebugPathsProps> = ({
           <span className="font-medium">
             {t("settings.debug.paths.appData")}
           </span>{" "}
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <span className="font-mono text-xs select-text">%APPDATA%/handy</span>
+          <span className="font-mono text-xs select-text">{appDataPath}</span>
         </div>
         <div>
           <span className="font-medium">
             {t("settings.debug.paths.models")}
           </span>{" "}
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <span className="font-mono text-xs select-text">
-            %APPDATA%/handy/models
-          </span>
+          <span className="font-mono text-xs select-text">{modelsPath}</span>
         </div>
         <div>
           <span className="font-medium">
             {t("settings.debug.paths.settings")}
           </span>{" "}
-          {/* eslint-disable-next-line i18next/no-literal-string */}
           <span className="font-mono text-xs select-text">
-            %APPDATA%/handy/settings_store.json
+            {settingsPath}
           </span>
         </div>
       </div>
