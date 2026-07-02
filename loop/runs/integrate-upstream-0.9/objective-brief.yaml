@@ -1,0 +1,59 @@
+objective: "Safely integrate upstream/main 0.9.0 capabilities into product/main without losing product-line behavior."
+scope:
+  paths:
+    - ".github/workflows/"
+    - "src-tauri/"
+    - "src/"
+    - "scripts/"
+    - "package.json"
+    - "bun.lock"
+    - "BUILD.md"
+    - "README.md"
+  systems:
+    - "Local transcription and model management"
+    - "Remote transcription product-line behavior"
+    - "Desktop overlay and settings UI"
+    - "Release and packaging workflows"
+done:
+  - "Integration branch contains upstream transcribe.cpp, streaming model, catalog, overlay, language selector, debug CLI, and bug-fix capabilities while preserving product/main branding, release flow, and remote transcription behavior."
+  - "Conflicts are resolved with documented decisions for transcription/model architecture, release packaging, branding/legal copy, and generated bindings/i18n."
+  - "Repository verification passes at the strongest practical local level, including frontend build/lint and relevant Rust checks, or every skipped check has an explicit blocker and risk note."
+  - "No current product/main WIP or user changes are lost; pre-existing dirty files are either preserved, parked, or explicitly integrated with evidence."
+non_goals:
+  - "Do not push, open a PR, or publish a release."
+  - "Do not remove remote transcription/product-line behavior unless a conflict makes it technically impossible and the decision is recorded."
+  - "Do not perform broad UI redesign unrelated to upstream 0.9.0 integration."
+  - "Do not rewrite branding/legal content beyond what is necessary to reconcile upstream changes with product/main."
+risks:
+  - "High conflict risk in Rust transcription/model/settings code."
+  - "High packaging risk from transcribe-cpp dynamic libraries and ONNX Runtime staging."
+  - "Product-line branding and remote transcription changes overlap upstream files."
+  - "Existing uncommitted worktree changes must not be overwritten."
+verification:
+  strategy: "Use project-native checks after each integration slice; verify both frontend and Rust/Tauri surfaces before completion."
+  required_checks:
+    - "git_status_guard"
+    - "frontend_lint"
+    - "frontend_build"
+    - "rust_check"
+    - "format_check"
+autonomy:
+  mode: "goal"
+  max_iterations: 20
+assumptions:
+  -
+    confidence: "high"
+    statement: "The integration should start from product/main on an isolated codex/ branch."
+    affects:
+      - "REQ-001"
+    validation: "Current branch is codex/integrate-upstream-0.9 created from product/main."
+  -
+    confidence: "medium"
+    statement: "Full production signing, release publishing, and hardware-specific GPU validation are out of local scope."
+    affects:
+      - "REQ-003"
+    validation: "Record any skipped release/GPU checks as blockers or residual risk."
+scope_change_requests: []
+residual_scope:
+  domain_backed: false
+  sources: []

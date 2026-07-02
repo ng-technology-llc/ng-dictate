@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "objective_run_id": "integrate-upstream-0.9",
+  "lifecycle": "planned",
+  "plan_version": 1,
+  "iteration": 0,
+  "current_task": null,
+  "last_task": null,
+  "last_verification": {
+    "command": null,
+    "status": "not_run",
+    "summary": null
+  },
+  "blockers": [],
+  "freeze": null,
+  "finalization": null,
+  "updated_at": "2026-07-02T05:22:54Z"
+}

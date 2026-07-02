@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "domain_backed": false,
+  "sources": [],
+  "freeze_registered_at": null,
+  "summary": {
+    "implemented": [],
+    "pending": [],
+    "excluded": [],
+    "manual_required": []
+  },
+  "completion_checked_at": null,
+  "blocks_domain_completion": false
+}
